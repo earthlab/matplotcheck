@@ -37,7 +37,7 @@ class TimeSeriesTester(PlotTester):
 		m: string error message if assertion is not met
 		"""
 		if not loc_exp:
-			assert True
+			pass
 		else:
 			if tick_size == 'large':
 				test_date = self.ax.xaxis.get_major_formatter().format_data(735141).replace(' ', '').lower() #September 30, 2013
@@ -70,7 +70,7 @@ class TimeSeriesTester(PlotTester):
 		m: error message if assertion is not met
 		"""	
 		if not loc_exp:
-			assert True
+			pass
 		else:
 			xlims = [mdates.num2date(l) for l in self.ax.get_xlim()]
 			if tick_size == 'large': ticks = self.ax.xaxis.get_majorticklocs()
@@ -117,9 +117,10 @@ class TimeSeriesTester(PlotTester):
 		nodata: a nodata value that will be searched for in dataset (float or int)
 		xtime: boolean value if the x-axis contains datetime values
 		"""
-		xy = self.get_xy(xtime = False)
-		assert ~np.isin(nodata, xy['x']), 'Values of {0} have been found in data'.format(nodata)
-		assert ~np.isin(nodata, xy['y']), 'Values of {0} have been found in data'.format(nodata)
+		if nodata != None:
+			xy = self.get_xy(xtime = False)
+			assert ~np.isin(nodata, xy['x']), 'Values of {0} have been found in data'.format(nodata)
+			assert ~np.isin(nodata, xy['y']), 'Values of {0} have been found in data'.format(nodata)
 
 	def assert_xdata_date(self, x_exp, m='X-axis is not in appropriate date format'):
 		"""Asserts x-axis data has been parsed into datetime objects.

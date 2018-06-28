@@ -92,7 +92,7 @@ class PlotTester(object):
 			raise ValueError('title_type must be one of the following ["figure", "axes", "either"]')
 		
 		if lst == None:
-			assert not title, 'Title displayed when it should not be'
+			pass
 		else:
 			assert title, 'Expected title is not displayed'
 			title = title.lower().replace(' ','')
@@ -133,7 +133,6 @@ class PlotTester(object):
 		"""
 		caption = self.get_caption()
 		if strings_exp == None:
-			assert not caption, 'Plot should not contain caption'
 			return
 		else:
 			assert caption, 'No caption exist in appropriate location'
@@ -186,7 +185,7 @@ class PlotTester(object):
 			raise ValueError('axis must be one of the following ["x", "y"]')
 		
 		if lst == None:
-			assert not label, '{0} axis label displayed'.format(axis)
+			pass
 		else:
 			assert label, 'Expected {0} axis label is not displayed'.format(axis)
 			label = label.lower()

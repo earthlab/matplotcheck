@@ -30,13 +30,12 @@ class RasterTester(PlotTester):
 
 		parameters
 		----------
-		crange: tuple of (min, max) for colorbar. If None, asserts no colorbar is displayed
+		crange: tuple of (min, max) for colorbar. 
+			if empty tuple: asserts exactly 1 colobar exists, but does not check values.
 		"""
 		cb = self.get_colorbars()
-		if not crange:
-			assert not cb, 'Colorbar should not be displayed'
+		assert len(cb) == 1, 'Exactly one colorbar should be displayed'
 		if crange:
-			assert len(cb) == 1, 'Exactly one colorbar should be displayed'
 			assert cb[0].vmin == crange[0], 'Colorbar minimum is not expected value:{0}'.format(crange[0])
 			assert cb[0].vmax == crange[1], 'Colorbar maximum is not expected value:{0}'.format(crange[1])
 

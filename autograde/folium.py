@@ -31,5 +31,5 @@ class FoliumTester(object):
 		while(self.fmap._children): 
 			c = self.fmap._children.popitem()[1]
 			if type(c) == folium.map.Marker: marker_locs += [c.location]
-		assert np.array_equal(marker_locs, markers), m
+		assert set(marker_locs) == set(markers), m
 
