@@ -27,42 +27,48 @@ Beyond that, we have noticed common groupings of assertions for specific plot ty
 
 ## Examples
 
-2D plot with x-axis label containing ‘x’ and y-axis label containing ‘y’ and ‘data’
-`from autograde.cases import PlotBasicSuite
+2D plot with x-axis label containing "x" and y-axis label containing "y" and "data"
+
+```python
+from autograde.cases import PlotBasicSuite
 import pandas as pd
 import unittest
+
 axis = plt.gca()
 data = pd.DataFrame(data={“x”:xvals, “y”:yvals})
 suite = PlotBasicSuite(ax=axis, data_exp=data, xcol=”x”, ycol=”y”)
 xlabel_contains=[“x”], ylabel_contains = [“y”,”data”])
-results = unittest.TextTestRunner().run(suite)`
+results = unittest.TextTestRunner().run(suite)```
 
 Plot containing a spatial raster image and spatial polygon vector data
-`from autograde.cases import PlotRasterSuite
+```python
+from autograde.cases import PlotRasterSuite
 axis = plt.gca()
 suite = PlotRasterSuite(ax=axis, im_expected=image, polygons=polygons)
-results = unittest.TextTestRunner().run(suite)`
+results = unittest.TextTestRunner().run(suite)```
 
 If you prefer to forgo the groupings into TestSuites, you can just use the assertions instead.
 
-2D plot with x-axis label containing ‘x’ and y-axis label containing ‘y’ and ‘data’
-`from autograde.base import PlotTester
+2D plot with x-axis label containing "x" and y-axis label containing "y" and "data"
+```python
+from autograde.base import PlotTester
 import pandas as pd
 axis = plt.gca()
 pt = PlotTester(axis)
 data = pd.DataFrame(data={“x”:xvals, “y”:yvals})
 pt.assert_xydata(data, “x”, “y”)
 pt.assert_xlabel_contains([“x”])
-pt.assert_ylabel_contains([“y”, “data”])`
+pt.assert_ylabel_contains([“y”, “data”])```
 
 Plot containing a spatial raster image and spatial polygon vector data
-`from autograde.raster import RasterTester
+```python
+from autograde.raster import RasterTester
 From autograde.vector import VectorTester
 axis = plt.gca()
 rt = RasterTester(axis)
 vt = VectorTester(axis)
 rt.assert_image(im_expected=image)
-vt.assert_polygons(polygons_expected=polygons)`
+vt.assert_polygons(polygons_expected=polygons)```
 
 Caveats: This repo likely misses edge cases of the many ways matplotlib plots can be created. Please feel free to submit bugs!
 
