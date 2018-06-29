@@ -36,9 +36,7 @@ class TimeSeriesTester(PlotTester):
 			None: if no tick format has been specified. This will automatically assert True
 		m: string error message if assertion is not met
 		"""
-		if not loc_exp:
-			pass
-		else:
+		if loc_exp:
 			if tick_size == 'large':
 				test_date = self.ax.xaxis.get_major_formatter().format_data(735141).replace(' ', '').lower() #September 30, 2013
 			elif tick_size == 'small':
@@ -69,9 +67,8 @@ class TimeSeriesTester(PlotTester):
 			None: if no tick location has been specified. This will automatically assert True
 		m: error message if assertion is not met
 		"""	
-		if not loc_exp:
-			pass
-		else:
+
+		if loc_exp:
 			xlims = [mdates.num2date(l) for l in self.ax.get_xlim()]
 			if tick_size == 'large': ticks = self.ax.xaxis.get_majorticklocs()
 			elif tick_size == 'small': ticks = self.ax.xaxis.get_minorticklocs()
