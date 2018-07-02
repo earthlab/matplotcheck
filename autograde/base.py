@@ -92,12 +92,12 @@ class PlotTester(object):
 			raise ValueError('title_type must be one of the following ["figure", "axes", "either"]')
 		
 		if lst == None:
-			assert not title, 'Title displayed when it should not be'
+			pass
 		else:
 			assert title, 'Expected title is not displayed'
 			title = title.lower().replace(' ','')
 			for s in lst:
-				assert s in title, 'Title does not contain expected text:{0}'.format(s)
+				assert s.lower().replace(' ','') in title, 'Title does not contain expected text:{0}'.format(s)
 
 	## CAPTION TEST/HELPER FUNCTIONS ##
 
@@ -133,7 +133,6 @@ class PlotTester(object):
 		"""
 		caption = self.get_caption()
 		if strings_exp == None:
-			assert not caption, 'Plot should not contain caption'
 			return
 		else:
 			assert caption, 'No caption exist in appropriate location'
@@ -142,7 +141,7 @@ class PlotTester(object):
 		for lst in strings_exp:
 			flag = False
 			for s in lst:
-				if s in caption:
+				if s.lower().replace(' ','') in caption:
 					caption = caption.replace(s,'')
 					flag = True
 					break
@@ -186,12 +185,12 @@ class PlotTester(object):
 			raise ValueError('axis must be one of the following ["x", "y"]')
 		
 		if lst == None:
-			assert not label, '{0} axis label displayed'.format(axis)
+			pass
 		else:
 			assert label, 'Expected {0} axis label is not displayed'.format(axis)
-			label = label.lower()
+			label = label.lower().replace(' ','')
 			for s in lst:
-				assert s in label, '{0} axis label does not contain expected text:{1}'.format(axis,m)
+				assert s.lower().replace(' ','') in label, '{0} axis label does not contain expected text:{1}'.format(axis,m)
 
 	def assert_lims(self, lims_expected, axis='x'):
 		"""Assert the lims of ax match lims_expected. Whether this tests the x or y axis is denoted in variable axis

@@ -17,6 +17,7 @@ def loadTests(tests):
 	return test_suite
 
 
+
 class PlotBasicSuite(object):
 	""" A generic object to test a basic 2d Matplotlib plot (scatter, bar, line, etc.)
 	
@@ -33,7 +34,7 @@ class PlotBasicSuite(object):
     lims_equal: boolean expressing if x and y limits are expected to be equal
     title_contains: list of lower case strings where each string is expected to be in title, barring capitalization. 
         If value is an empty list: test is just to see that title exists and is not an empty string
-        If value is None: asserts no title
+        If value is None: no tests are run
     title_type: one of the following strings ["figure", "axes", "either"]
         "figure": only the figure title (suptitle) will be tested
         "axes": only the axes title (suptitle) will be tested
@@ -41,20 +42,20 @@ class PlotBasicSuite(object):
             The combined title will be tested.
     xlabel_contains: list of lower case strings where each string is expected to be in x-axis label, barring capitalization. 
         If value is an empty list: test is just to see that x-axis label exists and is not an empty string
-        If value is None: asserts no label is expressed
+        If value is None: no tests are run
     ylabel_contains: list of lower case strings where each string is expected to be in y-axis label, barring capitalization. 
         If value is an empty list: test is just to see that y-axis label exists and is not an empty string
-        If value is None: asserts no label is expressed
+        If value is None: no tests are run
     caption_string: list of lists. Each internal list is a list of lower case strings where at least one string must be 
         found in the caption, barring capitalization
-        if None: assert caption does not exist
         if empty list: asserts caption exists and not an empty string
+        if None: no tests are run
     legend_labels: list of lower case stings. Each string is an expected entry label in the legend, barring capitalization.
 	"""
 
 	def __init__(self, ax, data_exp=None, xcol=None, ycol=None, plot_type=None, line_types=None, xlabels=False, 
 		lims_equal=False, title_contains=[], title_type='either', xlabel_contains=[], ylabel_contains=[],
-		caption_strings=[], legend_labels=None):
+		caption_strings=[], legend_labels=None, title_points=1, xlab_points=1, ylab_points=1):
 
 		class PlotLabelsTest(unittest.TestCase):
 			"""A unittest.TestCase containing 3 tests:
@@ -65,31 +66,21 @@ class PlotBasicSuite(object):
 			def setUp(self):
 				self.pt = PlotTester(ax)
 
+			@unittest.skipIf(title_contains is None, "Skip title test")
 			def test_title_exist(self):
 				self.pt.assert_title_contains(lst=title_contains, title_type=title_type)
 
+			@unittest.skipIf(xlabel_contains is None, "Skip x axis label test")
 			def test_xlab_exist(self):
 				self.pt.assert_axis_label_contains(axis='x', lst=xlabel_contains)
 
+			@unittest.skipIf(ylabel_contains is None, "Skip y axis label test")
 			def test_ylab_exist(self):
 				self.pt.assert_axis_label_contains(axis='y', lst=ylabel_contains)
 
 			def tearDown(self):
 				self.pt = None
 	
-		class PlotCaption(unittest.TestCase):
-			""" Returns a unittest.TestCase containing 1 test for an appropriate caption:
-    		1. caption_words: caption contains one string from each of the list of strings in strings_exp, barring capitalization.
-    		"""
-			def setUp(self):
-				self.pt = PlotTester(ax)
-
-			def test_caption_words(self):
-				self.pt.assert_caption_contains(strings_exp=caption_strings)
-
-			def tearDown(self):
-				self.pt = None
-
 		class LegendTest(unittest.TestCase):
 			"""A unittest.TestCase containing 2 tests checking the legend(s):
     		1. legned_labels: Asserts the legend has labels specified in labels_exp (barring capitalization), and only those labels
@@ -98,15 +89,31 @@ class PlotBasicSuite(object):
 			def setUp(self):
 				self.pt = PlotTester(ax)
 
+			@unittest.skipIf(legend_labels is None, "Skip legend test")
 			def test_legend_labels(self):
 				self.pt.assert_legend_labels(labels_exp=legend_labels)
 
+			@unittest.skipIf(legend_labels is None, "Skip legend test")
 			def test_legend_location(self):
 				self.pt.assert_no_legend_overlap()
 				self.pt.assert_legend_no_overlay_content()
 			
 			def tearDown(self):
 				self.pt = None				
+
+		class PlotCaption(unittest.TestCase):
+			""" Returns a unittest.TestCase containing 1 test for an appropriate caption:
+    		1. caption_words: caption contains one string from each of the list of strings in strings_exp, barring capitalization.
+    		"""
+			def setUp(self):
+				self.pt = PlotTester(ax)
+
+			@unittest.skipIf(caption_strings is None, "Skip caption test")
+			def test_caption_words(self):
+				self.pt.assert_caption_contains(strings_exp=caption_strings)
+
+			def tearDown(self):
+				self.pt = None
 
 		class PlotBasic(unittest.TestCase):
 			"""A unittest.TestCase containing 4 tests on Matplotlib Axes ax
@@ -118,6 +125,7 @@ class PlotBasicSuite(object):
 			def setUp(self):
 				self.pt = PlotTester(ax)
 
+			@unittest.skipIf(data_exp is None, "Skip data test")
 			def test_data(self):
 				points_only = False
 				if plot_type == 'scatter': 
@@ -125,15 +133,17 @@ class PlotBasicSuite(object):
 				self.pt.assert_xydata(xy_expected=data_exp, xcol=xcol, ycol=ycol, 
 					points_only=points_only, xtime=False, xlabels=xlabels)
 
+			@unittest.skipIf(line_types is None, "No additional lines requested")
 			def test_lines(self):
 				self.pt.assert_lines_of_type(line_types=line_types)
 
+			@unittest.skipIf(plot_type is None, "No specific plot type requested")
 			def test_plot_type(self):
 				self.pt.assert_plot_type(plot_type=plot_type)
 
+			@unittest.skipIf(not lims_equal, "Limits do not need to be equal")
 			def test_lims(self):
-				if lims_equal:
-					self.pt.assert_equal_xlims_ylims()
+				self.pt.assert_equal_xlims_ylims()
 
 			def tearDown(self):
 				self.pt = None
@@ -203,15 +213,19 @@ class PlotHistogramSuite(PlotBasicSuite):
 			def setUp(self):
 				self.pt = PlotTester(ax)
 
+			@unittest.skipIf(n_bins is None, "No specified number of bins required")
 			def test_num_neg_bins(self):
 				self.pt.assert_num_bins(n=n_bins[0], which_bins='negative')
 
+			@unittest.skipIf(n_bins is None, "No specified number of bins required")
 			def test_num_pos_bins(self):
 				self.pt.assert_num_bins(n=n_bins[1], which_bins='positive')
 
+			@unittest.skipIf(xlims is None, "No specified x limits")
 			def test_x_lims(self):
 				self.pt.assert_lims_range(lims_range=xlims, axis='x')
 
+			@unittest.skipIf(ylims is None, "No specified y limits")
 			def test_y_lims(self):
 				self.pt.assert_lims_range(lims_range=ylims, axis='y')
 
@@ -275,12 +289,15 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
 			def setUp(self):
 				self.tst = TimeSeriesTester(ax)
 
+			@unittest.skipIf(major_locator_exp is None, "No expected large tick format")
 			def test_x_major_formatter(self):
 				self.tst.assert_xticks_reformatted(tick_size='large', loc_exp=major_locator_exp)
 
+			@unittest.skipIf(major_locator_exp is None, "No expected large tick locator")
 			def test_x_major_locs(self):
 				self.tst.assert_xticks_locs(tick_size='large', loc_exp=major_locator_exp)
 
+			@unittest.skipIf(minor_locator_exp is None, "No expected small tick locator")
 			def test_x_minor_locs(self):
 				self.tst.assert_xticks_locs(tick_size='small', loc_exp=minor_locator_exp)
 
@@ -296,6 +313,7 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
 			def setUp(self):
 				self.tst = TimeSeriesTester(ax)
 
+			@unittest.skipIf(no_data_val is None, "No data value not specified")
 			def test_yna_vals(self):
 				self.tst.assert_no_data_value(nodata=no_data_val)
 
@@ -347,10 +365,10 @@ class PlotVectorSuite(PlotBasicSuite):
     markers: Geopandas dataframe with geometry column containing expected Point objects
     lines: Geopandas dataframe with geometry column containing expected LineString and MultiLineString objects
     polygons: list of lines where each line is a list of coord tuples for the exterior polygon
-    markers_by_type: column title from markers_exp that points are expected to be grouped by/contain 
+    markers_groupby: column title from markers_exp that points are expected to be grouped by/contain 
     	like attributes. Attributes tested are: marker type, markersize, and color
         if None, assertion is passed
-    lines_by_type: column title from line_exp that lines are expected to be grouped by/contain 
+    lines_groupby: column title from line_exp that lines are expected to be grouped by/contain 
     	like attributes. Attributes tested are: line style, line width, and color
     	if None, assertion is passed
     markers_by_size: column title from markers_exp that points are expected to be sorted by
@@ -358,7 +376,7 @@ class PlotVectorSuite(PlotBasicSuite):
     """
 
 	def __init__(self, ax, caption_strings, legend_labels, title_type='either', title_contains=[],
-		markers=None, lines=None, polygons=None, markers_by_type=None, lines_by_type=None, markers_by_size=None):
+		markers=None, lines=None, polygons=None, markers_groupby=None, lines_groupby=None, markers_by_size=None):
 		"""Initialize PlotVectorSuite object"""
 		super(PlotVectorSuite, self).__init__(ax=ax, caption_strings=caption_strings, legend_labels=legend_labels,
 			title_type=title_type, title_contains=title_contains, xlabel_contains=None, ylabel_contains=None)
@@ -375,24 +393,29 @@ class PlotVectorSuite(PlotBasicSuite):
 			def setUp(self):
 				self.vt = VectorTester(ax)
 
+			@unittest.skipIf(markers is None, "No expected markers")
 			def test_marker_location(self):
 				self.vt.assert_xydata(xy_expected=markers, points_only=True, m='Incorrect marker locations')
 
+			@unittest.skipIf(markers_by_size is None, "No markersize variation required")
 			def test_markers_by_size(self):
-				if markers_by_size:
-					self.vt.assert_collection_sorted_by_markersize(df_expected=markers, sort_column=markers_by_size)
+				self.vt.assert_collection_sorted_by_markersize(df_expected=markers, sort_column=markers_by_size)
 
+			@unittest.skipIf(markers_groupby is None, "No expected marker groupby")
 			def test_markers_grouped(self):
-				if markers_by_type:
-					self.vt.assert_points_grouped_by_type(data_exp=markers, sort_column=markers_by_type)
+				if markers_groupby:
+					self.vt.assert_points_grouped_by_type(data_exp=markers, sort_column=markers_groupby)
 
+			@unittest.skipIf(lines is None, "No expected lines")
 			def test_lines_location(self):
 				self.vt.assert_lines(lines_expected=lines)
 
+			@unittest.skipIf(lines_groupby is None, "No expected lines groupby")
 			def test_lines_grouped(self):
-				if lines_by_type:
-					self.vt.assert_lines_grouped_by_type(lines_expected=lines, sort_column=lines_by_type)
+				if lines_groupby:
+					self.vt.assert_lines_grouped_by_type(lines_expected=lines, sort_column=lines_groupby)
 
+			@unittest.skipIf(polygons is None, "No expected polygons")
 			def test_polygons_location(self):
 				self.vt.assert_polygons(polygons_expected=polygons, dec=4)
 
@@ -424,8 +447,8 @@ class PlotRasterSuite(PlotVectorSuite):
 	im_expected: array containing values of an expected image
 	caption_strings: list of lists. Each internal list is a list of strings where at least one string must be 
         found in the caption, barring capitalization
-        if None: assert caption does not exist
         if empty list: asserts caption exists and not an empty string
+        if None: assertion is passed
 	im_classified: boolean if image on ax is classfied
 	legend_labels: list of lists. Each internal list represents a classification category.
 		Said list is a list of strings where at least one string is expected to be in the legend label for this category.
@@ -435,17 +458,27 @@ class PlotRasterSuite(PlotVectorSuite):
 	markers: Geopandas dataframe with geometry column containing expected Point objects
     markers_by_size: column title from markers_exp that points are expected to be sorted by
         if None, assertion is passed
+    markers_groupby: column title from markers_exp that points are expected to be grouped by/contain 
+    	like attributes. Attributes tested are: marker type, markersize, and color
+        if None, assertion is passed
     lines: Geopandas dataframe with geometry column containing expected LineString and MultiLineString objects
+    lines_groupby: column title from line_exp that lines are expected to be grouped by/contain 
+    	like attributes. Attributes tested are: line style, line width, and color
+    	if None, assertion is passed
     polygons: list of lines where each line is a list of coord tuples for the exterior polygon 
-	colorbar_range: tuple of (min, max) for colorbar. If None, asserts no colorbar is displayed
+	colorbar_range: tuple of (min, max) for colorbar. 
+		If empty tuple: asserts a colorbar exists, but does not check values
+		If None: assertion is passed
     """
 
-	def __init__(self, ax, im_expected, caption_strings, im_classified=True, legend_labels=None, title_type='either', 
-		title_contains=[], markers=None, markers_by_size=None, lines=None, polygons=None, 
+	def __init__(self, ax, im_expected, caption_strings, im_classified=True, legend_labels=None, 
+		title_type='either', title_contains=[], markers=None, markers_by_size=None, 
+		markers_groupby=None, lines=None, lines_groupby=None, polygons=None, 
 		colorbar_range=None):
 		"""Initialize PlotRasterSuite object"""
 		super(PlotRasterSuite, self).__init__(ax=ax, caption_strings=caption_strings, 
-			legend_labels=legend_labels, markers=markers, lines=lines, 
+			legend_labels=legend_labels, markers=markers, markers_by_size=markers_by_size,
+			markers_groupby=markers_groupby, lines=lines, lines_groupby=lines_groupby,
 			polygons=polygons, title_type=title_type, title_contains=title_contains)
 
 		class PlotRaster(unittest.TestCase):
@@ -461,19 +494,23 @@ class PlotRasterSuite(PlotVectorSuite):
 			def setUp(self):
 				self.rt = RasterTester(ax)
 
+			@unittest.skipIf(im_expected is None, "No expected image")
 			def test_image_data(self):
 				self.rt.assert_image(im_expected=im_expected, im_classified=im_classified)
 
+			@unittest.skipIf(im_expected is None, "No expected image")
 			def test_image_stretch(self):
 				self.rt.assert_image_full_screen()
 
+			@unittest.skip("Mask test not implemented")
 			def test_image_mask(self):
 				pass
 
+			@unittest.skipIf(not im_classified, "Image not expected to be classified")
 			def test_legend_accuracy(self):
-				if im_classified:
-					self.rt.assert_legend_accuracy_classified_image(im_expected=im_expected, all_label_options=legend_labels)
+				self.rt.assert_legend_accuracy_classified_image(im_expected=im_expected, all_label_options=legend_labels)
 
+			@unittest.skipIf(colorbar_range is None, "No expected colorbar")
 			def test_colorbar_accuracy(self):
 				self.rt.assert_colorbar_range(crange=colorbar_range)
 
@@ -505,7 +542,7 @@ class PlotFoliumSuite(object):
     parameters
     ---------
     fmap: folium map to be tested
-    markers: list of tuples where each tuple represents the x and y coord of an expected marker
+    markers: set of tuples where each tuple represents the x and y coord of an expected marker
     """
 
 	def __init__(self, fmap, markers):
@@ -521,6 +558,7 @@ class PlotFoliumSuite(object):
 			def test_map_folium(self):
 				self.ft.assert_map_type_folium()
 
+			@unittest.skipIf(markers is None, "No markers searched for")
 			def test_marker_locs(self):
 				self.ft.assert_folium_marker_locs(markers=markers)
 			

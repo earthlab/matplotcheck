@@ -24,12 +24,13 @@ class FoliumTester(object):
 
 		parameters
 		----------
-		markers: list of tuples where each tuple represents the x and y coord of an expected marker
+		markers: set of tuples where each tuple represents the x and y coord of an expected marker
 		m: string error message if assertion is not met
 		"""
-		marker_locs = []
+		marker_locs = set()
 		while(self.fmap._children): 
 			c = self.fmap._children.popitem()[1]
-			if type(c) == folium.map.Marker: marker_locs += [c.location]
-		assert np.array_equal(marker_locs, markers), m
+			if type(c) == folium.map.Marker: 
+				marker_locs.add(tuple(c.location))
+		assert marker_locs == markers, m
 
