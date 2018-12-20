@@ -31,7 +31,7 @@ if __name__ == "__main__":
           description=DESCRIPTION,
           version=VERSION,
           install_requires=['tqdm', 'pandas', 'numpy', 'geopandas',
-                            'matplotlib', 'rasterio', 'download'],
+                            'matplotlib', 'rasterio', 'download', 'python-dateutil'],
           zip_safe=False,  # the package can run out of an .egg file
           classifiers=[
               'Intended Audience :: Developers',
