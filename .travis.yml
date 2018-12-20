@@ -22,10 +22,10 @@ install:
   - python setup.py install
   - pip install -r dev-requirements.txt
 
- script:
-   - pytest  --doctest-modules --cov=matplotcheck
-   # Build documentation
-   - pushd docs && make html && popd
+script:
+  - pytest  --doctest-modules --cov=matplotcheck
+  # Build documentation
+  - pushd docs && make html && popd
 
 after_success:
   - codecov
