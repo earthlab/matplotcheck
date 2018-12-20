@@ -3,8 +3,8 @@ import setuptools
 from numpy.distutils.core import setup
 
 
-DISTNAME = 'autograde'
-DESCRIPTION = 'Functions to grade homework assignemnts in the Earth Analytics course'
+DISTNAME = 'matplotcheck'
+DESCRIPTION = 'Functions to grade homework assignments in the Earth Analytics course'
 MAINTAINER = 'Leah Wasser'
 MAINTAINER_EMAIL = 'leah.wasser@colorado.edu'
 VERSION = '0.0.1-git'
@@ -17,7 +17,7 @@ def configuration(parent_package='', top_path=None):
     from numpy.distutils.misc_util import Configuration
     config = Configuration(None, parent_package, top_path)
 
-    config.add_subpackage('autograde')
+    config.add_subpackage('matplotcheck')
 
     return config
 
