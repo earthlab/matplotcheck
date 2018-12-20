@@ -22,6 +22,7 @@ dependencies:
   - scikit-image
   - gdal
   - geocoder
+  - folium
 
   - pip:
       # Utilities
