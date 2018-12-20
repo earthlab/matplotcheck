@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/earthlab/matPlotCheck.svg?branch=master)](https://travis-ci.com/earthlab/matPlotCheck)
+
+
 # MatPlotCheck
 
 A package for testing different types of matplotlib plots including:
