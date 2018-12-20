@@ -1,5 +1,5 @@
 import os
-import setuptools
+from os import path
 from numpy.distutils.core import setup
 
 
@@ -22,6 +22,11 @@ def configuration(parent_package='', top_path=None):
     return config
 
 
+
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
+    LONG_DESCRIPTION = f.read()
+
 if __name__ == "__main__":
     setup(configuration=configuration,
           name=DISTNAME,
@@ -29,6 +34,8 @@ if __name__ == "__main__":
           include_package_data=True,
           maintainer_email=MAINTAINER_EMAIL,
           description=DESCRIPTION,
+          long_description=LONG_DESCRIPTION,
+          long_description_content_type="text/markdown",
           version=VERSION,
           install_requires=['tqdm', 'pandas', 'numpy', 'geopandas',
                             'matplotlib', 'rasterio', 'download', 'python-dateutil'],
