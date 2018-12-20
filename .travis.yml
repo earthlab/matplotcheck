@@ -23,7 +23,7 @@ install:
   - pip install -r dev-requirements.txt
 
  script:
-   - pytest  --doctest-modules --cov=earthpy
+   - pytest  --doctest-modules --cov=matplotcheck
    # Build documentation
    - pushd docs && make html && popd
 
