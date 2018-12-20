@@ -398,10 +398,10 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
 
         class PlotTimeSeries(unittest.TestCase):
             """A unittest.TestCase containing 3 tests for time series plots:
-		    1  yna_vals: y data on ax does not contain no_data_val
-		    2. x_datetime: values on x-axis are datetime
-		    3. xy_data: x and y data on ax is as expected according to data_exp
-		    """
+            1  yna_vals: y data on ax does not contain no_data_val
+            2. x_datetime: values on x-axis are datetime
+            3. xy_data: x and y data on ax is as expected according to data_exp
+            """
 
             def setUp(self):
                 self.tst = TimeSeriesTester(ax)
