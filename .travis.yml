@@ -1,31 +1,31 @@
 language: python
 
 python:
- - 3.6
+- 3.6
 
 cache: pip
 
 install:
-#  - sudo apt-get update
-#  # https://conda.io/docs/user-guide/tasks/use-conda-with-travis-ci.html
-#  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-#  - bash miniconda.sh -b -p $HOME/miniconda
-#  - export PATH="$HOME/miniconda/bin:$PATH"
-#  - hash -r
-#  - conda config --set always_yes yes --set changeps1 no
-#  - conda update -q conda
-#  # Useful for debugging any issues with conda
-#  - conda info -a
-#  - conda env create -f environment.yml
-#  - source activate earthpy-dev
-#  - conda list
-#  - python setup.py install
+  - sudo apt-get update
+  # https://conda.io/docs/user-guide/tasks/use-conda-with-travis-ci.html
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - conda env create -f environment.yml
+  - source activate earthpy-dev
+  - conda list
+  - python setup.py install
   - pip install -r dev-requirements.txt
 
  script:
-#   - pytest  --doctest-modules --cov=matplotcheck
+   - pytest  --doctest-modules --cov=matplotcheck
    # Build documentation
    - pushd docs && make html && popd
 
 after_success:
-#  - codecov
+  - codecov
