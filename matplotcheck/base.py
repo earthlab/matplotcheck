@@ -33,7 +33,7 @@ class PlotTester(object):
         """
 
         if self.ax.lines:
-            for l in ax.lines:
+            for l in self.ax.lines:
                 if (
                     not l.get_linestyle()
                     or not l.get_linewidth()
@@ -52,7 +52,7 @@ class PlotTester(object):
         if self.ax.collections:
             return True
         elif self.ax.lines:
-            for l in ax.lines:
+            for l in self.ax.lines:
                 if (
                     l.get_linestyle() == "None"
                     or l.get_linewidth() == "None"
@@ -65,9 +65,10 @@ class PlotTester(object):
         """Asserts Axes ax contains the type of plot specified in plot_type.
         if plot_type is None, assertion is passed
 
-        parameters
+        Parameters
         ----------
-        plot_type: string from list ['scatter','bar', 'line'] of expected plot type
+        plot_type: string
+            String specifying the expected plot type. Options: 'scatter','bar', 'line'
         """
         if plot_type:
             if plot_type == "scatter":
@@ -86,9 +87,10 @@ class PlotTester(object):
     def get_titles(self):
         """Returns the suptitle (Figure title) and axes title of ax
 
-        returns
+        Returns
         -------
-        suptitle: figure title of the Figure ax is on. If none, this is an empty string
+        suptitle: string
+            Figure title of the Figure that the ax object is on. If none, this is an empty string
         title: title on the axes. If none, this is an empty string.
         """
         fig, suptitle = self.ax.get_figure(), ""
@@ -700,11 +702,15 @@ class PlotTester(object):
     def assert_num_bins(self, n=3, which_bins="positive"):
         """Asserts number of bins of type which_bins is at least n
 
-        parameters:
+        Parameters
+        --------
         n: int declaring minimum number of bins of type which_bin
         which_bins: string from list ['negative', 'positive']
             'negative': all bins with values centered at a positive value
             'positite': all bins with values centered at a negative value
+
+        Returns
+        --------
         """
         x_data = self.get_xy(xtime=False)["x"]
         if which_bins == "negative":
