@@ -6,6 +6,13 @@
 Welcome to matplotcheck's documentation!
 ========================================
 
+Matplotcheck supports accessing and testing elements of matplotlib plots created to display different types of data.
+It currently supports.
+
+* basic scatter, line andbar plots
+* geospatial vector plots created using geopandas `.plot` and
+* raster plots
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
