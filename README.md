@@ -1,14 +1,15 @@
-[![Build Status](https://travis-ci.com/earthlab/matPlotCheck.svg?branch=master)](https://travis-ci.com/earthlab/matPlotCheck)
-
+[![Build Status](https://travis-ci.com/earthlab/matplotcheck.svg?branch=master)](https://travis-ci.com/earthlab/matplotcheck)
+[![codecov](https://codecov.io/gh/earthlab/matPlotCheck/branch/master/graph/badge.svg)](https://codecov.io/gh/earthlab/matPlotCheck)
 
 # MatPlotCheck
 
 A package for testing different types of matplotlib plots including:
 
-* regular .plot plots
-* geopandas spatial plots 
+* basic matplotlib plots
+* geopandas spatial vector plots 
 * raster plots
 * time series plots
+* folium plots
 
 and more!
 
