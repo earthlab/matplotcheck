@@ -5,6 +5,7 @@ wheels/
 *.egg
 .idea
 .pytest_cache/
+__pycache__/
 
 
 # Sphinx documentation
@@ -25,4 +26,3 @@ venv.bak/
 
 # mkdocs documentation
 /site
-
