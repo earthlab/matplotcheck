@@ -25,7 +25,8 @@ install:
 script:
   - pytest --doctest-modules --cov=matplotcheck
   # Build documentation
-  - pushd docs && make html && popd
+  - make docs
+  # pushd docs && make html && popd
 
 after_success:
   - codecov
