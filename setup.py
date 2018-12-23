@@ -1,6 +1,7 @@
 import os
 from os import path
 from numpy.distutils.core import setup
+import setuptools
 
 
 DISTNAME = "matplotcheck"
