@@ -46,6 +46,7 @@ if __name__ == "__main__":
             "tqdm",
             "pandas",
             "numpy",
+            "folium",
             "geopandas",
             "matplotlib",
             "rasterio",
