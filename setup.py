@@ -1,14 +1,14 @@
 import os
 from os import path
 from numpy.distutils.core import setup
-import setuptools
+#import setuptools
 
 
 DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
-VERSION = "0.0.1-git"
+VERSION = "0.0.1"
 
 
 def configuration(parent_package="", top_path=None):
