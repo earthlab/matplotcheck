@@ -2,13 +2,9 @@ import os
 from os import path
 from numpy.distutils.core import setup
 
-# import setuptools
-
 
 DISTNAME = "matplotcheck"
-DESCRIPTION = (
-    "Functions to grade homework assignments in the Earth Analytics course"
-)
+DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
 VERSION = "0.0.1-git"
@@ -57,7 +53,7 @@ if __name__ == "__main__":
         zip_safe=False,  # the package can run out of an .egg file
         classifiers=[
             "Intended Audience :: Developers",
-            "License :: OSI Approved",
+            "License :: OSI Approved :: BSD License",
             "Programming Language :: Python",
             "Topic :: Software Development",
             "Operating System :: Microsoft :: Windows",
