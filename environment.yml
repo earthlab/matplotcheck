@@ -10,23 +10,10 @@ dependencies:
   - pyqt
   - pytest
   - pytest-cov
-  - seaborn
 
   # Geo stuff
-  - geopy
-  - cartopy
   - geopandas
   - rasterio
-  - pysal
-  - pyproj
-  - scikit-image
   - gdal
   - geocoder
   - folium
-
-  - pip:
-      # Utilities
-      - download
-      - mne
-      - sklearn
-      - tqdm
