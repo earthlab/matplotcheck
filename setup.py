@@ -2,8 +2,12 @@ import os
 from os import path
 from numpy.distutils.core import setup
 
-# import setuptools
 
+DISTNAME = "matplotcheck"
+DESCRIPTION = "Functions to check Matplotlib plot outputs"
+MAINTAINER = "Leah Wasser"
+MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
+VERSION = "0.0.1"
 
 DISTNAME = "matplotcheck"
 DESCRIPTION = (
@@ -13,7 +17,6 @@ MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
 VERSION = "0.0.1-git"
 
-
 def configuration(parent_package="", top_path=None):
     if os.path.exists("MANIFEST"):
         os.remove("MANIFEST")
@@ -21,7 +24,6 @@ def configuration(parent_package="", top_path=None):
     from numpy.distutils.misc_util import Configuration
 
     config = Configuration(None, parent_package, top_path)
-
     config.add_subpackage("matplotcheck")
 
     return config
@@ -36,7 +38,6 @@ if __name__ == "__main__":
         configuration=configuration,
         name=DISTNAME,
         maintainer=MAINTAINER,
-        include_package_data=True,
         maintainer_email=MAINTAINER_EMAIL,
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
@@ -46,17 +47,17 @@ if __name__ == "__main__":
             "tqdm",
             "pandas",
             "numpy",
+            "folium",
             "geopandas",
             "matplotlib",
             "rasterio",
-            "download",
             "python-dateutil",
             "scipy",
         ],
         zip_safe=False,  # the package can run out of an .egg file
         classifiers=[
             "Intended Audience :: Developers",
-            "License :: OSI Approved",
+            "License :: OSI Approved :: BSD License",
             "Programming Language :: Python",
             "Topic :: Software Development",
             "Operating System :: Microsoft :: Windows",

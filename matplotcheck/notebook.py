@@ -11,8 +11,8 @@ def convert_axes(plt, which_axes="current"):
     plt: Matplotlib plot to be tested
     which_axes: string from the following list ['current', 'last', 'first', 'all'] stating which axes we are saving for testing
 
-    Returns:
-    --------
+    Returns
+    -------
     ax: Matplotlib axes or list of axes as express by which_axes
     """
     fig = plt.gcf()
