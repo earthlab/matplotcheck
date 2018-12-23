@@ -17,7 +17,6 @@ def configuration(parent_package="", top_path=None):
     from numpy.distutils.misc_util import Configuration
 
     config = Configuration(None, parent_package, top_path)
-
     config.add_subpackage("matplotcheck")
 
     return config
@@ -32,7 +31,6 @@ if __name__ == "__main__":
         configuration=configuration,
         name=DISTNAME,
         maintainer=MAINTAINER,
-        include_package_data=True,
         maintainer_email=MAINTAINER_EMAIL,
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
