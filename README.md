@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.com/earthlab/matplotcheck.svg?branch=master)](https://travis-ci.com/earthlab/matplotcheck)
 [![codecov](https://codecov.io/gh/earthlab/matPlotCheck/branch/master/graph/badge.svg)](https://codecov.io/gh/earthlab/matPlotCheck)
 [![Documentation Status](https://readthedocs.org/projects/matplotcheck/badge/?version=latest)](https://matplotcheck.readthedocs.io/en/latest/?badge=latest)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://img.shields.io/badge/code%20style-black-000000.svg)
 
 # MatPlotCheck
 
