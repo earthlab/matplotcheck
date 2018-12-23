@@ -1,7 +1,6 @@
 import os
 from os import path
 from numpy.distutils.core import setup
-#import setuptools
 
 
 DISTNAME = "matplotcheck"
@@ -10,6 +9,13 @@ MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
 VERSION = "0.0.1"
 
+DISTNAME = "matplotcheck"
+DESCRIPTION = (
+    "Functions to grade homework assignments in the Earth Analytics course"
+)
+MAINTAINER = "Leah Wasser"
+MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
+VERSION = "0.0.1-git"
 
 def configuration(parent_package="", top_path=None):
     if os.path.exists("MANIFEST"):
@@ -45,7 +51,6 @@ if __name__ == "__main__":
             "geopandas",
             "matplotlib",
             "rasterio",
-            "download",
             "python-dateutil",
             "scipy",
         ],

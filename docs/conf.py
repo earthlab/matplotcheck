@@ -24,7 +24,7 @@ copyright = "2018, Leah Wasser, Kristin Curry"
 author = "Leah Wasser, Kristin Curry"
 
 # The short X.Y version
-version = ""
+version = ".2"
 # The full version, including alpha/beta/rc tags
 release = ".2"
 
