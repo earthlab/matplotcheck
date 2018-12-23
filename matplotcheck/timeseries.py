@@ -76,11 +76,14 @@ class TimeSeriesTester(PlotTester):
             assert test_date in accepted_responses, m
 
     def assert_xticks_locs(
-        self, tick_size="large", loc_exp=None, m="Incorrect X axis tick locations"
+        self,
+        tick_size="large",
+        loc_exp=None,
+        m="Incorrect X axis tick locations",
     ):
         """Asserts that Axes ax has xaxis ticks as noted by tick_size and loc_exp
 
-        Parameters:
+        Parameters
         ----------
         tick_size: str, opts: ['large','small']
             'large': if testing large ticks
@@ -92,7 +95,7 @@ class TimeSeriesTester(PlotTester):
             'week': if tick should be shown every new week
             'day': if tick should be shown every new day
             None: if no tick location has been specified. This will
-                  automatically assert True
+            automatically assert True
         m: error message if assertion is not met
         """
 
@@ -127,7 +130,9 @@ class TimeSeriesTester(PlotTester):
             start, end = mdates.num2date(ticks[0]), mdates.num2date(ticks[-1])
             assert start < xlims[0] + inc, "Tick locators do not cover x axis"
             assert end > xlims[1] - inc, "Tick locators do not cover x axis"
-            ticks_exp = [d.toordinal() for d in self._my_range(start, end, inc)]
+            ticks_exp = [
+                d.toordinal() for d in self._my_range(start, end, inc)
+            ]
             np.testing.assert_equal(ticks, ticks_exp, m)
 
     def _my_range(self, start, end, step):
@@ -136,7 +141,7 @@ class TimeSeriesTester(PlotTester):
         other than ints. both start and end are included in the loop.
 
         Parameters
-        ---------
+        ----------
         start: value to start while loop at
         end: last value to run in while loop
         step: about to increase between cycles in loop
@@ -161,13 +166,18 @@ class TimeSeriesTester(PlotTester):
             xy = self.get_xy(xtime=False)
             assert ~np.isin(
                 nodata, xy["x"]
-            ), "Values of {0} have been found in data. Be sure to remove no data values".format(nodata)
+            ), "Values of {0} have been found in data. Be sure to remove no data values".format(
+                nodata
+            )
             assert ~np.isin(
                 nodata, xy["y"]
-            ), "Values of {0} have been found in data. Be sure to remove no data values".format(nodata)
+            ), "Values of {0} have been found in data. Be sure to remove no data values".format(
+                nodata
+            )
 
-    def assert_xdata_date(self, x_exp,
-                          m="X-axis is not in appropriate date format"):
+    def assert_xdata_date(
+        self, x_exp, m="X-axis is not in appropriate date format"
+    ):
         """Asserts x-axis data has been parsed into datetime objects.
         Matplotlib changes datetime to floats representing number of days since
         day 0. If you are using dates prior to year 270, this assertion will

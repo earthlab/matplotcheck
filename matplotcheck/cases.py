@@ -19,10 +19,10 @@ def loadTests(tests):
 
 
 class PlotBasicSuite(object):
-    """ A generic object to test a basic 2d Matplotlib plot (scatter, bar, line, etc.)
+    """A generic object to test a basic 2d Matplotlib plot (scatter, bar, line)
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     ax: Matplotlib Axes to be tested
     data_exp: pandas dataframe containing plot data
     xcol: string column title in data_exp that contains xaxis data
@@ -39,7 +39,7 @@ class PlotBasicSuite(object):
         "figure": only the figure title (suptitle) will be tested
         "axes": only the axes title (suptitle) will be tested
         "either": either the figure title or axes title will pass this assertion.
-            The combined title will be tested.
+        The combined title will be tested.
     xlabel_contains: list of lower case strings where each string is expected to be in x-axis label, barring capitalization.
         If value is an empty list: test is just to see that x-axis label exists and is not an empty string
         If value is None: no tests are run
@@ -75,10 +75,10 @@ class PlotBasicSuite(object):
     ):
         class PlotLabelsTest(unittest.TestCase):
             """A unittest.TestCase containing 3 tests:
-    		1. title_exist: ax has a title that contains each string in list of strings title_contains, barring capitalization
-    		2. xlab_exist: ax has a x label that contains each string in list of strings xlabel_contains, barring capitalization
-    		3. ylab_exist: ax has a y label that that contains each string in list of strings ylabel_contains, barring capitalization
-    		"""
+            1. title_exist: ax has a title that contains each string in list of strings title_contains, barring capitalization
+            2. xlab_exist: ax has a x label that contains each string in list of strings xlabel_contains, barring capitalization
+            3. ylab_exist: ax has a y label that that contains each string in list of strings ylabel_contains, barring capitalization
+            """
 
             def setUp(self):
                 self.pt = PlotTester(ax)
@@ -106,9 +106,11 @@ class PlotBasicSuite(object):
 
         class LegendTest(unittest.TestCase):
             """A unittest.TestCase containing 2 tests checking the legend(s):
-    		1. legned_labels: Asserts the legend has labels specified in labels_exp (barring capitalization), and only those labels
-    		2. legend_location: Asserts legend does not cover data and no legends overlap each other
-			"""
+            1. legend_labels: Asserts the legend has labels specified in labels_
+            exp (barring capitalization), and only those labels
+            2. legend_location: Asserts legend does not cover data and no
+            legends overlap each other
+            """
 
             def setUp(self):
                 self.pt = PlotTester(ax)
@@ -127,11 +129,11 @@ class PlotBasicSuite(object):
 
         class PlotCaption(unittest.TestCase):
             """ Returns a unittest.TestCase containing 1 test for an
-			appropriate caption:
+            appropriate caption:
 
-			Test 1 - caption_words: caption contains one string from each of
-			the list of strings in strings_exp, barring capitalization.
-    		"""
+            Test 1 - caption_words: caption contains one string from each of
+            the list of strings in strings_exp, barring capitalization.
+            """
 
             def setUp(self):
                 self.pt = PlotTester(ax)
@@ -145,11 +147,11 @@ class PlotBasicSuite(object):
 
         class PlotBasic(unittest.TestCase):
             """A unittest.TestCase containing 4 tests on Matplotlib Axes ax
-		    1. data: asserts that the x and y data of ax matches data_exp
-		    2. lines: asserts each of lines in line_types is displayed on ax
-		    3. plot_type: asserts plot is of expected type expressed by plot_type
-		    4. lims: asserts the x and y limits are equal if boolean lims_equal expresses it should be
-		    """
+            1. data: asserts that the x and y data of ax matches data_exp
+            2. lines: asserts each of lines in line_types is displayed on ax
+            3. plot_type: asserts plot is of expected type expressed by plot_type
+            4. lims: asserts the x and y limits are equal if boolean lims_equal expresses it should be
+            """
 
             def setUp(self):
                 self.pt = PlotTester(ax)
@@ -196,11 +198,11 @@ class PlotBasicSuite(object):
     def cases(self):
         """Returns a list of TestCases to be run in a TestLoader for basic 2d plots (scatter, bar, line, etc.).
 
-		Testcases are as follows:
-		1. LabelsCase: Asserts the title, x-axis label, and y-axis label are as expected
-		2. BasicCase: Asserts data matches data_exp, and other assertions based on params listed below
-		For more on tests, see init method above. For more on assertions, see the autograde package.
-		"""
+        Testcases are as follows:
+        1. LabelsCase: Asserts the title, x-axis label, and y-axis label are as expected
+        2. BasicCase: Asserts data matches data_exp, and other assertions based on params listed below
+        For more on tests, see init method above. For more on assertions, see the autograde package.
+        """
         return [self.LabelsCase, self.BasicCase]
 
     @property
@@ -209,33 +211,43 @@ class PlotBasicSuite(object):
         return loadTests(self.cases)
 
 
-#### HISTOGRAM ###
+""" HISTOGRAM """
 
 
 class PlotHistogramSuite(PlotBasicSuite):
-    """ A PlotBasicSuite object to test a Matplotlib histogram plot.
-	Since students have the flexibility to determine bin size, we are testing the set up of the
-    hisogram more than the data in the histogram itself.
+    """A PlotBasicSuite object to test a Matplotlib histogram plot.
+    Since students have the flexibility to determine bin size, we are testing
+    the set up of the
+    histogram more than the data in the histogram itself.
 
-	parameters:
-	-----------
+    Parameters
+    ----------
     ax: Matplotlib Axes to be tested
-    n_bins: tuple of ints. First int is the minimum number of bins containing negative values.
+    n_bins: tuple of ints. First int is the minimum number of bins containing
+        negative values.
         Second int is the minimum number of bins containing positive values
-    xlims: tuple of 2 tuples. First tuple contains range the left x limit must be in, exclusive.
+    xlims: tuple of 2 tuples. First tuple contains range the left x limit must
+        be in, exclusive.
         Second tuple contains range the right x limit must be in, exclusive.
-    ylims: tuple of 2 tuples. First tuple contains range the bottom y limit must be in, exclusive.
+    ylims: tuple of 2 tuples. First tuple contains range the bottom y limit
+        must be in, exclusive.
         Second tuple contains range the top y limit must be in, exclusive.
-    title_contains: list of lower case strings where each string is expected to be in title, barring capitalization.
-        If value is an empty list: test is just to see that title exists and is not an empty string
+    title_contains: list of lower case strings where each string is expected to
+        be in title, barring capitalization.
+        If value is an empty list: test is just to see that title exists and is
+        not an empty string
         If value is None: asserts no title
-    xlabel_contains: list of lower case strings where each string is expected to be in x-axis label, barring capitalization.
-        If value is an empty list: test is just to see that x-axis label exists and is not an empty string
+    xlabel_contains: list of lower case strings where each string is expected to
+        be in x-axis label, barring capitalization.
+        If value is an empty list: test is just to see that x-axis label exists
+        and is not an empty string
         If value is None: asserts no label is expressed
-    ylabel_contains: list of lower case strings where each string is expected to be in y-axis label, barring capitalization.
-        If value is an empty list: test is just to see that y-axis label exists and is not an empty string
+    ylabel_contains: list of lower case strings where each string is expected
+        to be in y-axis label, barring capitalization.
+        If value is an empty list: test is just to see that y-axis label exists
+        and is not an empty string
         If value is None: asserts no label is expressed
-	"""
+    """
 
     def __init__(
         self,
@@ -257,12 +269,12 @@ class PlotHistogramSuite(PlotBasicSuite):
 
         class PlotHistogram(unittest.TestCase):
             """A unittest.TestCase containing 4 tests for a histogram:
-			Test 1 - num_neg_bins: number of bins centered at a negative value is greater than n_bins[0]
-			Test 2- num_pos_bins: number of bins centered at a positive value is greater than n_bins[1]
-			Test 3 - x-lims: x-axis left limits are within the bounds [xlims[0][0], xlims[0][1]] and
-			        x-axis right limits are within the bounds [xlims[1][0], xlims[1][1]]
-			Test 4 -  y_lims: y-axis bottom limits are within the bounds [ylims[0][0], ylims[0][1]] and
-			        y-axis top limits are within the bounds [ylims[1][0], ylims[1][1]]
+            Test 1 - num_neg_bins: number of bins centered at a negative value is greater than n_bins[0]
+            Test 2- num_pos_bins: number of bins centered at a positive value is greater than n_bins[1]
+            Test 3 - x-lims: x-axis left limits are within the bounds [xlims[0][0], xlims[0][1]] and
+            x-axis right limits are within the bounds [xlims[1][0], xlims[1][1]]
+            Test 4 -  y_lims: y-axis bottom limits are within the bounds [ylims[0][0], ylims[0][1]] and
+            y-axis top limits are within the bounds [ylims[1][0], ylims[1][1]]
             """
 
             def setUp(self):
@@ -296,11 +308,11 @@ class PlotHistogramSuite(PlotBasicSuite):
     @property
     def cases(self):
         """Returns list of cases for a histogram. Testcases are as follows:
-		1. LabelsCase: Asserts the title, x-axis label, and y-axis label are as expected
-		2. HistogramCase: number of negative and positive bins as declares in n_bins. x axis limits and y axis limits
-			are in range declared by xlims and y lims.
-		For more on tests, see init method above. For more on assertions, see the autograde package.
-		"""
+        1. LabelsCase: Asserts the title, x-axis label, and y-axis label are as expected
+        2. HistogramCase: number of negative and positive bins as declares in n_bins. x axis limits and y axis limits
+        are in range declared by xlims and y lims.
+        For more on tests, see init method above. For more on assertions, see the autograde package.
+        """
         return [self.LabelsCase, self.HistogramCase]
 
 
@@ -310,15 +322,15 @@ class PlotHistogramSuite(PlotBasicSuite):
 class PlotTimeSeriesSuite(PlotBasicSuite):
     """A PlotBasicSuite object to test Matplotlib time series plots.
 
-    parameters
-    ---------
+    Parameters
+    ----------
     ax: Matplotlib Axes to be tested
     data_exp: pandas dataframe containing plot data
     x_col: string column title in data_exp that contains xaxis data
     y_col: string column title in data_exp that contains yaxis data
     no_data_val: float representing no data, as stated by the input data
     major_locator_exp: one of the following ['decade', 'year', 'month', 'week', 'day', None]
-    	decade: if tick should be shown every ten years
+        decade: if tick should be shown every ten years
         year: if tick should be shown every new year
         month: if tick should be shown every new month
         week: if tick should be shown every new week
@@ -361,10 +373,10 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
 
         class PlotTicksReformat(unittest.TestCase):
             """A unittest.TestCase containing 3 tests checking the xaxis ticks and labels:
-		    1. x_major_formatter: large ticks on x axis have been reformatted as expressed in major_locator_exp
-		    2. x_major_locs: large ticks on x axis are located as expressed in major_locator_exp
-		    3. x_minor_locs: small ticks on x axis are located as expressed in minor_locator_exp
-		    """
+            1. x_major_formatter: large ticks on x axis have been reformatted as expressed in major_locator_exp
+            2. x_major_locs: large ticks on x axis are located as expressed in major_locator_exp
+            3. x_minor_locs: small ticks on x axis are located as expressed in minor_locator_exp
+            """
 
             def setUp(self):
                 self.tst = TimeSeriesTester(ax)
@@ -397,10 +409,11 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
                 self.tst = None
 
         class PlotTimeSeries(unittest.TestCase):
-            """A unittest.TestCase containing 3 tests for time series plots:
-            1  yna_vals: y data on ax does not contain no_data_val
-            2. x_datetime: values on x-axis are datetime
-            3. xy_data: x and y data on ax is as expected according to data_exp
+            """A unittest.TestCase containing 3 tests for time series plots.
+
+            yna_vals: y data on ax does not contain no_data_val
+            x_datetime: values on x-axis are datetime
+            xy_data: x and y data on ax is as expected according to data_exp
             """
 
             def setUp(self):
@@ -429,13 +442,13 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
     @property
     def cases(self):
         """ Returns a list of TestCases for time series plots.
-		Testcase are as follows:
-		1. LabelsCase: Asserts the title, x-axis label, and y-axis label are as expected
-		2. TickReformatCase: Asserts x-axis ticks have large ticks as express in major_locator_exp and small
-			ticks as express in minor_locator_exp
-		3. TimeSeriesCase: Asserts data matches data_exp and is converted to time objects
-		For more on tests, see init method above. For more on assertions, see the autograde package.
-		"""
+        Testcase are as follows:
+        1. LabelsCase: Asserts the title, x-axis label, and y-axis label are as expected
+        2. TickReformatCase: Asserts x-axis ticks have large ticks as express in major_locator_exp and small
+        ticks as express in minor_locator_exp
+        3. TimeSeriesCase: Asserts data matches data_exp and is converted to time objects
+        For more on tests, see init method above. For more on assertions, see the autograde package.
+        """
         return [self.LabelsCase, self.TickReformatCase, self.TimeSeriesCase]
 
 
@@ -445,7 +458,7 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
 class PlotVectorSuite(PlotBasicSuite):
     """A PlotBasicSuite object to test a Matplotlib plot with spatial vector data.
 
-    parameters
+    Parameters
     ---------
     ax: Matplotlib Axes to be tested
     caption_strings: list of lists. Each internal list is a list of lower case strings where at least one string must be
@@ -457,7 +470,7 @@ class PlotVectorSuite(PlotBasicSuite):
         "figure": only the figure title (suptitle) will be tested
         "axes": only the axes title (suptitle) will be tested
         "either": either the figure title or axes title will pass this assertion.
-            The combined title will be tested.
+        The combined title will be tested.
     title_contains: list of lower case strings where each string is expected to be in title, barring capitalization.
         If value is an empty list: test is just to see that title exists and is not an empty string
         If value is None: asserts no title
@@ -465,11 +478,11 @@ class PlotVectorSuite(PlotBasicSuite):
     lines: Geopandas dataframe with geometry column containing expected LineString and MultiLineString objects
     polygons: list of lines where each line is a list of coord tuples for the exterior polygon
     markers_groupby: column title from markers_exp that points are expected to be grouped by/contain
-    	like attributes. Attributes tested are: marker type, markersize, and color
+        like attributes. Attributes tested are: marker type, markersize, and color
         if None, assertion is passed
     lines_groupby: column title from line_exp that lines are expected to be grouped by/contain
-    	like attributes. Attributes tested are: line style, line width, and color
-    	if None, assertion is passed
+        like attributes. Attributes tested are: line style, line width, and color
+        if None, assertion is passed
     markers_by_size: column title from markers_exp that points are expected to be sorted by
         if None, assertion is passed
     """
@@ -501,13 +514,13 @@ class PlotVectorSuite(PlotBasicSuite):
 
         class PlotVector(unittest.TestCase):
             """A unittest.TestCase containing tests for a spatial vector plot.
-    		1. marker_location: points on ax match markers
-    		2. markers_by_size: asserts points on ax vary in size by column expressed in markers_by_size
-    		3. markers_grouped: asserts markers of the same group contain like attributes
-    		4. lines_location: lines on ax match lines
-    		5. lines_grouped: asserts lines of the same group contain like attributes
-    		6. polygons_location: polygons on ax match polygons
-    		"""
+            1. marker_location: points on ax match markers
+            2. markers_by_size: asserts points on ax vary in size by column expressed in markers_by_size
+            3. markers_grouped: asserts markers of the same group contain like attributes
+            4. lines_location: lines on ax match lines
+            5. lines_grouped: asserts lines of the same group contain like attributes
+            6. polygons_location: polygons on ax match polygons
+            """
 
             def setUp(self):
                 self.vt = VectorTester(ax)
@@ -562,13 +575,13 @@ class PlotVectorSuite(PlotBasicSuite):
     @property
     def cases(self):
         """ Returns a list of TestCases for spatial vector plots.
-		Testcase are as follows:
-		1. CaptionCase: assert caption is in appropriate location with strings expressed in caption_contains
-		2. LabelsCase: asserts the title contains strings in title_contains, and x and y labels are empty
-		3. LegendCase: assert legend(s) is/are in appropriate location with legend_labels
-		4. VectorCase: assert vector data is as expected in markers, lines, and polygons
-		For more on tests, see init method above. For more on assertions, see the autograde package.
-		"""
+        Testcase are as follows:
+        1. CaptionCase: assert caption is in appropriate location with strings expressed in caption_contains
+        2. LabelsCase: asserts the title contains strings in title_contains, and x and y labels are empty
+        3. LegendCase: assert legend(s) is/are in appropriate location with legend_labels
+        4. VectorCase: assert vector data is as expected in markers, lines, and polygons
+        For more on tests, see init method above. For more on assertions, see the autograde package.
+        """
         return [
             self.CaptionCase,
             self.LabelsCase,
@@ -583,34 +596,34 @@ class PlotVectorSuite(PlotBasicSuite):
 class PlotRasterSuite(PlotVectorSuite):
     """A PlotBasicSuite object to test a Matplotlib raster plot.
 
-    parameters
+    Parameters
     ---------
     ax: Matplotlib Axes to be tested
-	im_expected: array containing values of an expected image
-	caption_strings: list of lists. Each internal list is a list of strings where at least one string must be
+    im_expected: array containing values of an expected image
+    caption_strings: list of lists. Each internal list is a list of strings where at least one string must be
         found in the caption, barring capitalization
         if empty list: asserts caption exists and not an empty string
         if None: assertion is passed
-	im_classified: boolean if image on ax is classfied
-	legend_labels: list of lists. Each internal list represents a classification category.
-		Said list is a list of strings where at least one string is expected to be in the legend label for this category.
-		Internal lists must be in the same order as bins in im_expected.
-	title_type: one of the following strings ["figure", "axes", "either"], stating which title to test
-	title_contains: list of strings expected to be in title
-	markers: Geopandas dataframe with geometry column containing expected Point objects
+    im_classified: boolean if image on ax is classfied
+    legend_labels: list of lists. Each internal list represents a classification category.
+        Said list is a list of strings where at least one string is expected to be in the legend label for this category.
+        Internal lists must be in the same order as bins in im_expected.
+    title_type: one of the following strings ["figure", "axes", "either"], stating which title to test
+    title_contains: list of strings expected to be in title
+    markers: Geopandas dataframe with geometry column containing expected Point objects
     markers_by_size: column title from markers_exp that points are expected to be sorted by
         if None, assertion is passed
     markers_groupby: column title from markers_exp that points are expected to be grouped by/contain
-    	like attributes. Attributes tested are: marker type, markersize, and color
+        like attributes. Attributes tested are: marker type, markersize, and color
         if None, assertion is passed
     lines: Geopandas dataframe with geometry column containing expected LineString and MultiLineString objects
     lines_groupby: column title from line_exp that lines are expected to be grouped by/contain
-    	like attributes. Attributes tested are: line style, line width, and color
-    	if None, assertion is passed
+        like attributes. Attributes tested are: line style, line width, and color
+        if None, assertion is passed
     polygons: list of lines where each line is a list of coord tuples for the exterior polygon
-	colorbar_range: tuple of (min, max) for colorbar.
-		If empty tuple: asserts a colorbar exists, but does not check values
-		If None: assertion is passed
+    colorbar_range: tuple of (min, max) for colorbar.
+        If empty tuple: asserts a colorbar exists, but does not check values
+        If None: assertion is passed
     """
 
     def __init__(
@@ -647,14 +660,14 @@ class PlotRasterSuite(PlotVectorSuite):
 
         class PlotRaster(unittest.TestCase):
             """A unittest.TestCase containing tests for a spatial raster plot.
-    		1. image_data: asserts image is as expected. If Image is classified image classification may be shifted or reversed.
-		    2. image_stretch: asserts image takes up entire display as expected
-		    3. image_mask:
-		    4. legend_accuracy: if image is classified, asserts legend exists and correctly describes image.
-		    	if image is not classified, assertion is passed.
-		    5. colorbar_accuracy: asserts colorbar exists and has range descrbied in colorbar_range
-		    6. axis_off: axis lines are not displayed
-    		"""
+            1. image_data: asserts image is as expected. If Image is classified image classification may be shifted or reversed.
+            2. image_stretch: asserts image takes up entire display as expected
+            3. image_mask:
+            4. legend_accuracy: if image is classified, asserts legend exists and correctly describes image.
+                if image is not classified, assertion is passed.
+            5. colorbar_accuracy: asserts colorbar exists and has range descrbied in colorbar_range
+            6. axis_off: axis lines are not displayed
+            """
 
             def setUp(self):
                 self.rt = RasterTester(ax)
@@ -696,12 +709,12 @@ class PlotRasterSuite(PlotVectorSuite):
     @property
     def cases(self):
         """ Returns a list of TestCases for spatial raster plots.
-		Testcase are as follows:
-		1. CaptionCase: assert caption is in appropriate location with strings expressed in caption_strings
-		2. LabelsCase: asserts the title contains strings in title_contains, and x and y labels are empty
-		3. RasterCase: asserts raster image matches im_expected and legend is correct if image is classified
-		4. VectorCase: assert vector data is as expected
-		"""
+        Testcase are as follows:
+        1. CaptionCase: assert caption is in appropriate location with strings expressed in caption_strings
+        2. LabelsCase: asserts the title contains strings in title_contains, and x and y labels are empty
+        3. RasterCase: asserts raster image matches im_expected and legend is correct if image is classified
+        4. VectorCase: assert vector data is as expected
+        """
         return [
             self.CaptionCase,
             self.LabelsCase,
@@ -714,7 +727,7 @@ class PlotRasterSuite(PlotVectorSuite):
 class PlotFoliumSuite(object):
     """A generic object to test Folium Maps.
 
-    parameters
+    Parameters
     ---------
     fmap: folium map to be tested
     markers: set of tuples where each tuple represents the x and y coord of an expected marker
@@ -723,9 +736,9 @@ class PlotFoliumSuite(object):
     def __init__(self, fmap, markers):
         class MapFolium(unittest.TestCase):
             """Returns a unittest.TestCase containing 2 tests on a Folium map.
-		    1. map_folium: map is of type folium.folium.Map
-		    2. marker_locs: map contains all markers in markers_exp and no additional markers
-		    """
+            1. map_folium: map is of type folium.folium.Map
+            2. marker_locs: map contains all markers in markers_exp and no additional markers
+            """
 
             def setUp(self):
                 self.ft = FoliumTester(fmap)
@@ -745,9 +758,9 @@ class PlotFoliumSuite(object):
     @property
     def cases(self):
         """ Returns a TestSuite for Folium Maps.
-		Testcase are as follows:
-		1. FoliumCase: asserts map is of type folium.map and contains expected markers
-		"""
+        Testcase are as follows:
+        1. FoliumCase: asserts map is of type folium.map and contains expected markers
+        """
         return [self.FoliumCase]
 
     @property
