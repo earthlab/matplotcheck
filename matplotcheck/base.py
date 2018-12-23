@@ -12,7 +12,7 @@ class InvalidPlotError(Exception):
 
 
 class PlotTester(object):
-    """Object to test Matplotlib plots
+    """Object to grab elements from Matplotlib plots
 
     Parameters
     ----------
@@ -25,11 +25,11 @@ class PlotTester(object):
 
     def _is_line(self):
         """Boolean expressing if ax contains scatter points.
-        If plot contains scatter points as well as lines, functions will return true.
+        If plot contains scatter points and lines return True.
 
         Returns
         -------
-        boolean: True if Axes ax is a scatter plot, False if not
+        boolean: True if Axes ax is a line plot, False if not
         """
 
         if self.ax.lines:
