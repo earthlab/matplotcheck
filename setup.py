@@ -8,14 +8,9 @@ DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
 VERSION = "0.0.1"
-
-DISTNAME = "matplotcheck"
 DESCRIPTION = (
-    "Functions to grade homework assignments in the Earth Analytics course"
+    "Functions to check and validate elements in a matplotlib created python plot."
 )
-MAINTAINER = "Leah Wasser"
-MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
-VERSION = "0.0.1-git"
 
 def configuration(parent_package="", top_path=None):
     if os.path.exists("MANIFEST"):
