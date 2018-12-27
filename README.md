@@ -1,14 +1,14 @@
+# MatPlotCheck
+
 [![Build Status](https://travis-ci.com/earthlab/matplotcheck.svg?branch=master)](https://travis-ci.com/earthlab/matplotcheck)
 [![codecov](https://codecov.io/gh/earthlab/matPlotCheck/branch/master/graph/badge.svg)](https://codecov.io/gh/earthlab/matPlotCheck)
 [![Documentation Status](https://readthedocs.org/projects/matplotcheck/badge/?version=latest)](https://matplotcheck.readthedocs.io/en/latest/?badge=latest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://img.shields.io/badge/code%20style-black-000000.svg)
 
-# MatPlotCheck
-
 A package for testing different types of matplotlib plots including:
 
 * basic matplotlib plots
-* geopandas spatial vector plots 
+* geopandas spatial vector plots
 * raster plots
 * time series plots
 * folium plots
@@ -30,12 +30,12 @@ Then import it into python.
 
 ## Background
 
-This library was developed to simplify the autograding process of Matplotlib plots. 
-Visually similar plots can be created in a variety of ways and hold different metadata. 
+This library was developed to simplify the autograding process of Matplotlib plots.
+Visually similar plots can be created in a variety of ways and hold different metadata.
 Our goal is to abstract away these differences by creating a simple way to test student plots.
 
-Beyond that, we have noticed common groupings of assertions for specific plot types. 
-`PlotBasicSuite`objects have been created to avoid repetition in writing out assertions, 
+Beyond that, we have noticed common groupings of assertions for specific plot types.
+`PlotBasicSuite`objects have been created to avoid repetition in writing out assertions,
 and return a TestSuite instead. To run the suite after it has been created, use a unittest text runner.
 
 ## Examples
@@ -92,12 +92,11 @@ rt.assert_image(im_expected=image)
 vt.assert_polygons(polygons_expected=polygons)
 ```
 
-Caveats: This repo likely misses edge cases of the many ways matplotlib plots can be created. 
+Caveats: This repo likely misses edge cases of the many ways matplotlib plots can be created.
 Please feel free to submit bugs!
 
 
-## Active Contributors 
+## Active Contributors
 
 - Leah Wasser
 - Kristen Curry
-
