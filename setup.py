@@ -1,16 +1,14 @@
 import os
 from os import path
 from numpy.distutils.core import setup
+from setuptools import setup
 
 
 DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
-VERSION = "0.0.25"
-DESCRIPTION = (
-    "Functions to check and validate elements in a matplotlib created python plot."
-)
+VERSION = "0.0.26"
 
 def configuration(parent_package="", top_path=None):
     if os.path.exists("MANIFEST"):
@@ -37,7 +35,7 @@ if __name__ == "__main__":
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         long_description_content_type="text/markdown",
-        url='https://github.com/earthlap/matplotcheck',
+        url="https://github.com/earthlap/matplotcheck",
         version=VERSION,
         install_requires=[
             "tqdm",
