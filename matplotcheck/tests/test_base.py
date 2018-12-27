@@ -46,8 +46,8 @@ def pd_line_plt():
 def test_line_plot(pd_line_plt):
     assert pd_line_plt._is_line
 
-def test_correct_title(pd_df_plt):
+def test_correct_title(pd_line_plt):
     """Check that the correct plot title is grabbed from the axis object.
     Note that get_titles maintains case"""
 
-    assert "Plot Title" in pd_df_plt.get_titles()[1]
+    assert "Plot Title" in pd_line_plt.get_titles()[1]
