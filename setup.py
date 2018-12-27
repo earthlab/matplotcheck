@@ -7,7 +7,7 @@ DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
-VERSION = "0.0.2"
+VERSION = "0.0.25"
 DESCRIPTION = (
     "Functions to check and validate elements in a matplotlib created python plot."
 )
@@ -36,8 +36,8 @@ if __name__ == "__main__":
         maintainer_email=MAINTAINER_EMAIL,
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
-        url='https://github.com/earthlap/matplotcheck',
         long_description_content_type="text/markdown",
+        url='https://github.com/earthlap/matplotcheck',
         version=VERSION,
         install_requires=[
             "tqdm",
