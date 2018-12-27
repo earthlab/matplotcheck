@@ -2,6 +2,8 @@
 .Python
 build/
 wheels/
+dist/
+matplotcheck.egg-info/
 *.egg
 .idea
 .pytest_cache/
