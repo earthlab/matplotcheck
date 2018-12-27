@@ -38,7 +38,6 @@ if __name__ == "__main__":
         url="https://github.com/earthlap/matplotcheck",
         version=VERSION,
         install_requires=[
-            "tqdm",
             "pandas",
             "numpy",
             "folium",
