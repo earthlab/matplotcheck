@@ -1,6 +1,6 @@
 import os
 from os import path
-from numpy.distutils.core import setup
+# from numpy.distutils.core import setup
 from setuptools import setup
 
 
