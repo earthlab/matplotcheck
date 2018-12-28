@@ -1,6 +1,6 @@
 import os
 from os import path
-from numpy.distutils.core import setup
+# from numpy.distutils.core import setup
 from setuptools import setup
 
 
@@ -38,7 +38,6 @@ if __name__ == "__main__":
         url="https://github.com/earthlap/matplotcheck",
         version=VERSION,
         install_requires=[
-            "tqdm",
             "pandas",
             "numpy",
             "folium",
