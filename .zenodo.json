@@ -1,0 +1,18 @@
+{
+  "creators": [
+    {
+      "affiliation": "Earth Lab, University of Colorado - Boulder",
+      "name": "Wasser, Leah",
+      "orcid": "0000-0002-8177-6550"
+    },
+    {
+      "name": "Curry, Kristen"
+    }
+  ],
+  "keywords": [
+    "plot",
+    "autograde"
+  ],
+  "license": "BSD-3-Clause",
+  "upload_type": "software"
+}
