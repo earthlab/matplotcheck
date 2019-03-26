@@ -3,14 +3,11 @@ channels:
   - conda-forge
 dependencies:
   # Core scientific python
-  - codecov
   - numpy
-  - matplotlib
-  - python=3.6
-  # - pyqt
+  - matplotlib=3.0.3
+  - python=3.7
 
   # Geo stuff
-  - geopandas
-  - rasterio
-  - gdal
+  - geopandas=0.4.1
+  - rasterio=1.0.21
   - folium
