@@ -32,7 +32,7 @@ if __name__ == "__main__":
             "numpy>=1.14.0",
             "folium",
             "geopandas",
-            "matplotlib>=2.0.0",
+            "matplotlib=3.0.3",
             "rasterio",
         ],
         zip_safe=False,  # the package can run out of an .egg file
