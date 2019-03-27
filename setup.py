@@ -6,7 +6,7 @@ DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
-# VERSION = "0.0.3"
+# VERSION = "0.0.4"
 
 
 # read the contents of your README file
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         long_description_content_type="text/markdown",
-        version="0.0.3",
+        version="0.0.4",
         packages=["matplotcheck"],
         install_requires=[
             "numpy>=1.14.0",
