@@ -29,7 +29,7 @@ if __name__ == "__main__":
             "folium",
             "geopandas",
             "matplotlib>=2.0.0",
-            "rasterio",
+            "rasterio=1.0.21",
         ],
         zip_safe=False,  # the package can run out of an .egg file
         classifiers=[
