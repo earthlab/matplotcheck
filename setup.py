@@ -26,7 +26,7 @@ if __name__ == "__main__":
         packages=["matplotcheck"],
         install_requires=[
             "numpy>=1.14.0",
-            # "folium=0.8.3",
+            "folium=0.8.3",
             "geopandas",
             "matplotlib>=2.0.0",
             "rasterio",
