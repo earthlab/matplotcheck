@@ -1,6 +1,4 @@
 from os import path
-
-# from numpy.distutils.core import setup
 from setuptools import setup
 
 
@@ -46,49 +44,3 @@ if __name__ == "__main__":
             "Operating System :: MacOS",
         ],
     )
-
-# if __name__ == "__main__":
-#     setup(
-#         configuration=configuration,
-#         name=DISTNAME,
-#         maintainer=MAINTAINER,
-#         maintainer_email=MAINTAINER_EMAIL,
-#         description=DESCRIPTION,
-#         long_description=LONG_DESCRIPTION,
-#         long_description_content_type="text/markdown",
-#         url="https://github.com/earthlap/matplotcheck",
-#         version="0.6.4",
-#         install_requires=[
-#             "pandas",
-#             "numpy",
-#             "folium",
-#             "geopandas",
-#             "matplotlib",
-#             "rasterio",
-#             "python-dateutil",
-#             "scipy",
-#         ],
-#         zip_safe=False,  # the package can run out of an .egg file
-#         classifiers=[
-#             "Intended Audience :: Developers",
-#             "License :: OSI Approved :: BSD License",
-#             "Programming Language :: Python",
-#             "Topic :: Software Development",
-#             "Operating System :: Microsoft :: Windows",
-#             "Operating System :: POSIX",
-#             "Operating System :: Unix",
-#             "Operating System :: MacOS",
-#         ],
-#     )
-
-
-# def configuration(parent_package="", top_path=None):
-#     if os.path.exists("MANIFEST"):
-#         os.remove("MANIFEST")
-#
-#     from numpy.distutils.misc_util import Configuration
-#
-#     config = Configuration(None, parent_package, top_path)
-#     config.add_subpackage("matplotcheck")
-#
-#     return config
