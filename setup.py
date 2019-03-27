@@ -6,7 +6,6 @@ DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
 MAINTAINER_EMAIL = "leah.wasser@colorado.edu"
-# VERSION = "0.0.5"
 
 
 # read the contents of your README file
