@@ -1,6 +1,9 @@
+bumpversion
 sphinx==1.8.0
 sphinx-autobuild==0.7.1
 sphinx_rtd_theme
 pytest>=3.1.0
 pytest-cov>=2.2.0
 codecov
+sphinx_gallery
+pre-commit
