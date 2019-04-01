@@ -25,11 +25,11 @@ if __name__ == "__main__":
         version="0.0.5",
         packages=["matplotcheck"],
         install_requires=[
-            "numpy>=1.14.0",
+            "numpy >=1.14.0",
             "folium",
             "geopandas",
-            "matplotlib>=2.0.0",
-            "rasterio=1.0.21",
+            "matplotlib >=2.0.0",
+            "rasterio",
         ],
         zip_safe=False,  # the package can run out of an .egg file
         classifiers=[
