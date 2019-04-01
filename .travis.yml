@@ -17,7 +17,7 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
   - conda env create -f environment.yml
-  - source activate matplotcheck-dev
+  - conda activate matplotcheck-dev
   - conda list
   - python setup.py install
   - pip install -r dev-requirements.txt
