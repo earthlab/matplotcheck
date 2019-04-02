@@ -8,3 +8,4 @@ m2r
 codecov
 sphinx_gallery
 pre-commit
+setuptools==40.8.0
