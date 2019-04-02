@@ -2,19 +2,16 @@ name: matplotcheck-dev
 channels:
   - conda-forge
 dependencies:
+  # Core scientific python
+  - numpy>=1.14.0
+  - matplotlib>=3.0.0
+  - python=3.7
 
-  - pip:
-    # Core scientific python
-    - numpy>=1.14.0
-    - matplotlib>=3.0.0
-    - python=3.7
-    - scipy
-
-    # Geo stuff
-    - geopandas=0.4.1
-    - rasterio=1.0.21
-    - folium=0.8.3
-    - sphinx=1.8.4
-    - sphinx_rtd_theme=0.4.3
-    - m2r=0.2.1
-    - sphinx-gallery=0.2.0
+  # Geo stuff
+  - geopandas=0.4.1
+  - rasterio=1.0.21
+  - folium=0.8.3
+  - sphinx=1.8.4
+  - sphinx_rtd_theme=0.4.3
+  - m2r=0.2.1
+  - sphinx-gallery=0.2.0
