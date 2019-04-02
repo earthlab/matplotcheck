@@ -29,7 +29,7 @@ script:
   # Build documentation
   - make docs
   # pushd docs && make html && popd
-  - black --check --verbose .
+  #- black --check --verbose .
 
 after_success:
   - codecov
