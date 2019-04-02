@@ -40,7 +40,7 @@ locally, but this is the recommended option on Windows and MacOS::
 Install the package
 ^^^^^^^^^^^^^^^^^^^
 
-Once your earthpy-dev environment is activated, install EarthPy in editable
+Once your matplotcheck-dev environment is activated, install EarthPy in editable
 mode, along with the development requirements and pre-commit hooks::
 
     $ pip install -e .
