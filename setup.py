@@ -1,7 +1,6 @@
 from os import path
 from setuptools import setup
 
-
 DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
@@ -42,4 +41,5 @@ if __name__ == "__main__":
             "Operating System :: Unix",
             "Operating System :: MacOS",
         ],
+        url="https://github.com/earthlab/matplotcheck",
     )
