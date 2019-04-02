@@ -8,7 +8,5 @@ python:
       - requirements: dev-requirements.txt
       - method: pip
         path: .
-      - method: setuptools
-        path: matplotcheck
 sphinx:
   fail_on_warning: true
