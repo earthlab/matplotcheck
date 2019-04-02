@@ -1,3 +1,11 @@
+"""
+matplotcheck.base
+=================
+
+Doing stuff.
+
+"""
+
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -12,11 +20,14 @@ class InvalidPlotError(Exception):
 
 
 class PlotTester(object):
-    """Object to grab elements from Matplotlib plots
+    """
+    Object to grab elements from Matplotlib plots
+    Temporarily removing parameters and returns as it's breaking sphinx
 
     Parameters
     ----------
-    axis: Matplotlib.Axes.axes object
+    axis : mpl axis object
+
     """
 
     def __init__(self, ax):
@@ -89,7 +100,7 @@ class PlotTester(object):
                     "Plot_type to test must be either: scatter, bar or line"
                 )
 
-    ## TITLES TESTS/HELPER FUNCTIONS ##
+    """ TITLES TESTS/HELPER FUNCTIONS """
 
     def get_titles(self):
         """Returns the suptitle (Figure title) and axes title of ax
@@ -142,7 +153,7 @@ class PlotTester(object):
                     s.lower().replace(" ", "") in title
                 ), "Title does not contain expected text:{0}".format(s)
 
-    ## CAPTION TEST/HELPER FUNCTIONS ##
+    """CAPTION TEST/HELPER FUNCTIONS """
 
     def get_caption(self):
         """Returns matplotlib.text.Text that is located in the bottom right, just below the right side of ax
@@ -196,7 +207,7 @@ class PlotTester(object):
                 flag
             ), "Caption does not contain expected string: {0}".format(s)
 
-    ## AXIS TEST/HELPER FUNCTIONS ##
+    """ AXIS TEST/HELPER FUNCTIONS """
 
     def assert_axis_off(self, m="Axis lines are displayed on plot"):
         """Asserts one of the three cases holds true with error message m:
@@ -230,11 +241,11 @@ class PlotTester(object):
         If list is `None`, test assert axis label is an empty string
 
         Parameters
-        ---------
-        axis: string
+        ----------
+        axis : string
             one of the following ['x','y'] stated which axis label to be tested
-        lst: list of strings
-            Strings to be searched for in axis label. Strings must be lower case.
+        lst : list of strings
+            Strings to be searched for in axis label. Strings must be lower case
         """
         if axis == "x":
             label = self.ax.get_xlabel()
@@ -502,7 +513,7 @@ class PlotTester(object):
                 leg_extent2 = legends[j].get_window_extent().get_points()
                 assert legends_overlap(leg_extent1, leg_extent2) == False, m
 
-    ## BASIC PLOT DATA FUNCTIONS ##
+    """ BASIC PLOT DATA FUNCTIONS """
 
     def get_xy(self, points_only=False, xtime=False):
         """Returns a pandas dataframe with columns "x" and "y" holding the x and y coords on Axes ax
