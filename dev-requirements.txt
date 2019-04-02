@@ -8,4 +8,3 @@ m2r
 codecov
 sphinx_gallery
 pre-commit
-black
