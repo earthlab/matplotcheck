@@ -2,7 +2,7 @@
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
-  # install conda and the earthpy-dev environment
+  # install conda and the matplotcheck-dev environment
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O ~/miniconda.sh
   bash ~/miniconda.sh -b -p $HOME/miniconda
   export PATH="$HOME/miniconda/bin:$PATH"
