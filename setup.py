@@ -1,7 +1,6 @@
 from os import path
 from setuptools import setup
 
-
 DISTNAME = "matplotcheck"
 DESCRIPTION = "Functions to check Matplotlib plot outputs"
 MAINTAINER = "Leah Wasser"
@@ -25,10 +24,10 @@ if __name__ == "__main__":
         version="0.0.5",
         packages=["matplotcheck"],
         install_requires=[
-            "numpy>=1.14.0",
+            "numpy >=1.14.0",
             "folium",
             "geopandas",
-            "matplotlib>=2.0.0",
+            "matplotlib >=2.0.0",
             "rasterio",
         ],
         zip_safe=False,  # the package can run out of an .egg file
@@ -42,4 +41,5 @@ if __name__ == "__main__":
             "Operating System :: Unix",
             "Operating System :: MacOS",
         ],
+        url="https://github.com/earthlab/matplotcheck",
     )

@@ -8,5 +8,7 @@ python:
       - requirements: dev-requirements.txt
       - method: pip
         path: .
+      - method: pip
+        path: .
 sphinx:
   fail_on_warning: true
