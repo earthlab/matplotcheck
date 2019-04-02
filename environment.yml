@@ -13,4 +13,3 @@ dependencies:
   - geopandas=0.4.1
   - rasterio=1.0.21
   - folium=0.8.3
-
