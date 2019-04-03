@@ -24,10 +24,10 @@ if __name__ == "__main__":
         version="0.0.7",
         packages=["matplotcheck"],
         install_requires=[
-            "numpy >=1.14.0",
+            "numpy>=1.14.0",
             "folium",
             "geopandas",
-            "matplotlib >=2.0.0",
+            "matplotlib>=2.0.0",
             "rasterio",
             "scipy",
         ],
