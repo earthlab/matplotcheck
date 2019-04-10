@@ -17,12 +17,13 @@ def pd_df():
 
 @pytest.fixture
 def np_ar():
+    """Create numpy array for image plot testing"""
     return np.random.rand(100,100)
 
 
 @pytest.fixture
 def pd_scatter_plt(pd_df):
-    """Create a pandas dataframe for testing"""
+    """Create scatter plot for testing"""
     fig, ax = plt.subplots()
     pd_df.plot("A", "B", kind="scatter", ax=ax)
 
@@ -34,7 +35,7 @@ def pd_scatter_plt(pd_df):
 
 @pytest.fixture
 def pd_line_plt(pd_df):
-    """Create a pandas dataframe for testing"""
+    """Create line plot for testing"""
     fig, ax = plt.subplots()
     pd_df.plot("A", "B", kind="line", ax=ax)
 
@@ -49,7 +50,7 @@ def pd_line_plt(pd_df):
 
 @pytest.fixture
 def pd_bar_plt(pd_df):
-    """Create a pandas dataframe for testing"""
+    """Create bar plot for testing"""
     fig, ax = plt.subplots()
     pd_df.plot("A", "B", kind="bar", ax=ax)
 
@@ -122,19 +123,22 @@ def test_correct_title(pd_line_plt):
 
 
 def test_title_contains(pd_line_plt):
-    """Check that the title contains right words"""
+    """Check that title_contains tester passes and fails as expected"""
 
     pd_line_plt.assert_title_contains(["My", "Title"])
 
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_title_contains(["foo", "bar"])
+
 
 def test_axis_label_contains(pd_line_plt):
-    """Check that the x and y axis labels contains right words"""
+    """Check that axis_label_contains tester passes and fails as expected"""
 
     pd_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
     pd_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
 
 
-def test_raster_image(pd_raster_plt, np_ar):
+def test_raster_assert_image(pd_raster_plt, np_ar):
     """Check that RasterTester image checker works"""
 
     # Check that assert_image works
@@ -144,6 +148,4 @@ def test_raster_image(pd_raster_plt, np_ar):
     bad_ar = np_ar + 1
     with pytest.raises(AssertionError):
         pd_raster_plt.assert_image(bad_ar)
-
-
 
