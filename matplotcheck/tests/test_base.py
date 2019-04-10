@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotcheck.base import PlotTester
+from matplotcheck.raster import RasterTester
 
 
 @pytest.fixture
@@ -12,6 +13,11 @@ def pd_df():
     return pd.DataFrame(
         np.random.randint(0, 100, size=(100, 2)), columns=list("AB")
     )
+
+
+@pytest.fixture
+def np_ar():
+    return np.random.rand(100,100)
 
 
 @pytest.fixture
@@ -63,6 +69,17 @@ def pd_bar_plt():
 
     axis = plt.gca()
     return PlotTester(axis)
+
+
+@pytest.fixture
+def pd_raster_plt(np_ar):
+    """Create raster plot for testing"""
+    fig, ax = plt.subplots()
+    ax.imshow(np_ar)
+    ax.set_title("My Plot Title", fontsize=30)
+
+    axis = plt.gca()
+    return RasterTester(axis)
 
 
 def test_line_plot(pd_line_plt):
@@ -127,3 +144,18 @@ def test_axis_label_contains(pd_line_plt):
 
     pd_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
     pd_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
+
+
+def test_raster_image(pd_raster_plt, np_ar):
+    """Check that RasterTester image checker works"""
+
+    # Check that assert_image works
+    pd_raster_plt.assert_image(np_ar)
+
+    # Check to make sure this fails
+    bad_ar = np_ar + 1
+    with pytest.raises(AssertionError):
+        pd_raster_plt.assert_image(bad_ar)
+
+
+
