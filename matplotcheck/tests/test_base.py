@@ -21,12 +21,8 @@ def np_ar():
 
 
 @pytest.fixture
-def pd_scatter_plt():
+def pd_scatter_plt(pd_df):
     """Create a pandas dataframe for testing"""
-    # Can a fixture take data from another fixture??
-    pd_df = pd.DataFrame(
-        np.random.randint(0, 100, size=(100, 2)), columns=list("AB")
-    )
     fig, ax = plt.subplots()
     pd_df.plot("A", "B", kind="scatter", ax=ax)
 
@@ -37,12 +33,8 @@ def pd_scatter_plt():
 
 
 @pytest.fixture
-def pd_line_plt():
+def pd_line_plt(pd_df):
     """Create a pandas dataframe for testing"""
-    # Can a fixture take data from another fixture??
-    pd_df = pd.DataFrame(
-        np.random.randint(0, 100, size=(100, 2)), columns=list("AB")
-    )
     fig, ax = plt.subplots()
     pd_df.plot("A", "B", kind="line", ax=ax)
 
@@ -56,12 +48,8 @@ def pd_line_plt():
 
 
 @pytest.fixture
-def pd_bar_plt():
+def pd_bar_plt(pd_df):
     """Create a pandas dataframe for testing"""
-    # Can a fixture take data from another fixture??
-    pd_df = pd.DataFrame(
-        np.random.randint(0, 100, size=(25, 2)), columns=list("AB")
-    )
     fig, ax = plt.subplots()
     pd_df.plot("A", "B", kind="bar", ax=ax)
 
