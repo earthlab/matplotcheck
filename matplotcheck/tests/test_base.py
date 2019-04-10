@@ -42,6 +42,9 @@ def pd_line_plt():
 
     ax.set_title("My Plot Title", fontsize=30)
 
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
+
     axis = plt.gca()
     return PlotTester(axis)
 
@@ -110,4 +113,17 @@ def test_correct_title(pd_line_plt):
     """Check that the correct plot title is grabbed from the axis object.
     Note that get_titles maintains case."""
 
-    assert "Plot Title" in pd_line_plt.get_titles()[1]
+    assert "My Plot Title" == pd_line_plt.get_titles()[1]
+
+
+def test_title_contains(pd_line_plt):
+    """Check that the title contains right words"""
+
+    pd_line_plt.assert_title_contains(["My", "Title"])
+
+
+def test_axis_label_contains(pd_line_plt):
+    """Check that the x and y axis labels contains right words"""
+
+    pd_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
+    pd_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
