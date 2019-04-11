@@ -29,10 +29,11 @@ install:
   - conda config --add channels conda-forge
   - conda info -a
   - conda env create -f environment.yml
-  - activate matplotcheck-dev
+  - conda activate matplotcheck-dev
   - python setup.py install
   - pip install -r dev-requirements.txt --user
 
 test_script:
   - conda list
+  - conda info -a
   - pytest
