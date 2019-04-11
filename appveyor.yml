@@ -31,7 +31,7 @@ install:
   - conda env create -f environment.yml
   - activate matplotcheck-dev
   - python setup.py install
-  - pip install -r dev-requirements.txt --user
+  - pip install -r dev-requirements.txt
 
 test_script:
   - conda list
