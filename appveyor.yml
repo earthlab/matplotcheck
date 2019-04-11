@@ -2,7 +2,6 @@
 # https://github.com/geopandas/geopandas/blob/master/appveyor.yml
 # https://github.com/earthlab/earthpy/blob/master/appveyor.yml
 
-
 matrix:
   fast_finish: true     # immediately finish build once one of the jobs fails.
 
