@@ -16,20 +16,17 @@ def pd_df():
 
 
 @pytest.fixture
-def np_ar():
-    """Create numpy array for image plot testing"""
-    return np.random.rand(100,100)
-
-
-@pytest.fixture
 def pd_scatter_plt(pd_df):
     """Create scatter plot for testing"""
     fig, ax = plt.subplots()
-    pd_df.plot("A", "B", kind="scatter", ax=ax)
 
+    pd_df.plot("A", "B", kind="scatter", ax=ax)
     ax.set_title("My Plot Title", fontsize=30)
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
 
     axis = plt.gca()
+
     return PlotTester(axis)
 
 
@@ -37,14 +34,14 @@ def pd_scatter_plt(pd_df):
 def pd_line_plt(pd_df):
     """Create line plot for testing"""
     fig, ax = plt.subplots()
+
     pd_df.plot("A", "B", kind="line", ax=ax)
-
     ax.set_title("My Plot Title", fontsize=30)
-
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
 
     axis = plt.gca()
+
     return PlotTester(axis)
 
 
@@ -52,23 +49,15 @@ def pd_line_plt(pd_df):
 def pd_bar_plt(pd_df):
     """Create bar plot for testing"""
     fig, ax = plt.subplots()
+
     pd_df.plot("A", "B", kind="bar", ax=ax)
-
     ax.set_title("My Plot Title", fontsize=30)
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
 
     axis = plt.gca()
+
     return PlotTester(axis)
-
-
-@pytest.fixture
-def pd_raster_plt(np_ar):
-    """Create raster plot for testing"""
-    fig, ax = plt.subplots()
-    ax.imshow(np_ar)
-    ax.set_title("My Plot Title", fontsize=30)
-
-    axis = plt.gca()
-    return RasterTester(axis)
 
 
 def test_line_plot(pd_line_plt):
@@ -136,16 +125,3 @@ def test_axis_label_contains(pd_line_plt):
 
     pd_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
     pd_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
-
-
-def test_raster_assert_image(pd_raster_plt, np_ar):
-    """Check that RasterTester image checker works"""
-
-    # Check that assert_image works
-    pd_raster_plt.assert_image(np_ar)
-
-    # Check to make sure this fails
-    bad_ar = np_ar + 1
-    with pytest.raises(AssertionError):
-        pd_raster_plt.assert_image(bad_ar)
-
