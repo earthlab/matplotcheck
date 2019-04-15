@@ -35,10 +35,17 @@ def pd_line_plt(pd_df):
     """Create line plot for testing"""
     fig, ax = plt.subplots()
 
+    # Basic plot plus title, x and y axis labels
     pd_df.plot("A", "B", kind="line", ax=ax)
     ax.set_title("My Plot Title", fontsize=30)
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
+
+    # Insert caption
+    ax_position = ax.get_position()
+    fig.text(
+        ax_position.ymax - 0.25, ax_position.ymin - 0.075, "Figure Caption"
+    )
 
     axis = plt.gca()
 
@@ -104,7 +111,7 @@ def test_options(pd_line_plt):
         pd_line_plt.assert_plot_type("foo")
 
 
-def test_correct_title(pd_line_plt):
+def test_get_titles(pd_line_plt):
     """Check that the correct plot title is grabbed from the axis object.
     Note that get_titles maintains case."""
 
@@ -118,6 +125,21 @@ def test_title_contains(pd_line_plt):
 
     with pytest.raises(AssertionError):
         pd_line_plt.assert_title_contains(["foo", "bar"])
+
+
+def test_get_caption(pd_line_plt):
+    """Make sure that get caption returns correct text string"""
+
+    assert "Figure Caption" == pd_line_plt.get_caption().get_text()
+
+
+def test_assert_caption_contains(pd_line_plt):
+    """Test that caption contains passes and fails as expected"""
+
+    pd_line_plt.assert_caption_contains([["Figure"], ["Caption"]])
+
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_caption_contains([["foo"], ["bar"]])
 
 
 def test_axis_label_contains(pd_line_plt):
