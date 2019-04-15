@@ -40,6 +40,8 @@ def pd_line_plt(pd_df):
     ax.set_title("My Plot Title", fontsize=30)
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
+    ax.set_xlim((0, 100))
+    ax.set_ylim((0, 100))
 
     # Insert caption
     ax_position = ax.get_position()
@@ -147,3 +149,43 @@ def test_axis_label_contains(pd_line_plt):
 
     pd_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
     pd_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
+
+
+def test_assert_lims(pd_line_plt):
+    """Test for axis limit assertion, exact values"""
+    pd_line_plt.assert_lims([0, 100], axis="x")
+    pd_line_plt.assert_lims([0, 100], axis="y")
+
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims([0, 101], axis="x")
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims([0, 101], axis="y")
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims([1, 100], axis="x")
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims([1, 100], axis="y")
+
+
+def test_assert_lims_range(pd_line_plt):
+    """Test for axis limit assertion, accepting range of values"""
+    pd_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="x")
+    pd_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="y")
+
+    # Should raise AssertionErrors
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="x")
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims_range(((-5, 5), (95, 99)), axis="y")
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_lims_range(((-5, 5), (95, 100)), axis="y")
+        pd_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="y")
+
+
+def test_assert_equal_xlims_ylims(pd_line_plt, pd_bar_plt):
+    """Checks that axis xlims and ylims are equal, as expected"""
+    pd_line_plt.assert_equal_xlims_ylims()
+
+    # Should raise AssertionError
+    pd_line_plt.ax.set_xlim((0, 99))
+    with pytest.raises(AssertionError):
+        pd_line_plt.assert_equal_xlims_ylims()
