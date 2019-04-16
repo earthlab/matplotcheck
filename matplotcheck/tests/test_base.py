@@ -7,6 +7,9 @@ from matplotcheck.base import PlotTester
 from matplotcheck.raster import RasterTester
 
 
+""" PYTEST FIXTURES """
+
+
 @pytest.fixture
 def pd_df():
     """Create a pandas dataframe for testing"""
@@ -55,6 +58,17 @@ def pd_line_plt(pd_df):
 
 
 @pytest.fixture
+def multi_line_plt(pd_df):
+    """Line plot with multiple data columns, plus legend"""
+    fig, ax = plt.subplots()
+    pd_df.plot(ax=ax)
+    ax.set_ylim((0, 140))
+    ax.legend(loc="center left", title="Legend", bbox_to_anchor=(1, 0.5))
+    axis = plt.gca()
+    return PlotTester(axis)
+
+
+@pytest.fixture
 def pd_bar_plt(pd_df):
     """Create bar plot for testing"""
     fig, ax = plt.subplots()
@@ -67,6 +81,9 @@ def pd_bar_plt(pd_df):
     axis = plt.gca()
 
     return PlotTester(axis)
+
+
+""" PLOT TYPE TESTS """
 
 
 def test_line_plot(pd_line_plt):
@@ -113,6 +130,9 @@ def test_options(pd_line_plt):
         pd_line_plt.assert_plot_type("foo")
 
 
+""" TITLE TESTS """
+
+
 def test_get_titles(pd_line_plt):
     """Check that the correct plot title is grabbed from the axis object.
     Note that get_titles maintains case."""
@@ -129,6 +149,9 @@ def test_title_contains(pd_line_plt):
         pd_line_plt.assert_title_contains(["foo", "bar"])
 
 
+""" CAPTION TESTS """
+
+
 def test_get_caption(pd_line_plt):
     """Make sure that get caption returns correct text string"""
 
@@ -142,6 +165,9 @@ def test_assert_caption_contains(pd_line_plt):
 
     with pytest.raises(AssertionError):
         pd_line_plt.assert_caption_contains([["foo"], ["bar"]])
+
+
+""" AXIS TESTS """
 
 
 def test_axis_label_contains(pd_line_plt):
@@ -189,3 +215,38 @@ def test_assert_equal_xlims_ylims(pd_line_plt, pd_bar_plt):
     pd_line_plt.ax.set_xlim((0, 99))
     with pytest.raises(AssertionError):
         pd_line_plt.assert_equal_xlims_ylims()
+
+
+""" LEGEND TESTS """
+
+
+def test_assert_legend_subtitles(multi_line_plt):
+    """Test for checking that legend tites are equal to given string"""
+    multi_line_plt.assert_legend_titles(["legend"])
+
+    # Requires lowercase string
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_titles(["Legend"])
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["legend", "legend2"])
+
+
+def test_assert_legend_labels(multi_line_plt):
+    """Test for checking that legend labels are expected strings"""
+    multi_line_plt.assert_legend_labels(["a", "b"])
+
+    # Require lowercase string
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["A", "B"])
+    # These should fail too
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["a", "c"])
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["a", "b", "c"])
+
+
+# def test_assert_legend_no_overlay_content(multi_line_plt):
+#     """Test for checking whether legend overlays plot contents"""
+#
+#
+#     multi_line_plt.assert_legend_no_overlay_content()
