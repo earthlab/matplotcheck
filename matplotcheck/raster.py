@@ -31,9 +31,13 @@ class RasterTester(PlotTester):
 
 		Parameters
 		----------
-		crange: tuple of (min, max) for colorbar. 
+		crange: tuple of (min, max) for colorbar.
 			if empty tuple: asserts exactly 1 colobar exists, but does not check values.
 		"""
+        # Check that images exist
+        if not self.ax.images():
+            assert False, "No image found on axes"
+        # Get colorbars
         cb = self.get_colorbars()
         assert len(cb) == 1, "Exactly one colorbar should be displayed"
         if crange:
@@ -53,7 +57,7 @@ class RasterTester(PlotTester):
 		label: string to see if it contains an option in all_label_options
 		all_label_options: list of lists. Each internal list represents a classification category.
 			Said list is a list of strings where at least one string is expected to be in the legend label for this category.
-		
+
 		Returns
 		------
 		string that is the first entry in the list which label is matched with.

@@ -127,6 +127,13 @@ def test_raster_assert_colorbar_range_multiple(raster_plt, np_ar):
 """ LEGEND TESTS """
 
 
+def test_raster_assert_colorbar_range_blank(raster_plt_blank, np_ar):
+    """Colorbar range checker should fail if no image has been added to axes"""
+    # Should fail with no image on axis
+    with pytest.raises(AssertionError, match="No image found on axes"):
+        raster_plt_blank.assert_colorbar_range([np_ar.min(), np_ar.max()])
+
+
 def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
     """Checks that legend matches image, checking both the labels and color patches"""
     values = np.sort(np.unique(np_ar_discrete))
