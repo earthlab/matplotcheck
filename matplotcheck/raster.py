@@ -35,7 +35,7 @@ class RasterTester(PlotTester):
 			if empty tuple: asserts exactly 1 colobar exists, but does not check values.
 		"""
         # Check that images exist
-        if not self.ax.images():
+        if not self.ax.images:
             assert False, "No image found on axes"
         # Get colorbars
         cb = self.get_colorbars()
