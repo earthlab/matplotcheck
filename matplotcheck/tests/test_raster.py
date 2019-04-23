@@ -185,7 +185,6 @@ def test_raster_assert_legend_accuracy_noimage(
 
 def test_raster_assert_image(raster_plt, np_ar):
     """Checks that assert_image passes only when plot data matches array"""
-
     # Check that assert_image works
     raster_plt.assert_image(np_ar)
 
@@ -195,16 +194,58 @@ def test_raster_assert_image(raster_plt, np_ar):
         raster_plt.assert_image(bad_ar)
 
 
+def test_raster_assert_image_blank(raster_plt_blank, np_ar):
+    """"assert_image should fail with blank image"""
+
+    # Should fail with no image
+    with pytest.raises(AssertionError, match="No Image Displayed"):
+        raster_plt_blank.assert_image(np_ar)
+
+
 def test_raster_assert_image_rgb(raster_plt_rgb, np_ar_rgb):
+    """Check assert_image for a 3-band RGB image"""
     raster_plt_rgb.assert_image(np_ar_rgb)
+
+    # Should fail with wrong array
+    bad_ar = np_ar_rgb + 1
+    with pytest.raises(AssertionError, match="Arrays are not equal"):
+        raster_plt_rgb.assert_image(bad_ar)
 
 
 def test_raster_assert_image_class(raster_plt_class, np_ar_discrete):
+    """Check assert_image for a discrete, classified image"""
     raster_plt_class.assert_image(np_ar_discrete, im_classified=True)
 
+    # Should fail with wrong array
+    bad_ar = np_ar_discrete + 1
+    with pytest.raises(AssertionError, match="Arrays are not equal"):
+        raster_plt_class.assert_image(bad_ar)
 
-def test_raster_assert_image_fullscreen(raster_plt, raster_plt_blank):
-    """Checks that image takes up full screen"""
+
+def test_raster_assert_image_fullscreen(raster_plt):
+    """Checks that the first image on axis takes up full axis"""
+    # Should pass using default axis limits
     raster_plt.assert_image_full_screen()
-    with pytest.raises(AssertionError):
+
+    # Should fail if we modify the axis xlims
+    cur_xlim, cur_ylim = raster_plt.ax.get_xlim(), raster_plt.ax.get_ylim()
+    raster_plt.ax.set_xlim([cur_xlim[0], cur_xlim[1] + 5])
+    with pytest.raises(
+        AssertionError, match="Image is stretched inaccurately"
+    ):
+        raster_plt.assert_image_full_screen()
+
+    # Check y axis lims
+    raster_plt.ax.set_xlim([cur_xlim[0], cur_xlim[1]])
+    raster_plt.ax.set_ylim([cur_ylim[0], cur_ylim[1] - 1])
+    with pytest.raises(
+        AssertionError, match="Image is stretched inaccurately"
+    ):
+        raster_plt.assert_image_full_screen()
+
+
+def test_raster_assert_image_fullscreen_blank(raster_plt_blank):
+    """assert_image_fullscreen should fail with blank image"""
+    # Should fail with blank image
+    with pytest.raises(AssertionError, match="No image found on axes"):
         raster_plt_blank.assert_image_full_screen()
