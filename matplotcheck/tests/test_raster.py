@@ -64,7 +64,7 @@ def raster_plt_class(np_ar_discrete):
 
     fig, ax = plt.subplots()
     im = ax.imshow(
-        np_ar_discrete, interpolation='none', cmap=plt.get_cmap('tab10')
+        np_ar_discrete, interpolation="none", cmap=plt.get_cmap("tab10")
     )
     ax.set_title("My Plot Title", fontsize=30)
 
@@ -85,34 +85,41 @@ def raster_plt_class(np_ar_discrete):
 
 def test_raster_get_colorbars(raster_plt):
     """Check that get_colorbars correctly retrieves the correct object type"""
-
+    # Should only be 1 object, and should be a colorbar object
     cb = raster_plt.get_colorbars()
     assert len(cb) == 1
     assert isinstance(cb[0], matplotlib.colorbar.Colorbar)
 
 
-def test_raster_assert_colorbar_range(raster_plt, np_ar):
+def test_raster_assert_colorbar_range_minmax(raster_plt, np_ar):
     """Colorbar range checker, should be set to min and max of input array"""
+    # Colorbar range should be min and max
     raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max()])
 
     # Should fail with wrong min and max values
     with pytest.raises(
         AssertionError,
-        match="Colorbar minimum is not expected value:{}".format(np_ar.min() - 1)
+        match="Colorbar minimum is not expected value:{}".format(
+            np_ar.min() - 1
+        ),
     ):
         raster_plt.assert_colorbar_range([np_ar.min() - 1, np_ar.max()])
     with pytest.raises(
         AssertionError,
-        match="Colorbar maximum is not expected value:{}".format(np_ar.max() + 0.1)
+        match="Colorbar maximum is not expected value:{}".format(
+            np_ar.max() + 0.1
+        ),
     ):
         raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max() + 0.1])
 
-    # Add a second colorbar, should fail
+
+def test_raster_assert_colorbar_range_multiple(raster_plt, np_ar):
+    """Colorbar range checker should fail when there are multiple colorbars"""
+    # Add a second colorbar
     raster_plt.ax.imshow(np_ar)
     raster_plt.ax.get_figure().colorbar(raster_plt.ax.images[1], raster_plt.ax)
     with pytest.raises(
-        AssertionError,
-        match="Exactly one colorbar should be displayed"
+        AssertionError, match="Exactly one colorbar should be displayed"
     ):
         raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max()])
 
@@ -120,9 +127,7 @@ def test_raster_assert_colorbar_range(raster_plt, np_ar):
 """ LEGEND TESTS """
 
 
-def test_raster_assert_legend_accuracy_classified_image(
-    raster_plt_class, raster_plt_blank, raster_plt, np_ar_discrete
-):
+def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
     """Checks that legend matches image, checking both the labels and color patches"""
     values = np.sort(np.unique(np_ar_discrete))
     label_options = [[str(i)] for i in values]
@@ -130,18 +135,6 @@ def test_raster_assert_legend_accuracy_classified_image(
     raster_plt_class.assert_legend_accuracy_classified_image(
         np_ar_discrete, label_options
     )
-
-    # Fails without legend
-    with pytest.raises(AssertionError, match="No legend displayed"):
-        raster_plt.assert_legend_accuracy_classified_image(
-            np_ar_discrete, label_options
-        )
-
-    # Fails when no image displayed
-    with pytest.raises(AssertionError, match="No Image Displayed"):
-        raster_plt_blank.assert_legend_accuracy_classified_image(
-            np_ar_discrete,
-            label_options)
 
     # Should fail with bad label
     bad_label_options = [["foo"] * values.shape[0]]
@@ -152,10 +145,38 @@ def test_raster_assert_legend_accuracy_classified_image(
 
     # Should fail if you swap image values without updating plot colors
     bad_image = np_ar_discrete
-    bad_image[bad_image==0] = 1
-    with pytest.raises(AssertionError, match="Incorrect legend to data relation"):
+    bad_image[bad_image == 0] = 1
+    with pytest.raises(
+        AssertionError, match="Incorrect legend to data relation"
+    ):
         raster_plt_class.assert_legend_accuracy_classified_image(
             bad_image, label_options
+        )
+
+
+def test_raster_assert_legend_accuracy_nolegend(raster_plt, np_ar_discrete):
+    """Check that assert_legend_accuracy fails if there is no legend"""
+    values = np.sort(np.unique(np_ar_discrete))
+    label_options = [[str(i)] for i in values]
+
+    # Fails without legend
+    with pytest.raises(AssertionError, match="No legend displayed"):
+        raster_plt.assert_legend_accuracy_classified_image(
+            np_ar_discrete, label_options
+        )
+
+
+def test_raster_assert_legend_accuracy_noimage(
+    raster_plt_blank, np_ar_discrete
+):
+    """Check that assert_legend_accuracy fails if there is no image"""
+    values = np.sort(np.unique(np_ar_discrete))
+    label_options = [[str(i)] for i in values]
+
+    # Fails when no image displayed
+    with pytest.raises(AssertionError, match="No Image Displayed"):
+        raster_plt_blank.assert_legend_accuracy_classified_image(
+            np_ar_discrete, label_options
         )
 
 
