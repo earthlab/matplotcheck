@@ -3,6 +3,7 @@ import pytest
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotcheck.base import PlotTester
 
 
 @pytest.fixture

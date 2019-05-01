@@ -1,6 +1,5 @@
 """Tests for the base module"""
 import pytest
-from matplotcheck.base import PlotTester
 
 
 def test_line_plot(pt_line_plt):
