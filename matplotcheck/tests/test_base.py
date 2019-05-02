@@ -57,10 +57,29 @@ def test_correct_title(pt_line_plt):
 
 
 def test_axis_label_contains(pt_line_plt):
-    """Check that axis_label_contains tester passes and fails as expected"""
+    """Checks for assert_axis_label_contains"""
 
     pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
     pt_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
+
+    # Fails when given an invalid axies
+    with pytest.raises(ValueError, match="axis must be one of the following"):
+        pt_line_plt.assert_axis_label_contains(axis="z", lst=["y"])
+
+    with pytest.raises(
+        AssertionError, match="x axis label does not contain expected text:foo"
+    ):
+        pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "foo"])
+
+
+def test_axis_label_contains_blank(pt_multi_line_plt):
+    """Check assert_axis_label_contains works when axis label and/or expected text is blank"""
+
+    pt_multi_line_plt.assert_axis_label_contains(axis="x", lst=None)
+    with pytest.raises(
+        AssertionError, match="Expected x axis label is not displayed"
+    ):
+        pt_multi_line_plt.assert_axis_label_contains(axis="x", lst=["foo"])
 
 
 def test_assert_lims(pt_line_plt):
