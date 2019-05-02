@@ -2,6 +2,9 @@
 import pytest
 
 
+""" PLOT TYPE TESTS """
+
+
 def test_line_plot(pt_line_plt):
     """Test that the line plot returns true for line but false for bar or
     scatter."""
@@ -46,8 +49,44 @@ def test_options(pt_line_plt):
         pt_line_plt.assert_plot_type("foo")
 
 
-def test_correct_title(pt_line_plt):
+""" TITLE TESTS """
+
+
+def test_get_titles(pt_line_plt):
     """Check that the correct plot title is grabbed from the axis object.
     Note that get_titles maintains case."""
 
     assert "Plot Title" in pt_line_plt.get_titles()[1]
+
+
+def test_get_titles_suptitle(pt_subplot_line_scatter):
+    """Check that the correct suptitle gets grabbed from a figure with 2 subplots"""
+
+    assert "Two Plot Figure" in pt_subplot_line_scatter.get_titles()[0]
+
+
+def test_title_contains(pt_line_plt):
+    """Check that title_contains tester passes and fails as expected"""
+
+    pt_line_plt.assert_title_contains(["My", "Title"])
+
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_title_contains(["foo", "bar"])
+
+
+""" CAPTION TESTS """
+
+
+def test_get_caption(pt_line_plt):
+    """Make sure that get caption returns correct text string"""
+
+    assert "Figure Caption" == pt_line_plt.get_caption().get_text()
+
+
+def test_assert_caption_contains(pt_line_plt):
+    """Test that caption contains passes and fails as expected"""
+
+    pt_line_plt.assert_caption_contains([["Figure"], ["Caption"]])
+
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_caption_contains([["foo"], ["bar"]])

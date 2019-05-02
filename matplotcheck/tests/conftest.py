@@ -103,11 +103,16 @@ def pt_time_line_plt(pd_df_timeseries):
 
     return PlotTester(axis)
 
-    """Test that the line plot returns true for line but false for bar or
-    scatter."""
-    pd_line_plt.assert_plot_type("line")
 
-    with pytest.raises(AssertionError):
-        pd_line_plt.assert_plot_type("bar")
-    with pytest.raises(AssertionError):
-        pd_line_plt.assert_plot_type("scatter")
+@pytest.fixture
+def pt_subplot_line_scatter(pd_df):
+    """Create figure with 2 subplots and a suptitle"""
+    fig, ax = plt.subplots(ncols=2)
+
+    pd_df.plot("A", "B", kind="scatter", ax=ax[0])
+    pd_df.plot("A", "B", kind="line", ax=ax[1])
+    plt.suptitle("Two Plot Figure")
+
+    axis = plt.gca()
+
+    return PlotTester(axis)
