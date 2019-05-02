@@ -56,6 +56,59 @@ def test_correct_title(pt_line_plt):
 """ AXIS TESTS """
 
 
+def test_axis_off_turned_off(pt_line_plt):
+    """Check assert_axis_off for case when axis are turned off"""
+    # Should fail when axis are on (by default)
+    with pytest.raises(
+        AssertionError, match="Axis lines are displayed on plot"
+    ):
+        pt_line_plt.assert_axis_off()
+
+    # Turn off axis and test again
+    pt_line_plt.ax.axis("off")
+    pt_line_plt.assert_axis_off()
+
+
+def test_axis_off_vis_false(pt_line_plt):
+    """Check assert_axis_off for case when axis visibility set to False"""
+    pt_line_plt.ax.xaxis.set_visible(False)
+    pt_line_plt.ax.yaxis.set_visible(False)
+    pt_line_plt.assert_axis_off()
+
+    # Should fail with either axis visible
+    pt_line_plt.ax.xaxis.set_visible(True)
+    with pytest.raises(
+        AssertionError, match="Axis lines are displayed on plot"
+    ):
+        pt_line_plt.assert_axis_off()
+    pt_line_plt.ax.xaxis.set_visible(False)
+    pt_line_plt.ax.yaxis.set_visible(True)
+    with pytest.raises(
+        AssertionError, match="Axis lines are displayed on plot"
+    ):
+        pt_line_plt.assert_axis_off()
+
+
+def test_axis_off_empty_ticks(pt_line_plt):
+    """Check assert_axis_off for case when axis tick labels set to empty lists"""
+    pt_line_plt.ax.xaxis.set_ticks([])
+    pt_line_plt.ax.yaxis.set_ticks([])
+    pt_line_plt.assert_axis_off()
+
+    # Should fail with either axis ticks turned on
+    pt_line_plt.ax.xaxis.set_ticks([1])
+    with pytest.raises(
+        AssertionError, match="Axis lines are displayed on plot"
+    ):
+        pt_line_plt.assert_axis_off()
+    pt_line_plt.ax.xaxis.set_ticks([])
+    pt_line_plt.ax.yaxis.set_ticks([1])
+    with pytest.raises(
+        AssertionError, match="Axis lines are displayed on plot"
+    ):
+        pt_line_plt.assert_axis_off()
+
+
 def test_axis_label_contains(pt_line_plt):
     """Checks for assert_axis_label_contains"""
 
