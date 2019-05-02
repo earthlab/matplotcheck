@@ -48,6 +48,7 @@ def pt_line_plt(pd_df):
     # Basic plot plus title, x and y axis labels
     pd_df.plot("A", "B", kind="line", ax=ax)
     ax.set_title("My Plot Title", fontsize=30)
+    plt.suptitle("My Figure Title")
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
     ax.set_xlim((0, 100))
@@ -98,20 +99,6 @@ def pt_time_line_plt(pd_df_timeseries):
     fig, ax = plt.subplots()
 
     pd_df_timeseries.plot("time", "A", kind="line", ax=ax)
-
-    axis = plt.gca()
-
-    return PlotTester(axis)
-
-
-@pytest.fixture
-def pt_subplot_line_scatter(pd_df):
-    """Create figure with 2 subplots and a suptitle"""
-    fig, ax = plt.subplots(ncols=2)
-
-    pd_df.plot("A", "B", kind="scatter", ax=ax[0])
-    pd_df.plot("A", "B", kind="line", ax=ax[1])
-    plt.suptitle("Two Plot Figure")
 
     axis = plt.gca()
 

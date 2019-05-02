@@ -59,19 +59,66 @@ def test_get_titles(pt_line_plt):
     assert "Plot Title" in pt_line_plt.get_titles()[1]
 
 
-def test_get_titles_suptitle(pt_subplot_line_scatter):
+def test_get_titles_suptitle(pt_line_plt):
     """Check that the correct suptitle gets grabbed from a figure with 2 subplots"""
 
-    assert "Two Plot Figure" in pt_subplot_line_scatter.get_titles()[0]
+    assert "My Figure Title" in pt_line_plt.get_titles()[0]
 
 
-def test_title_contains(pt_line_plt):
-    """Check that title_contains tester passes and fails as expected"""
+def test_title_contains_axes(pt_line_plt):
+    """Check title_contains tester for axes title"""
 
-    pt_line_plt.assert_title_contains(["My", "Title"])
+    # Should pass if contain list is empty
+    pt_line_plt.assert_title_contains([], title_type="axes")
+    pt_line_plt.assert_title_contains(None, title_type="axes")
 
-    with pytest.raises(AssertionError):
-        pt_line_plt.assert_title_contains(["foo", "bar"])
+    pt_line_plt.assert_title_contains(
+        ["My", "Plot", "Title"], title_type="axes"
+    )
+
+    with pytest.raises(
+        AssertionError, match="Title does not contain expected text:foo"
+    ):
+        pt_line_plt.assert_title_contains(
+            ["Title", "foo", "bar"], title_type="axes"
+        )
+
+    # Should fail if given invalid title type
+    with pytest.raises(
+        ValueError, match="title_type must be one of the following"
+    ):
+        pt_line_plt.assert_title_contains(["Title"], title_type="all")
+
+
+def test_title_contains_figure(pt_line_plt, pt_bar_plt):
+    """Check title_contains tester for figure title"""
+
+    pt_line_plt.assert_title_contains(
+        ["My", "Figure", "Title"], title_type="figure"
+    )
+
+    # Should fail if there is no suptitle
+    with pytest.raises(
+        AssertionError, match="Expected title is not displayed"
+    ):
+        pt_bar_plt.assert_title_contains(
+            ["My", "Figure", "Title"], title_type="figure"
+        )
+
+
+def test_title_contains_both_axes_figure(pt_line_plt):
+    """Check title_contains tester for combined axes + figure titles"""
+
+    pt_line_plt.assert_title_contains(
+        ["My", "Figure", "Plot", "Title"], title_type="either"
+    )
+
+    with pytest.raises(
+        AssertionError, match="Title does not contain expected text:foo"
+    ):
+        pt_line_plt.assert_title_contains(
+            ["My", "Figure", "Plot", "Title", "foo"], title_type="either"
+        )
 
 
 """ CAPTION TESTS """
@@ -88,5 +135,18 @@ def test_assert_caption_contains(pt_line_plt):
 
     pt_line_plt.assert_caption_contains([["Figure"], ["Caption"]])
 
-    with pytest.raises(AssertionError):
+    # Should pass when no strings expected
+    pt_line_plt.assert_caption_contains(None)
+
+    with pytest.raises(
+        AssertionError, match="Caption does not contain expected string: foo"
+    ):
         pt_line_plt.assert_caption_contains([["foo"], ["bar"]])
+
+
+def test_assert_caption_contains_nocaption(pt_bar_plt):
+    """Test that caption_contains fails when there is no caption"""
+    with pytest.raises(
+        AssertionError, match="No caption exist in appropriate location"
+    ):
+        pt_bar_plt.assert_caption_contains([["Figure"], ["Caption"]])
