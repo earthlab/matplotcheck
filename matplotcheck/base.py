@@ -265,7 +265,7 @@ class PlotTester(object):
                 assert (
                     s.lower().replace(" ", "") in label
                 ), "{0} axis label does not contain expected text:{1}".format(
-                    axis, label
+                    axis, s
                 )
 
     def assert_lims(self, lims_expected, axis="x"):
