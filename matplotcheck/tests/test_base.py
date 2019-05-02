@@ -148,6 +148,8 @@ def test_assert_lims(pt_line_plt):
         pt_line_plt.assert_lims([1, 100], axis="x")
     with pytest.raises(AssertionError):
         pt_line_plt.assert_lims([1, 100], axis="y")
+    with pytest.raises(ValueError):
+        pt_line_plt.assert_lims([0, 100], axis="z")
 
 
 def test_assert_lims_range(pt_line_plt):
@@ -163,6 +165,8 @@ def test_assert_lims_range(pt_line_plt):
     with pytest.raises(AssertionError):
         pt_line_plt.assert_lims_range(((-5, 5), (95, 100)), axis="y")
         pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="y")
+    with pytest.raises(ValueError):
+        pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="z")
 
 
 def test_assert_equal_xlims_ylims(pt_line_plt, pt_bar_plt):
