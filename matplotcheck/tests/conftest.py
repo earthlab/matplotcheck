@@ -102,12 +102,3 @@ def pt_time_line_plt(pd_df_timeseries):
     axis = plt.gca()
 
     return PlotTester(axis)
-
-    """Test that the line plot returns true for line but false for bar or
-    scatter."""
-    pd_line_plt.assert_plot_type("line")
-
-    with pytest.raises(AssertionError):
-        pd_line_plt.assert_plot_type("bar")
-    with pytest.raises(AssertionError):
-        pd_line_plt.assert_plot_type("scatter")
