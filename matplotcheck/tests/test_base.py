@@ -51,3 +51,56 @@ def test_correct_title(pt_line_plt):
     Note that get_titles maintains case."""
 
     assert "Plot Title" in pt_line_plt.get_titles()[1]
+
+
+""" AXIS TESTS """
+
+
+def test_axis_label_contains(pt_line_plt):
+    """Check that axis_label_contains tester passes and fails as expected"""
+
+    pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
+    pt_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
+
+
+def test_assert_lims(pt_line_plt):
+    """Test for axis limit assertion, exact values"""
+    pt_line_plt.assert_lims([0, 100], axis="x")
+    pt_line_plt.assert_lims([0, 100], axis="y")
+
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims([0, 101], axis="x")
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims([0, 101], axis="y")
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims([1, 100], axis="x")
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims([1, 100], axis="y")
+
+
+def test_assert_lims_range(pt_line_plt):
+    """Test for axis limit assertion, accepting range of values"""
+    pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="x")
+    pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="y")
+
+    # Should raise AssertionErrors
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="x")
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims_range(((-5, 5), (95, 99)), axis="y")
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_lims_range(((-5, 5), (95, 100)), axis="y")
+        pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="y")
+
+
+def test_assert_equal_xlims_ylims(pt_line_plt, pt_bar_plt):
+    """Checks that axis xlims and ylims are equal, as expected"""
+    pt_line_plt.assert_equal_xlims_ylims()
+
+    # Should raise AssertionError
+    pt_line_plt.ax.set_xlim((0, 99))
+    with pytest.raises(AssertionError):
+        pt_line_plt.assert_equal_xlims_ylims()
+
+
+""" LEGEND TESTS """
