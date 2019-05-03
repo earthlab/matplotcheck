@@ -77,26 +77,35 @@ def raster_plt_class(np_ar_discrete):
     plt.legend(handles=patches)
 
     axis = plt.gca()
+
     return RasterTester(axis)
 
 
 """ COLORBAR TESTS """
 
 
-def test_raster_get_colorbars(raster_plt):
-    """Check that get_colorbars correctly retrieves the correct object type"""
+def test_raster_get_colorbars_length(raster_plt):
+    """Check that get_colorbars correctly retrieves 1 colorbar from raster_plt1"""
     # Should only be 1 object, and should be a colorbar object
     cb = raster_plt.get_colorbars()
     assert len(cb) == 1
+
+
+def test_raster_get_colorbars_type(raster_plt):
+    """Check that get_colorbars retrieves a colorbar object"""
+    cb = raster_plt.get_colorbars()
     assert isinstance(cb[0], matplotlib.colorbar.Colorbar)
 
 
-def test_raster_assert_colorbar_range_minmax(raster_plt, np_ar):
+def test_raster_assert_colorbar_range(raster_plt, np_ar):
     """Colorbar range checker, should be set to min and max of input array"""
     # Colorbar range should be min and max
     raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max()])
 
-    # Should fail with wrong min and max values
+
+def test_raster_assert_colorbar_range_wrongmin(raster_plt, np_ar):
+    """Colorbar range checker should fail with the wrong max"""
+    # Should fail with min value
     with pytest.raises(
         AssertionError,
         match="Colorbar minimum is not expected value:{}".format(
@@ -104,6 +113,11 @@ def test_raster_assert_colorbar_range_minmax(raster_plt, np_ar):
         ),
     ):
         raster_plt.assert_colorbar_range([np_ar.min() - 1, np_ar.max()])
+
+
+def test_raster_assert_colorbar_range_wrongmax(raster_plt, np_ar):
+    """Colorbar range checker should fail with the wrong min"""
+    # Should fail with wrong max value
     with pytest.raises(
         AssertionError,
         match="Colorbar maximum is not expected value:{}".format(
@@ -124,14 +138,14 @@ def test_raster_assert_colorbar_range_multiple(raster_plt, np_ar):
         raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max()])
 
 
-""" LEGEND TESTS """
-
-
 def test_raster_assert_colorbar_range_blank(raster_plt_blank, np_ar):
     """Colorbar range checker should fail if no image has been added to axes"""
     # Should fail with no image on axis
     with pytest.raises(AssertionError, match="No image found on axes"):
         raster_plt_blank.assert_colorbar_range([np_ar.min(), np_ar.max()])
+
+
+""" LEGEND TESTS """
 
 
 def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
@@ -143,6 +157,13 @@ def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
         np_ar_discrete, label_options
     )
 
+
+def test_raster_assert_legend_accuracy_badlabel(
+    raster_plt_class, np_ar_discrete
+):
+    """Checks that legend matches image, should fail with bad labels"""
+    values = np.sort(np.unique(np_ar_discrete))
+
     # Should fail with bad label
     bad_label_options = [["foo"] * values.shape[0]]
     with pytest.raises(AssertionError, match="Incorrect legend labels"):
@@ -150,9 +171,19 @@ def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
             np_ar_discrete, bad_label_options
         )
 
-    # Should fail if you swap image values without updating plot colors
+
+def test_raster_assert_legend_accuracy_badvalues(
+    raster_plt_class, np_ar_discrete
+):
+    """Checks that legend matches image, should fail if you swap image values"""
+    values = np.sort(np.unique(np_ar_discrete))
+    label_options = [[str(i)] for i in values]
+
+    # Swap image values without updating plot colors
     bad_image = np_ar_discrete
     bad_image[bad_image == 0] = 1
+
+    # Should fail with bad image
     with pytest.raises(
         AssertionError, match="Incorrect legend to data relation"
     ):
@@ -192,9 +223,11 @@ def test_raster_assert_legend_accuracy_noimage(
 
 def test_raster_assert_image(raster_plt, np_ar):
     """Checks that assert_image passes only when plot data matches array"""
-    # Check that assert_image works
     raster_plt.assert_image(np_ar)
 
+
+def test_raster_assert_image_baddata(raster_plt, np_ar):
+    """assert_image should fail when we change the array values"""
     # Should fail with wrong array
     bad_ar = np_ar + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
@@ -203,8 +236,6 @@ def test_raster_assert_image(raster_plt, np_ar):
 
 def test_raster_assert_image_blank(raster_plt_blank, np_ar):
     """"assert_image should fail with blank image"""
-
-    # Should fail with no image
     with pytest.raises(AssertionError, match="No Image Displayed"):
         raster_plt_blank.assert_image(np_ar)
 
@@ -213,7 +244,9 @@ def test_raster_assert_image_rgb(raster_plt_rgb, np_ar_rgb):
     """Check assert_image for a 3-band RGB image"""
     raster_plt_rgb.assert_image(np_ar_rgb)
 
-    # Should fail with wrong array
+
+def test_raster_assert_image_rgb_baddata(raster_plt_rgb, np_ar_rgb):
+    """Check assert_image fails with bad data for rgb plot"""
     bad_ar = np_ar_rgb + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
         raster_plt_rgb.assert_image(bad_ar)
@@ -223,7 +256,9 @@ def test_raster_assert_image_class(raster_plt_class, np_ar_discrete):
     """Check assert_image for a discrete, classified image"""
     raster_plt_class.assert_image(np_ar_discrete, im_classified=True)
 
-    # Should fail with wrong array
+
+def test_raster_assert_image_class_baddata(raster_plt_class, np_ar_discrete):
+    """Check that assert_image with bad data fails for a discrete, classified image"""
     bad_ar = np_ar_discrete + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
         raster_plt_class.assert_image(bad_ar)
@@ -231,10 +266,11 @@ def test_raster_assert_image_class(raster_plt_class, np_ar_discrete):
 
 def test_raster_assert_image_fullscreen(raster_plt):
     """Checks that the first image on axis takes up full axis"""
-    # Should pass using default axis limits
     raster_plt.assert_image_full_screen()
 
-    # Should fail if we modify the axis xlims
+
+def test_raster_assert_image_fullscreen_fail_xlims(raster_plt):
+    """assert fullscreen should fail if we modify the x-axis limits"""
     cur_xlim, cur_ylim = raster_plt.ax.get_xlim(), raster_plt.ax.get_ylim()
     raster_plt.ax.set_xlim([cur_xlim[0], cur_xlim[1] + 5])
     with pytest.raises(
@@ -242,7 +278,10 @@ def test_raster_assert_image_fullscreen(raster_plt):
     ):
         raster_plt.assert_image_full_screen()
 
-    # Check y axis lims
+
+def test_raster_assert_image_fullscreen_fail_ylims(raster_plt):
+    """assert fullscreen should fail if we modify the x-axis limits"""
+    cur_xlim, cur_ylim = raster_plt.ax.get_xlim(), raster_plt.ax.get_ylim()
     raster_plt.ax.set_xlim([cur_xlim[0], cur_xlim[1]])
     raster_plt.ax.set_ylim([cur_ylim[0], cur_ylim[1] - 1])
     with pytest.raises(
@@ -253,6 +292,5 @@ def test_raster_assert_image_fullscreen(raster_plt):
 
 def test_raster_assert_image_fullscreen_blank(raster_plt_blank):
     """assert_image_fullscreen should fail with blank image"""
-    # Should fail with blank image
     with pytest.raises(AssertionError, match="No image found on axes"):
         raster_plt_blank.assert_image_full_screen()
