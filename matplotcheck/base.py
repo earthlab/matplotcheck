@@ -312,8 +312,14 @@ class PlotTester(object):
             raise ValueError(
                 "axis must be one of the following string ['x', 'y']"
             )
-        assert lims_range[0][0] <= lims[0] <= lims_range[0][1]
-        assert lims_range[1][0] <= lims[1] <= lims_range[1][1]
+        assert (
+            lims_range[0][0] <= lims[0] <= lims_range[0][1],
+            "Incorrect min limits on the {0} axis".format(axis),
+        )
+        assert (
+            lims_range[1][0] <= lims[1] <= lims_range[1][1],
+            "Incorrect max limits on the {0} axis".format(axis),
+        )
 
     def assert_equal_xlims_ylims(
         self, message="xlims and ylims are not equal"
