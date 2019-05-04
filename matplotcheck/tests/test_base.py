@@ -247,13 +247,24 @@ def test_assert_lims_range_invalid_axis(pt_line_plt):
         pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="z")
 
 
-def test_assert_equal_xlims_ylims(pt_line_plt, pt_bar_plt):
+def test_assert_equal_xlims_ylims(pt_line_plt):
     """Checks that axis xlims and ylims are equal, as expected"""
     pt_line_plt.assert_equal_xlims_ylims()
 
-    # Should raise AssertionError
+
+def test_assert_equal_xlims_ylims_bad_xlims(pt_line_plt):
+    """Checks that assert_equal_xlims_ylims fails when we change x axis lims"""
+    # Check y axis
     pt_line_plt.ax.set_xlim((0, 99))
-    with pytest.raises(AssertionError):
+    with pytest.raises(AssertionError, match="xlims and ylims are not equal"):
+        pt_line_plt.assert_equal_xlims_ylims()
+
+
+def test_assert_equal_xlims_ylims_bad_ylims(pt_line_plt):
+    """Checks that assert_equal_xlims_ylims fails when we change y axis lims"""
+    # Check y axis
+    pt_line_plt.ax.set_ylim((1, 100))
+    with pytest.raises(AssertionError, match="xlims and ylims are not equal"):
         pt_line_plt.assert_equal_xlims_ylims()
 
 
