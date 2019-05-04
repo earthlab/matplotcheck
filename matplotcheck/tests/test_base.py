@@ -56,14 +56,17 @@ def test_correct_title(pt_line_plt):
 """ AXIS TESTS """
 
 
-def test_axis_off_turned_off(pt_line_plt):
-    """Check assert_axis_off for case when axis are turned off"""
+def test_axis_off_fail_on(pt_line_plt):
+    """Check assert_axis_off fails when axis lines are on"""
     # Should fail when axis are on (by default)
     with pytest.raises(
         AssertionError, match="Axis lines are displayed on plot"
     ):
         pt_line_plt.assert_axis_off()
 
+
+def test_axis_off_turned_off(pt_line_plt):
+    """Check assert_axis_off for case when axis are turned off"""
     # Turn off axis and test again
     pt_line_plt.ax.axis("off")
     pt_line_plt.assert_axis_off()
@@ -75,12 +78,17 @@ def test_axis_off_vis_false(pt_line_plt):
     pt_line_plt.ax.yaxis.set_visible(False)
     pt_line_plt.assert_axis_off()
 
+
+def test_axis_off_one_visible(pt_line_plt):
+    """Check assert_axis_off fails when x or y axis is set to visible"""
     # Should fail with either axis visible
     pt_line_plt.ax.xaxis.set_visible(True)
+    pt_line_plt.ax.yaxis.set_visible(False)
     with pytest.raises(
         AssertionError, match="Axis lines are displayed on plot"
     ):
         pt_line_plt.assert_axis_off()
+
     pt_line_plt.ax.xaxis.set_visible(False)
     pt_line_plt.ax.yaxis.set_visible(True)
     with pytest.raises(
@@ -95,12 +103,17 @@ def test_axis_off_empty_ticks(pt_line_plt):
     pt_line_plt.ax.yaxis.set_ticks([])
     pt_line_plt.assert_axis_off()
 
+
+def test_axis_off_non_empty_ticks(pt_line_plt):
+    """Check assert_axis_off fails when axis tick list is not empty"""
     # Should fail with either axis ticks turned on
     pt_line_plt.ax.xaxis.set_ticks([1])
+    pt_line_plt.ax.yaxis.set_ticks([])
     with pytest.raises(
         AssertionError, match="Axis lines are displayed on plot"
     ):
         pt_line_plt.assert_axis_off()
+
     pt_line_plt.ax.xaxis.set_ticks([])
     pt_line_plt.ax.yaxis.set_ticks([1])
     with pytest.raises(
@@ -109,46 +122,84 @@ def test_axis_off_empty_ticks(pt_line_plt):
         pt_line_plt.assert_axis_off()
 
 
-def test_axis_label_contains(pt_line_plt):
-    """Checks for assert_axis_label_contains"""
-
+def test_axis_label_contains_x(pt_line_plt):
+    """Checks for assert_axis_label_contains for x axis"""
     pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
+
+
+def test_axis_label_contains_y(pt_line_plt):
+    """Checks for assert_axis_label_contains for y axis"""
     pt_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
 
+
+def test_axis_label_contains_invalid_axis(pt_line_plt):
+    """Check that assert_axis_label_contains fails when given unexpected axis"""
     # Fails when given an invalid axies
     with pytest.raises(ValueError, match="axis must be one of the following"):
         pt_line_plt.assert_axis_label_contains(axis="z", lst=["y"])
 
+
+def test_axis_label_contains_bad_text(pt_line_plt):
+    """Check that assert_axis_label_contains fails with text not in label"""
     with pytest.raises(
         AssertionError, match="x axis label does not contain expected text:foo"
     ):
         pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "foo"])
 
 
-def test_axis_label_contains_blank(pt_multi_line_plt):
-    """Check assert_axis_label_contains works when axis label and/or expected text is blank"""
-
+def test_axis_label_contains_expect_none(pt_line_plt):
+    """Check assert_axis_label_contains passes when expected text is blank"""
     pt_multi_line_plt.assert_axis_label_contains(axis="x", lst=None)
+
+
+def test_axis_label_contains_expect_none(pt_multi_line_plt):
+    """Check assert_axis_label_contains fails when there is no axis label"""
     with pytest.raises(
         AssertionError, match="Expected x axis label is not displayed"
     ):
         pt_multi_line_plt.assert_axis_label_contains(axis="x", lst=["foo"])
 
+    with pytest.raises(
+        AssertionError, match="Expected y axis label is not displayed"
+    ):
+        pt_multi_line_plt.assert_axis_label_contains(axis="y", lst=["foo"])
 
-def test_assert_lims(pt_line_plt):
-    """Test for axis limit assertion, exact values"""
+
+def test_assert_lims_x_pass(pt_line_plt):
+    """Test for axis limit assertion x axis (exact values)"""
     pt_line_plt.assert_lims([0, 100], axis="x")
+
+
+def test_assert_lims_y_pass(pt_line_plt):
+    """Test for axis limit assertion y axis (exact values)"""
     pt_line_plt.assert_lims([0, 100], axis="y")
 
-    with pytest.raises(AssertionError):
-        pt_line_plt.assert_lims([0, 101], axis="x")
-    with pytest.raises(AssertionError):
+
+def test_assert_lims_y_bad_lims(pt_line_plt):
+    """Test that assert_lims fails with bad values for y axis"""
+    # Bad max
+    with pytest.raises(AssertionError, match="Incorrect limits on the y axis"):
         pt_line_plt.assert_lims([0, 101], axis="y")
-    with pytest.raises(AssertionError):
-        pt_line_plt.assert_lims([1, 100], axis="x")
-    with pytest.raises(AssertionError):
+    # Bad min
+    with pytest.raises(AssertionError, match="Incorrect limits on the y axis"):
         pt_line_plt.assert_lims([1, 100], axis="y")
-    with pytest.raises(ValueError):
+
+
+def test_assert_lims_x_bad_lims(pt_line_plt):
+    """Test that assert_lims fails with bad values for x axis"""
+    # Bad max
+    with pytest.raises(AssertionError, match="Incorrect limits on the x axis"):
+        pt_line_plt.assert_lims([0, 101], axis="x")
+    # Bad min
+    with pytest.raises(AssertionError, match="Incorrect limits on the x axis"):
+        pt_line_plt.assert_lims([1, 100], axis="x")
+
+
+def test_assert_lims_invalid_axis(pt_line_plt):
+    """Test that assert_lims fails with invalid axis (z)"""
+    with pytest.raises(
+        ValueError, match="axis must be one of the following string"
+    ):
         pt_line_plt.assert_lims([0, 100], axis="z")
 
 
