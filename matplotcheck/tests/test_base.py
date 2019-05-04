@@ -203,20 +203,47 @@ def test_assert_lims_invalid_axis(pt_line_plt):
         pt_line_plt.assert_lims([0, 100], axis="z")
 
 
-def test_assert_lims_range(pt_line_plt):
-    """Test for axis limit assertion, accepting range of values"""
+def test_assert_lims_range_x_pass(pt_line_plt):
+    """Test that x axis limit assertion range passes as expected"""
     pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="x")
-    pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="y")
+    pt_line_plt.assert_lims_range(((0, 0), (100, 100)), axis="x")
 
-    # Should raise AssertionErrors
-    with pytest.raises(AssertionError):
-        pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="x")
-    with pytest.raises(AssertionError):
+
+def test_assert_lims_range_y_pass(pt_line_plt):
+    """Test that y axis limit assertion range passes as expected"""
+    pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="y")
+    pt_line_plt.assert_lims_range(((0, 0), (100, 100)), axis="y")
+
+
+def test_assert_lims_range_y_bad_lims(pt_line_plt):
+    """Test that assert_lims_range fails with bad values for y axis"""
+    with pytest.raises(
+        AssertionError, match="Incorrect max limit on the y axis"
+    ):
         pt_line_plt.assert_lims_range(((-5, 5), (95, 99)), axis="y")
-    with pytest.raises(AssertionError):
-        pt_line_plt.assert_lims_range(((-5, 5), (95, 100)), axis="y")
+    with pytest.raises(
+        AssertionError, match="Incorrect min limit on the y axis"
+    ):
         pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="y")
-    with pytest.raises(ValueError):
+
+
+def test_assert_lims_range_x_bad_lims(pt_line_plt):
+    """Test that assert_lims_range fails with bad values for x axis"""
+    with pytest.raises(
+        AssertionError, match="Incorrect max limit on the x axis"
+    ):
+        pt_line_plt.assert_lims_range(((-5, 5), (95, 98)), axis="x")
+    with pytest.raises(
+        AssertionError, match="Incorrect min limit on the x axis"
+    ):
+        pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="x")
+
+
+def test_assert_lims_range_invalid_axis(pt_line_plt):
+    """Test that assert_lims_range fails with invalid axis (z)"""
+    with pytest.raises(
+        ValueError, match="axis must be one of the following string"
+    ):
         pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="z")
 
 
