@@ -1,5 +1,6 @@
 """Tests for the base module"""
 import pytest
+import matplotlib.pyplot as plt
 
 
 def test_line_plot(pt_line_plt):
@@ -110,8 +111,35 @@ def test_assert_legend_labels_wrong_num(pt_multi_line_plt):
         pt_multi_line_plt.assert_legend_labels(["a", "b", "c"])
 
 
-# def test_assert_legend_no_overlay_content(pt_multi_line_plt):
-#     """Test for checking whether legend overlays plot contents"""
-#
-#
-#     pt_multi_line_plt.assert_legend_no_overlay_content()
+def test_assert_legend_no_overlay_content(pt_multi_line_plt):
+    """Test for checking whether legend overlays plot contents"""
+    pt_multi_line_plt.assert_legend_no_overlay_content()
+
+
+def test_assert_legend_no_overlay_content_fail(pt_multi_line_plt):
+    """assert_legend_no_overlay should fail when legend is in center of plot"""
+    pt_multi_line_plt.ax.legend(loc="center")
+    with pytest.raises(AssertionError, match="Legend overlays plot contents"):
+        pt_multi_line_plt.assert_legend_no_overlay_content()
+
+
+def test_assert_no_legend_overlap_single(pt_multi_line_plt):
+    """Checks that assert_no_legend_overlap passes when only one legend"""
+    pt_multi_line_plt.assert_no_legend_overlap()
+
+
+def test_assert_no_legend_overlap_double(pt_multi_line_plt):
+    """Checks that assert_no_legend_overlap passes when two legends don't overlap"""
+    leg_2 = plt.legend(loc=[0, 0])
+    pt_multi_line_plt.ax.add_artist(leg_2)
+    pt_multi_line_plt.assert_no_legend_overlap()
+
+
+def test_assert_no_legend_overlap_fail(pt_multi_line_plt):
+    """Checks that assert_no_legend_overlap fails with overlapping legends"""
+    leg_2 = plt.legend(loc=[0, 0])
+    pt_multi_line_plt.ax.add_artist(leg_2)
+    leg_3 = plt.legend(loc=[0, 0])
+    pt_multi_line_plt.ax.add_artist(leg_3)
+    with pytest.raises(AssertionError, match="Legends overlap eachother"):
+        pt_multi_line_plt.assert_no_legend_overlap()

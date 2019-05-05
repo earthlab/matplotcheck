@@ -434,10 +434,16 @@ class PlotTester(object):
         legends = self.get_legends()
         n = len(legends)
         for i in range(n - 1):
-            leg_extent1 = legends[i].get_window_extent().get_points()
+            leg_extent1 = (
+                legends[i].get_window_extent(RendererBase()).get_points()
+            )
             for j in range(i + 1, n):
-                leg_extent2 = legends[j].get_window_extent().get_points()
-                assert legends_overlap(leg_extent1, leg_extent2) == False, m
+                leg_extent2 = (
+                    legends[j].get_window_extent(RendererBase()).get_points()
+                )
+                assert (
+                    self.legends_overlap(leg_extent1, leg_extent2) == False
+                ), m
 
     """ BASIC PLOT DATA FUNCTIONS """
 
