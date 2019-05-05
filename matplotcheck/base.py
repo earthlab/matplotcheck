@@ -11,6 +11,7 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.dates as mdates
 import matplotlib
+from matplotlib.backend_bases import RendererBase
 import math
 from scipy import stats
 
@@ -393,10 +394,10 @@ class PlotTester(object):
         ---------
         m: string error message if assertion is not met
         """
-        plot_extent = self.ax.get_window_extent().get_points()
+        plot_extent = self.ax.get_window_extent(RendererBase()).get_points()
         legends = self.get_legends()
         for leg in legends:
-            leg_extent = leg.get_window_extent().get_points()
+            leg_extent = leg.get_window_extent(RendererBase()).get_points()
             legend_left = leg_extent[1][0] < plot_extent[0][0]
             legend_right = leg_extent[0][0] > plot_extent[1][0]
             legend_below = leg_extent[1][1] < plot_extent[0][1]
