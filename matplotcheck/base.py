@@ -357,7 +357,7 @@ class PlotTester(object):
         titles = [leg.get_title().get_text().lower() for leg in legends]
         for title_exp in titles_exp:
             assert any(
-                title_exp in s for s in titles
+                title_exp.lower() in s for s in titles
             ), "Legend subtitle does not contain expected string: {0}".format(
                 title_exp
             )
