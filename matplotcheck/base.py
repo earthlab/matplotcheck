@@ -376,6 +376,7 @@ class PlotTester(object):
         legend_texts = [
             t.get_text().lower() for leg in legends for t in leg.get_texts()
         ]
+        labels_exp = [l.lower() for l in labels_exp]
         assert len(legend_texts) == len(
             labels_exp
         ), "Legend does not contain expected number of entries"
