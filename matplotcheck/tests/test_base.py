@@ -51,3 +51,38 @@ def test_correct_title(pt_line_plt):
     Note that get_titles maintains case."""
 
     assert "Plot Title" in pt_line_plt.get_titles()[1]
+
+
+""" LEGEND TESTS """
+
+
+def test_assert_legend_subtitles(multi_line_plt):
+    """Test for checking that legend tites are equal to given string"""
+    multi_line_plt.assert_legend_titles(["legend"])
+
+    # Requires lowercase string
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_titles(["Legend"])
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["legend", "legend2"])
+
+
+def test_assert_legend_labels(multi_line_plt):
+    """Test for checking that legend labels are expected strings"""
+    multi_line_plt.assert_legend_labels(["a", "b"])
+
+    # Require lowercase string
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["A", "B"])
+    # These should fail too
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["a", "c"])
+    with pytest.raises(AssertionError):
+        multi_line_plt.assert_legend_labels(["a", "b", "c"])
+
+
+# def test_assert_legend_no_overlay_content(multi_line_plt):
+#     """Test for checking whether legend overlays plot contents"""
+#
+#
+#     multi_line_plt.assert_legend_no_overlay_content()
