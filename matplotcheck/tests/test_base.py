@@ -56,33 +56,62 @@ def test_correct_title(pt_line_plt):
 """ LEGEND TESTS """
 
 
-def test_assert_legend_subtitles(multi_line_plt):
+def test_assert_legend_titles(pt_multi_line_plt):
     """Test for checking that legend tites are equal to given string"""
-    multi_line_plt.assert_legend_titles(["legend"])
-
-    # Requires lowercase string
-    with pytest.raises(AssertionError):
-        multi_line_plt.assert_legend_titles(["Legend"])
-    with pytest.raises(AssertionError):
-        multi_line_plt.assert_legend_labels(["legend", "legend2"])
+    pt_multi_line_plt.assert_legend_titles(["legend"])
 
 
-def test_assert_legend_labels(multi_line_plt):
+def test_assert_legend_titles_not_case_sensitive(pt_multi_line_plt):
+    """Check that assert_legend_titles is NOT case sensitive"""
+    pt_multi_line_plt.assert_legend_titles(["LeGenD"])
+
+
+def test_assert_legend_titles_bad_text(pt_multi_line_plt):
+    """Check that assert_legend_titles fails with wrong text"""
+    with pytest.raises(
+        AssertionError,
+        match="Legend subtitle does not contain expected string: foo",
+    ):
+        pt_multi_line_plt.assert_legend_titles(["foo"])
+
+
+def test_assert_legend_titles_wrong_num(pt_multi_line_plt):
+    """Check assert_legend_titles fails when expected # of titles != # of legends"""
+    with pytest.raises(
+        AssertionError, match="Incorrect number of legend exist"
+    ):
+        pt_multi_line_plt.assert_legend_titles(["legend", "legend2"])
+
+
+def test_assert_legend_labels(pt_multi_line_plt):
     """Test for checking that legend labels are expected strings"""
-    multi_line_plt.assert_legend_labels(["a", "b"])
-
-    # Require lowercase string
-    with pytest.raises(AssertionError):
-        multi_line_plt.assert_legend_labels(["A", "B"])
-    # These should fail too
-    with pytest.raises(AssertionError):
-        multi_line_plt.assert_legend_labels(["a", "c"])
-    with pytest.raises(AssertionError):
-        multi_line_plt.assert_legend_labels(["a", "b", "c"])
+    pt_multi_line_plt.assert_legend_labels(["a", "b"])
 
 
-# def test_assert_legend_no_overlay_content(multi_line_plt):
+def test_assert_legend_not_case_sensitive(pt_multi_line_plt):
+    """Check that assert_legend_labels is NOT case sensitive"""
+    pt_multi_line_plt.assert_legend_labels(["A", "B"])
+
+
+def test_assert_legend_labels_bad_text(pt_multi_line_plt):
+    """Check that assert_legend_labels raises expected error when given wrong text"""
+    with pytest.raises(
+        AssertionError, match="Legend does not have expected labels"
+    ):
+        pt_multi_line_plt.assert_legend_labels(["a", "c"])
+
+
+def test_assert_legend_labels_wrong_num(pt_multi_line_plt):
+    """Check that assert_legend_labels raises expected error given wrong number of labels"""
+    with pytest.raises(
+        AssertionError,
+        match="Legend does not contain expected number of entries",
+    ):
+        pt_multi_line_plt.assert_legend_labels(["a", "b", "c"])
+
+
+# def test_assert_legend_no_overlay_content(pt_multi_line_plt):
 #     """Test for checking whether legend overlays plot contents"""
 #
 #
-#     multi_line_plt.assert_legend_no_overlay_content()
+#     pt_multi_line_plt.assert_legend_no_overlay_content()
