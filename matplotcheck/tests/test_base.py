@@ -130,16 +130,16 @@ def test_assert_no_legend_overlap_single(pt_multi_line_plt):
 
 def test_assert_no_legend_overlap_double(pt_multi_line_plt):
     """Checks that assert_no_legend_overlap passes when two legends don't overlap"""
-    leg_2 = plt.legend(loc=[0, 0])
-    pt_multi_line_plt.ax.add_artist(leg_2)
+    leg_1 = plt.legend(loc=[0.8, 0.8])
+    leg_2 = plt.legend(loc=[0.1, 0.1])
+    pt_multi_line_plt.ax.add_artist(leg_1)
     pt_multi_line_plt.assert_no_legend_overlap()
 
 
 def test_assert_no_legend_overlap_fail(pt_multi_line_plt):
     """Checks that assert_no_legend_overlap fails with overlapping legends"""
-    leg_2 = plt.legend(loc=[0, 0])
-    pt_multi_line_plt.ax.add_artist(leg_2)
-    leg_3 = plt.legend(loc=[0, 0])
-    pt_multi_line_plt.ax.add_artist(leg_3)
+    leg_1 = plt.legend(loc=[0.12, 0.12])
+    leg_2 = plt.legend(loc=[0.1, 0.1])
+    pt_multi_line_plt.ax.add_artist(leg_1)
     with pytest.raises(AssertionError, match="Legends overlap eachother"):
         pt_multi_line_plt.assert_no_legend_overlap()
