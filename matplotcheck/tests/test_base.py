@@ -51,3 +51,28 @@ def test_correct_title(pt_line_plt):
     Note that get_titles maintains case."""
 
     assert "Plot Title" in pt_line_plt.get_titles()[1]
+
+
+"""DATACHECK TESTS"""
+
+
+def test_assert_xydata_scatter(pt_scatter_plt, pd_df):
+    """Checks points in scatter plot against expected data"""
+    pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B")
+
+
+def test_assert_xydata_scatter(pt_scatter_plt, pd_df):
+    """assert_xydata should fail when we change the data"""
+    pd_df["B"][1] += 5
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B")
+
+
+# def test_assert_xydata_timeseries(pd_time_line_plt, pd_df_timeseries):
+#     pd_time_line_plt.assert_xydata(pd_df_timeseries, xcol='time', ycol='A',
+#                                    xtime=True)
+
+
+def test_assert_xydata_xlabel(pt_bar_plt, pd_df):
+    pd_df["A"] = pd_df["A"].apply(str)
+    pt_bar_plt.assert_xlabel_ydata(pd_df, xcol="A", ycol="B")
