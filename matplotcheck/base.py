@@ -349,19 +349,56 @@ class PlotTester(object):
         titles_exp: list of strings.
             Each string is expected be be in one subtitle. The number of strings is equal
             to the number of expected subtitles.
+
+        Returns
+        -------
+        AssertionError if the expected legend title is not found in the object
+        or nothing if the title string is found.
+
         """
         legends = self.get_legends()
-        assert len(legends) == len(
-            titles_exp
-        ), "Incorrect number of legend exist"
+
+        # I think this should be a try - it's just looking to see if the
+        # Instructor provided the correct number of legends. But also what
+        # if the student provides a plot with more than one??
+
+        try:
+            len(legends) == len(titles_exp)
+        except ValueError:
+            raise ValueError(
+                "The number of legend strings provided "
+                "doesn't equal the number of legend strings found "
+                "in the plot object"
+            )
+
+        # try:
+        #     len(legends) == len(titles_exp)
+        # except:
+        #     raise ValueError("The number of legend strings should equal the "
+        #                      "number of ??? i'm not sure what this does")
+        # assert len(legends) == len(
+        #     titles_exp
+        # ), "Incorrect number of legend exist"
 
         titles = [leg.get_title().get_text().lower() for leg in legends]
+
         for title_exp in titles_exp:
-            assert any(
-                title_exp.lower() in s for s in titles
-            ), "Legend subtitle does not contain expected string: {0}".format(
-                title_exp
-            )
+            titles_contains = [title_exp.lower() in s for s in titles]
+            if any(titles_contains):
+                print(
+                    "Your plot title is missing the word(s): {0}".format(
+                        titles_exp
+                    )
+                )
+                return False
+            else:
+                return True
+
+            # assert any(
+            #     title_exp.lower() in s for s in titles
+            # ), "Legend subtitle does not contain expected string: {0}".format(
+            #     title_exp
+            # )
 
     def assert_legend_labels(self, labels_exp):
         """Asserts legend on ax has the correct entry labels
