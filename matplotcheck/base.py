@@ -218,35 +218,48 @@ class PlotTester(object):
         Parameters
         ----------
         m: string error message if assertion is not met
+
+        Returns
+        ----------
+        Nothing (if checks pass) or raises error with message m
         """
         flag = False
+        # Case 1: check if axis have been turned off
         if self.ax.axison == False:
             flag = True
+        # Case 2: Check if both axis visibilities set to false
         elif (
             self.ax.xaxis._visible == False and self.ax.yaxis._visible == False
         ):
             flag = True
+        # Case 3: Check if both axis ticks are set to empty lists
         elif (
             self.ax.xaxis.get_gridlines() == []
             and self.ax.yaxis.get_gridlines() == []
         ):
             flag = True
+
         assert flag, m
 
     def assert_axis_label_contains(self, axis="x", lst=[]):
-        """Asserts axis label contains each of the strings in lst. The axis
-        that is tested is described in axis.
+        """Asserts axis label contains each of the strings in lst. Tests x or y
+        axis based on 'axis' param. Not case sensitive
 
-        If lst is an empty list, test asserts axis label is not an empty string
-        If list is `None`, test assert axis label is an empty string
 
         Parameters
         ----------
         axis : string
             one of the following ['x','y'] stated which axis label to be tested
         lst : list of strings
-            Strings to be searched for in axis label. Strings must be lower case
+            Strings to be searched for in axis label.
+            If lst is an empty list: assert axis label exists
+            If lst is `None`: passes
+
+        Returns
+        ----------
+        Nothing (if checks pass) or raises error
         """
+        # Retrieve appropriate axis label, error if axis param is not x or y
         if axis == "x":
             label = self.ax.get_xlabel()
         elif axis == "y":
@@ -254,6 +267,7 @@ class PlotTester(object):
         else:
             raise ValueError('axis must be one of the following ["x", "y"]')
 
+        # Check that axis label contains the expected strings in lst
         if lst is None:
             pass
         else:
@@ -269,16 +283,21 @@ class PlotTester(object):
                 )
 
     def assert_lims(self, lims_expected, axis="x"):
-        """Assert the lims of ax match lims_expected. Whether this tests the
-        x or y axis is denoted in variable axis
+        """Assert the lims of ax match lims_expected. Tests x or y axis based on
+        'axis' param
 
         Parameters
         ---------
-        lims_expected: list
-            list of length 2 containing expected min and max for x axis limits
+        lims_expected: list of numbers (flt or int)
+            list of length 2 containing expected min and max vals for axis limits
         axis: string
-            from ['x','y'], stated which axis to be tested
+            from ['x','y'], which axis to be tested
+
+        Returns
+        ----------
+        Nothing (if checks pass) or raises error
         """
+        # Get axis limit values
         if axis == "x":
             lims = [int(l) for l in self.ax.get_xlim()]
         elif axis == "y":
@@ -287,12 +306,14 @@ class PlotTester(object):
             raise ValueError(
                 "axis must be one of the following string ['x', 'y']"
             )
+
+        # Check retrieved limits against expected min and max values
         assert np.array_equal(
             lims, lims_expected
         ), "Incorrect limits on the {0} axis".format(axis)
 
     def assert_lims_range(self, lims_range, axis="x"):
-        """Assers limits along axis defined in variable axis are in range lims_range.
+        """Asserts axis limits fall within lims_range (INCLUSIVE).
 
         Parameters
         ----------
@@ -303,7 +324,12 @@ class PlotTester(object):
             second tuple is the range the top x limit must be in
         axis: string
             from list ['x','y'] declaring which axis to be tested
+
+        Returns
+        ----------
+        Nothing (if checks pass) or raises error
         """
+        # Get ax axis limits
         if axis == "x":
             lims = self.ax.get_xlim()
         elif axis == "y":
@@ -312,26 +338,30 @@ class PlotTester(object):
             raise ValueError(
                 "axis must be one of the following string ['x', 'y']"
             )
+        # Check if the min falls with in lims_range[0]
         assert (
             lims_range[0][0] <= lims[0] <= lims_range[0][1]
         ), "Incorrect min limit on the {0} axis".format(axis)
+        # Check if the max falls with in lims_range[1]
         assert (
             lims_range[1][0] <= lims[1] <= lims_range[1][1]
         ), "Incorrect max limit on the {0} axis".format(axis)
 
-    def assert_equal_xlims_ylims(
-        self, message="xlims and ylims are not equal"
-    ):
-        """Assert the x and y lims of Axes ax are equal to each other
+    def assert_equal_xlims_ylims(self, m="xlims and ylims are not equal"):
+        """Assert the x and y lims of Axes ax are exactly equal to each other
 
         Parameters
         ---------
-        message: string
+        m: string
             Error message if assertion is not met that is shown to the user.
+
+        Returns
+        ----------
+        Nothing (if checks pass) or raises error with message m
         """
         xlims = self.ax.get_xlim()
         ylims = self.ax.get_ylim()
-        assert np.array_equal(xlims, ylims), message
+        assert np.array_equal(xlims, ylims), m
 
     """ LEGEND TESTS """
 
