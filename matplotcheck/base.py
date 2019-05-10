@@ -333,51 +333,68 @@ class PlotTester(object):
     """ LEGEND TESTS """
 
     def get_legends(self):
-        """Returns a list of legends on ax
+        """Retrieve the list of legends on ax
 
         Returns
-        -------
+        ----------
         list of matplotlib.legend.Legend objects
         """
         return self.ax.findobj(match=matplotlib.legend.Legend)
 
     def assert_legend_titles(self, titles_exp):
-        """Asserts legend contains subtitles expressed in titles_exp.
+        """Asserts legend titles contain expected text in titles_exp list.
 
         Parameters
-        ---------
+        ----------
         titles_exp: list of strings.
-            Each string is expected be be in one subtitle. The number of strings is equal
-            to the number of expected subtitles.
+            Each string is expected be be in one legend title. The number of
+            strings is equal to the number of expected legends.
+
+        Returns
+        ----------
+        Nothing (if checks pass) or prints error message
         """
         legends = self.get_legends()
         assert len(legends) == len(
             titles_exp
         ), "Incorrect number of legend exist"
 
+        # Check that each expected legend title is in a legend title in ax
         titles = [leg.get_title().get_text().lower() for leg in legends]
         for title_exp in titles_exp:
             assert any(
                 title_exp.lower() in s for s in titles
-            ), "Legend subtitle does not contain expected string: {0}".format(
+            ), "Legend title does not contain expected string: {0}".format(
                 title_exp
             )
 
     def assert_legend_labels(self, labels_exp):
-        """Asserts legend on ax has the correct entry labels
+        """Asserts legends on ax have the correct entry labels
 
         Parameters
-        ---------
-        labels_exp: list of lower case strings.
-            Each string is an expected legend entry label.
+        ----------
+        labels_exp: list of strings.
+            Each string is an expected legend entry label. Checks that
+            the legend entry labels match exactly (except for case).
+
+        Returns
+        ----------
+        Nothing (if checks pass) or prints error message
+
+        Notes
+        ----------
+        If there are multiple legends, it combines all the legend labels into
+        one set and checks that set against the list labels_exp
         """
         legends = self.get_legends()
         assert legends, "Legend does not exist"
 
+        # Lowercase both the expected and actual legend labels
         legend_texts = [
             t.get_text().lower() for leg in legends for t in leg.get_texts()
         ]
         labels_exp = [l.lower() for l in labels_exp]
+
         assert len(legend_texts) == len(
             labels_exp
         ), "Legend does not contain expected number of entries"
@@ -386,17 +403,23 @@ class PlotTester(object):
         ), "Legend does not have expected labels"
 
     def assert_legend_no_overlay_content(
-        self, m="Legend overlays plot contents"
+        self, m="Legend overlays plot window"
     ):
-        """Asserts that each legend does not overlay plot contents with error message m
+        """Asserts that each legend does not overlay plot window
 
         Parameters
         ---------
         m: string error message if assertion is not met
+
+        Returns
+        ----------
+        Nothing (if checks pass) or prints error message m
         """
+        # RendererBase() is needed to get extent, otherwise raises an error
         plot_extent = self.ax.get_window_extent(RendererBase()).get_points()
         legends = self.get_legends()
         for leg in legends:
+            # RendererBase() is needed to get extent, otherwise raises error
             leg_extent = leg.get_window_extent(RendererBase()).get_points()
             legend_left = leg_extent[1][0] < plot_extent[0][0]
             legend_right = leg_extent[0][0] > plot_extent[1][0]
@@ -405,15 +428,15 @@ class PlotTester(object):
 
     def legends_overlap(self, b1, b2):
         """Helper function for assert_no_legend_overlap.
-        Boolean value if points of window extents for b1 and b2 overlap
+        True if points of window extents for b1 and b2 overlap, False otherwise
 
         Parameters
         ----------
-        b1: bounding box of window extents
-        b2: bounding box of window extents
+        b1: 2x2 array, bounding box of window extents
+        b2: 2x2 array, bounding box of window extents
 
         Returns
-        -------
+        ----------
         boolean value that says if bounding boxes b1 and b2 overlap
         """
         x_overlap = (b1[0][0] <= b2[1][0] and b1[0][0] >= b2[0][0]) or (
@@ -425,19 +448,26 @@ class PlotTester(object):
         return x_overlap and y_overlap
 
     def assert_no_legend_overlap(self, m="Legends overlap eachother"):
-        """Asserts there are no two legends in Axes ax that overlap each other with error message m
+        """When multiple legends on ax, asserts that there are no two legends
+        in ax that overlap each other
 
         Parameters
         ----------
         m: string error message if assertion is not met
+
+        Returns
+        ----------
+        Nothing (if checks pass) or prints error message m
         """
         legends = self.get_legends()
         n = len(legends)
         for i in range(n - 1):
+            # Get extent of first legend in check, RendererBase() avoids error
             leg_extent1 = (
                 legends[i].get_window_extent(RendererBase()).get_points()
             )
             for j in range(i + 1, n):
+                # Get extent of second legend in check
                 leg_extent2 = (
                     legends[j].get_window_extent(RendererBase()).get_points()
                 )
