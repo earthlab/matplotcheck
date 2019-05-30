@@ -7,13 +7,13 @@ Doing stuff.
 """
 
 import numpy as np
-import pandas as pd
-import geopandas as gpd
 import matplotlib.dates as mdates
 import matplotlib
 from matplotlib.backend_bases import RendererBase
 import math
 from scipy import stats
+import pandas as pd
+import geopandas as gpd
 
 
 class InvalidPlotError(Exception):
