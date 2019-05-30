@@ -101,7 +101,6 @@ Please feel free to submit bugs!
 ## Active Contributors
 
 - Leah Wasser
-- Kristen Curry
 
 ## Dev Setup (to be moved to contributing)
 
@@ -114,7 +113,7 @@ conda activate matplotcheck-dev
 
 THen setup dev requirements
 
-```angular2
+```
 pip install -e .
 pip install dev-requirements.txt
 ```
