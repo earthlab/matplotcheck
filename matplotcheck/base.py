@@ -417,9 +417,14 @@ class PlotTester(object):
         ]
         labels_exp = [l.lower() for l in labels_exp]
 
-        assert len(legend_texts) == len(
-            labels_exp
-        ), "Legend does not contain expected number of entries"
+        num_exp_labs = len(labels_exp)
+        num_actual_labs = len(legend_texts)
+        assert num_actual_labs == num_exp_labs, (
+            "I was expecting {0} legend entries, but found {1}. Are there "
+            "extra labels in your legend?".format(
+                num_exp_labs, num_actual_labs
+            )
+        )
         assert set(legend_texts) == set(
             labels_exp
         ), "Legend does not have expected labels"
