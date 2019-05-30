@@ -20,7 +20,7 @@ def test_assert_legend_titles_bad_text(pt_multi_line_plt):
     """Check that assert_legend_titles fails with wrong text"""
     with pytest.raises(
         AssertionError,
-        match="Legend subtitle does not contain expected string: foo",
+        match="Legend title does not contain expected string: foo",
     ):
         pt_multi_line_plt.assert_legend_titles(["foo"])
 
@@ -68,7 +68,7 @@ def test_assert_legend_no_overlay_content(pt_multi_line_plt):
 def test_assert_legend_no_overlay_content_fail(pt_multi_line_plt):
     """assert_legend_no_overlay should fail when legend is in center of plot"""
     pt_multi_line_plt.ax.legend(loc="center")
-    with pytest.raises(AssertionError, match="Legend overlays plot contents"):
+    with pytest.raises(AssertionError, match="Legend overlays plot window"):
         pt_multi_line_plt.assert_legend_no_overlay_content()
 
 
