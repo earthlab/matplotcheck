@@ -157,8 +157,9 @@ class PlotTester(object):
     """CAPTION TEST/HELPER FUNCTIONS """
 
     def get_caption(self):
-        """Returns matplotlib.text.Text that is located in the bottom right, just below the right side of ax
-            If no text is found in location, None is returned.
+        """Returns matplotlib.text.Text that is located in the bottom right,
+        just below the right side of ax
+        If no text is found in location, None is returned.
 
         Returns
         -------
@@ -179,14 +180,19 @@ class PlotTester(object):
 
     def assert_caption_contains(self, strings_exp):
         """Asserts that Axes ax contains strings as expected in strings_exp.
-            strings_exp is a list of lists. Each internal list is a list of strings where at least one string
-            must be in the caption, barring capitalization. Once a string is found, it is removed from the caption,
-            therefore, order does matter. This is to enforce no overlap in found strings.
+        strings_exp is a list of lists. Each internal list is a list of
+        strings where at least one string must be in the caption, barring
+        capitalization. Once a string is found, it is removed from the
+        caption, therefore, order does matter. This is to enforce no overlap
+        in found strings.
 
         Parameters
         ----------
-        strings_exp: list of lists. Each internal list is a list of strings where at least one string must be
-            found in the caption. Input strings must be lower case, as we are not testing for capitalization
+        strings_exp: list of lists.
+            Each internal list is a list of strings
+            where at least one string must be
+            found in the caption. Input strings must be lower case, as we are
+            not testing for capitalization
             if None: assert caption does not exist
             if empty list: asserts caption exists and not an empty string
         """
