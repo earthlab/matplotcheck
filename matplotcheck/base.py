@@ -7,12 +7,13 @@ Doing stuff.
 """
 
 import numpy as np
-import pandas as pd
-import geopandas as gpd
 import matplotlib.dates as mdates
 import matplotlib
+from matplotlib.backend_bases import RendererBase
 import math
 from scipy import stats
+import pandas as pd
+import geopandas as gpd
 
 
 class InvalidPlotError(Exception):
@@ -321,7 +322,7 @@ class PlotTester(object):
         """Assert the x and y lims of Axes ax are equal to each other
 
         Parameters
-        ---------
+        ----------
         message: string
             Error message if assertion is not met that is shown to the user.
         """
@@ -332,7 +333,7 @@ class PlotTester(object):
     """ LEGEND TESTS """
 
     def get_legends(self):
-        """Returns a list of legends on ax
+        """Retrieve the list of legends on ax
 
         Returns
         -------
@@ -341,137 +342,102 @@ class PlotTester(object):
         return self.ax.findobj(match=matplotlib.legend.Legend)
 
     def assert_legend_titles(self, titles_exp):
-        """Asserts legend contains subtitles expressed in titles_exp.
+        """Asserts legend titles contain expected text in titles_exp list.
 
         Parameters
-        ---------
+        ----------
         titles_exp: list of strings.
-            Each string is expected be be in one subtitle. The number of strings is equal
-            to the number of expected subtitles.
+            Each string is expected be be in one legend title. The number of
+            strings is equal to the number of expected legends.
+
+        Returns
+        ----------
+        Nothing (if checks pass) or prints error message or AssertionError if
+        the expected legend title is not found in the object
+        or nothing if the title string is found.
         """
         legends = self.get_legends()
-        assert len(legends) == len(
-            titles_exp
-        ), "Incorrect number of legend exist"
 
+        # Test number of legends - edge case when a student might have two
+        # legends rather than 2
+
+        num_legends = len(legends)
+        num_exp_legends = len(titles_exp)
+
+        assert num_legends == num_exp_legends, (
+            "I was expecting {0} legend "
+            "titles but instead found "
+            "{1}".format(num_legends, num_exp_legends)
+        )
+
+        # Check that each expected legend title is in a legend title in ax
         titles = [leg.get_title().get_text().lower() for leg in legends]
+
         for title_exp in titles_exp:
             assert any(
-                title_exp in s for s in titles
-            ), "Legend subtitle does not contain expected string: {0}".format(
+                title_exp.lower() in s for s in titles
+            ), "Legend title does not contain expected string: {0}".format(
                 title_exp
             )
 
     def assert_legend_labels(self, labels_exp):
-        """Asserts legend on ax has the correct entry labels
+        """Asserts legends on ax have the correct entry labels
 
         Parameters
-        ---------
-        labels_exp: list of lower case strings.
-            Each string is an expected legend entry label.
+        ----------
+        labels_exp: list of strings.
+            Each string is an expected legend entry label. Checks that
+            the legend entry labels match exactly (except for case).
+
+        Returns
+        -------
+        Nothing (if checks pass) or prints error message
+
+        Notes
+        -----
+        If there are multiple legends, it combines all the legend labels into
+        one set and checks that set against the list labels_exp
         """
         legends = self.get_legends()
         assert legends, "Legend does not exist"
 
+        # Lowercase both the expected and actual legend labels
         legend_texts = [
             t.get_text().lower() for leg in legends for t in leg.get_texts()
         ]
-        assert len(legend_texts) == len(
-            labels_exp
-        ), "Legend does not contain expected number of entries"
+        labels_exp = [l.lower() for l in labels_exp]
+
+        num_exp_labs = len(labels_exp)
+        num_actual_labs = len(legend_texts)
+        assert num_actual_labs == num_exp_labs, (
+            "I was expecting {0} legend entries, but found {1}. Are there "
+            "extra labels in your legend?".format(
+                num_exp_labs, num_actual_labs
+            )
+        )
         assert set(legend_texts) == set(
             labels_exp
         ), "Legend does not have expected labels"
 
-    def which_label(self, label, all_label_options):
-        """helper function for assert_legend_accuracy_classified_image
-        Returns string that represents a category label for label.
+    def assert_legend_no_overlay_content(
+        self, m="Legend overlays plot window"
+    ):
+        """Asserts that each legend does not overlay plot window
 
         Parameters
         ----------
-        label: string
-            to see if it contains an option in all_label_options
-        all_label_options: list of lists.
-            Each internal list represents a classification category.
-            Said list is a list of strings where at least one string is
-            expected to be in the legend label for this category.
+        m: string error message if assertion is not met
 
         Returns
-        ------
-        string that is the first entry in the list which label is matched with.
-        If no match is found, return value is None
+        -------
+        Nothing (if checks pass) or prints error message m
         """
-        for label_opts in all_label_options:
-            for s in label_opts:
-                if s in label:
-                    return label_opts[0]
-        return None
-
-    def assert_legend_accuracy_classified_image(
-        self, im_expected, all_label_options
-    ):
-        """Asserts legend correctly describes classified image on Axes ax
-
-        Parameters
-        ----------
-        im_expected: array of arrays with expected classified image on ax.
-            Classification must start with bin 0.
-        all_label_options: list of lists.
-            Each internal list represents a classification category.
-            Said list is a list of strings where at least one string is
-            expected to be in the legend label for this category.
-        Internal lists must be in the same order as bins in im_expected.
-        """
-        im_data = []
-        if self.ax.get_images():
-            im = self.ax.get_images()[0]
-            im_data, im_cmap = im.get_array(), im.get_cmap()
-        assert list(im_data), "No Image Displayed"
-
-        legends = self.get_legends()
-        assert legends, "No legend displayed"
-
-        all_labels_temp = all_label_options
-        legend_dict = {}
-        for p in [
-            p
-            for sublist in [leg.get_patches() for leg in legends]
-            for p in sublist
-        ]:
-            label = p.get_label().lower()
-            legend_dict[p.get_facecolor()] = which_label(
-                label, all_label_options
-            )
-        assert len([val for val in legend_dict.values() if val]) == len(
-            all_label_options
-        ), "Incorrect legend labels"
-
-        im_class_dict = {}
-        for val in np.unique(im_data):
-            im_class_dict[val] = legend_dict[im_cmap(im.norm(val))]
-        im_data_labels = [
-            [im_class_dict[val] for val in row] for row in im_data.data
-        ]
-        im_expected_labels = [
-            [all_label_options[val][0] for val in row] for row in im_expected
-        ]
-        assert np.array_equal(
-            im_data_labels, im_expected_labels
-        ), "Incorrect legend to data relation"
-
-    def assert_legend_no_overlay_content(
-        self, m="Legend overlays plot contents"
-    ):
-        """Asserts that each legend does not overlay plot contents with error message m
-
-        Parameters
-        ---------
-        m: string error message if assertion is not met
-        """
-        plot_extent = self.ax.get_window_extent().get_points()
+        # RendererBase() is needed to get extent, otherwise raises an error
+        plot_extent = self.ax.get_window_extent(RendererBase()).get_points()
         legends = self.get_legends()
         for leg in legends:
-            leg_extent = leg.get_window_extent().get_points()
+            # RendererBase() is needed to get extent, otherwise raises error
+            leg_extent = leg.get_window_extent(RendererBase()).get_points()
             legend_left = leg_extent[1][0] < plot_extent[0][0]
             legend_right = leg_extent[0][0] > plot_extent[1][0]
             legend_below = leg_extent[1][1] < plot_extent[0][1]
@@ -479,12 +445,12 @@ class PlotTester(object):
 
     def legends_overlap(self, b1, b2):
         """Helper function for assert_no_legend_overlap.
-        Boolean value if points of window extents for b1 and b2 overlap
+        True if points of window extents for b1 and b2 overlap, False otherwise
 
         Parameters
         ----------
-        b1: bounding box of window extents
-        b2: bounding box of window extents
+        b1: 2x2 array, bounding box of window extents
+        b2: 2x2 array, bounding box of window extents
 
         Returns
         -------
@@ -499,34 +465,47 @@ class PlotTester(object):
         return x_overlap and y_overlap
 
     def assert_no_legend_overlap(self, m="Legends overlap eachother"):
-        """Asserts there are no two legends in Axes ax that overlap each other with error message m
+        """When multiple legends on ax, asserts that there are no two legends
+        in ax that overlap each other
 
         Parameters
         ----------
         m: string error message if assertion is not met
+
+        Returns
+        -------
+        Nothing (if checks pass) or prints error message m
         """
         legends = self.get_legends()
         n = len(legends)
         for i in range(n - 1):
-            leg_extent1 = legends[i].get_window_extent().get_points()
+            # Get extent of first legend in check, RendererBase() avoids error
+            leg_extent1 = (
+                legends[i].get_window_extent(RendererBase()).get_points()
+            )
             for j in range(i + 1, n):
-                leg_extent2 = legends[j].get_window_extent().get_points()
-                assert legends_overlap(leg_extent1, leg_extent2) == False, m
+                # Get extent of second legend in check
+                leg_extent2 = (
+                    legends[j].get_window_extent(RendererBase()).get_points()
+                )
+                assert (
+                    self.legends_overlap(leg_extent1, leg_extent2) == False
+                ), m
 
     """ BASIC PLOT DATA FUNCTIONS """
 
     def get_xy(self, points_only=False, xtime=False):
         """Returns a pandas dataframe with columns "x" and "y" holding the x and y coords on Axes ax
 
-        PARAMETERS
-        ---------
+        Parameters
+        ----------
         ax: Matplotlib Ax object
             axes object to be tested
         points_only: boolean
         xtime: boolean
             True if the x axis of the plot contains datetime values
 
-        RETURNS
+        Returns
         -------
         Pandas dataframe with columns "x" and "y" containing the x and y coords of each point on Axes ax
         """
@@ -685,11 +664,11 @@ class PlotTester(object):
         """Returns the y intercept of line based on the average slope of the line
 
         Parameters
-        ---------
+        ----------
         path_verts: array of verticies that make a line on Axes ax
 
         Returns
-        --------
+        -------
         slope: float of the average slope
         y_intercept: float of the y intercept
         """
@@ -712,7 +691,7 @@ class PlotTester(object):
         """Asserts that there exists a line on Axes ax with slope slope_exp and y intercept intercept_exp and goes at least from x coordinate min_val to x coordinate max_val
 
         Parameters
-        ---------
+        ----------
         slope_exp: expected slope of line
         intercept_exp: expeted y intercept of line
         xtime: boolean if x-axis values are datetime
@@ -775,14 +754,14 @@ class PlotTester(object):
         """Asserts number of bins of type which_bins is at least n
 
         Parameters
-        --------
+        ----------
         n: int declaring minimum number of bins of type which_bin
         which_bins: string from list ['negative', 'positive']
             'negative': all bins with values centered at a positive value
             'positite': all bins with values centered at a negative value
 
         Returns
-        --------
+        -------
         """
         x_data = self.get_xy(xtime=False)["x"]
         if which_bins == "negative":

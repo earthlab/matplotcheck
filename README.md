@@ -101,4 +101,19 @@ Please feel free to submit bugs!
 ## Active Contributors
 
 - Leah Wasser
-- Kristen Curry
+
+## Dev Setup (to be moved to contributing)
+
+setup the matplotcheck envt
+
+```
+conda env create -f environment.yml
+conda activate matplotcheck-dev
+```
+
+THen setup dev requirements
+
+```
+pip install -e .
+pip install dev-requirements.txt
+```
