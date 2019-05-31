@@ -322,7 +322,7 @@ class PlotTester(object):
         """Assert the x and y lims of Axes ax are equal to each other
 
         Parameters
-        ---------
+        ----------
         message: string
             Error message if assertion is not met that is shown to the user.
         """
@@ -336,7 +336,7 @@ class PlotTester(object):
         """Retrieve the list of legends on ax
 
         Returns
-        ----------
+        -------
         list of matplotlib.legend.Legend objects
         """
         return self.ax.findobj(match=matplotlib.legend.Legend)
@@ -390,11 +390,11 @@ class PlotTester(object):
             the legend entry labels match exactly (except for case).
 
         Returns
-        ----------
+        -------
         Nothing (if checks pass) or prints error message
 
         Notes
-        ----------
+        -----
         If there are multiple legends, it combines all the legend labels into
         one set and checks that set against the list labels_exp
         """
@@ -425,11 +425,11 @@ class PlotTester(object):
         """Asserts that each legend does not overlay plot window
 
         Parameters
-        ---------
+        ----------
         m: string error message if assertion is not met
 
         Returns
-        ----------
+        -------
         Nothing (if checks pass) or prints error message m
         """
         # RendererBase() is needed to get extent, otherwise raises an error
@@ -453,7 +453,7 @@ class PlotTester(object):
         b2: 2x2 array, bounding box of window extents
 
         Returns
-        ----------
+        -------
         boolean value that says if bounding boxes b1 and b2 overlap
         """
         x_overlap = (b1[0][0] <= b2[1][0] and b1[0][0] >= b2[0][0]) or (
@@ -473,7 +473,7 @@ class PlotTester(object):
         m: string error message if assertion is not met
 
         Returns
-        ----------
+        -------
         Nothing (if checks pass) or prints error message m
         """
         legends = self.get_legends()
@@ -497,15 +497,15 @@ class PlotTester(object):
     def get_xy(self, points_only=False, xtime=False):
         """Returns a pandas dataframe with columns "x" and "y" holding the x and y coords on Axes ax
 
-        PARAMETERS
-        ---------
+        Parameters
+        ----------
         ax: Matplotlib Ax object
             axes object to be tested
         points_only: boolean
         xtime: boolean
             True if the x axis of the plot contains datetime values
 
-        RETURNS
+        Returns
         -------
         Pandas dataframe with columns "x" and "y" containing the x and y coords of each point on Axes ax
         """
@@ -664,11 +664,11 @@ class PlotTester(object):
         """Returns the y intercept of line based on the average slope of the line
 
         Parameters
-        ---------
+        ----------
         path_verts: array of verticies that make a line on Axes ax
 
         Returns
-        --------
+        -------
         slope: float of the average slope
         y_intercept: float of the y intercept
         """
@@ -691,7 +691,7 @@ class PlotTester(object):
         """Asserts that there exists a line on Axes ax with slope slope_exp and y intercept intercept_exp and goes at least from x coordinate min_val to x coordinate max_val
 
         Parameters
-        ---------
+        ----------
         slope_exp: expected slope of line
         intercept_exp: expeted y intercept of line
         xtime: boolean if x-axis values are datetime
@@ -754,14 +754,14 @@ class PlotTester(object):
         """Asserts number of bins of type which_bins is at least n
 
         Parameters
-        --------
+        ----------
         n: int declaring minimum number of bins of type which_bin
         which_bins: string from list ['negative', 'positive']
             'negative': all bins with values centered at a positive value
             'positite': all bins with values centered at a negative value
 
         Returns
-        --------
+        -------
         """
         x_data = self.get_xy(xtime=False)["x"]
         if which_bins == "negative":
