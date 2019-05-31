@@ -48,6 +48,7 @@ def pt_line_plt(pd_df):
     # Basic plot plus title, x and y axis labels
     pd_df.plot("A", "B", kind="line", ax=ax)
     ax.set_title("My Plot Title", fontsize=30)
+    plt.suptitle("My Figure Title")
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
     ax.set_xlim((0, 100))
