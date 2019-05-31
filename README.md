@@ -24,7 +24,7 @@ To install, use pip. `--upgrade` is optional but it ensures that the package ove
 when you install and you have the current version. If you don't have the package
 yet you can still use the `--upgrade` argument.
 
-`pip install --upgrade git+https://github.com/earthlab/matplotcheck.git`
+`pip install --upgrade matplotcheck`
 
 Then import it into python.
 
@@ -111,7 +111,7 @@ conda env create -f environment.yml
 conda activate matplotcheck-dev
 ```
 
-THen setup dev requirements
+Then setup all of the development requirements.
 
 ```
 pip install -e .
