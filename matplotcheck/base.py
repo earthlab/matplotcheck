@@ -358,27 +358,17 @@ class PlotTester(object):
         """
         legends = self.get_legends()
 
-        # I think this should be a try - it's just looking to see if the
-        # Instructor provided the correct number of legends. But also what
-        # if the student provides a plot with more than one??
+        # Test number of legends - edge case when a student might have two
+        # legends rather than 2
 
-        try:
-            len(legends) == len(titles_exp)
-        except ValueError:
-            raise ValueError(
-                "The number of legend strings provided "
-                "doesn't equal the number of legend strings found "
-                "in the plot object"
-            )
+        num_legends = len(legends)
+        num_exp_legends = len(titles_exp)
 
-        # try:
-        #     len(legends) == len(titles_exp)
-        # except:
-        #     raise ValueError("The number of legend strings should equal the "
-        #                      "number of ??? i'm not sure what this does")
-        # assert len(legends) == len(
-        #     titles_exp
-        # ), "Incorrect number of legend exist"
+        assert num_legends == num_exp_legends, (
+            "I was expecting {0} legend "
+            "titles but instead found "
+            "{1}".format(num_legends, num_exp_legends)
+        )
 
         # Check that each expected legend title is in a legend title in ax
         titles = [leg.get_title().get_text().lower() for leg in legends]

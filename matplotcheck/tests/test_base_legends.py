@@ -31,7 +31,7 @@ def test_assert_legend_titles_wrong_num(pt_multi_line_plt):
     is not equal to # of legends"""
     with pytest.raises(
         AssertionError,
-        match="Legend title does not contain expected string: legend2",
+        match="I was expecting 1 legend titles but instead found 2",
     ):
         pt_multi_line_plt.assert_legend_titles(["legend", "legend2"])
 
