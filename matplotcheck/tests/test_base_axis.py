@@ -12,6 +12,7 @@ def test_axis_off_fail_on(pt_line_plt):
         AssertionError, match="Axis lines are displayed on plot"
     ):
         pt_line_plt.assert_axis_off()
+    plt.close()
 
 
 def test_axis_off_turned_off(pt_line_plt):
@@ -19,6 +20,7 @@ def test_axis_off_turned_off(pt_line_plt):
     # Turn off axis and test again
     pt_line_plt.ax.axis("off")
     pt_line_plt.assert_axis_off()
+    plt.close()
 
 
 def test_axis_off_vis_false(pt_line_plt):
@@ -26,6 +28,7 @@ def test_axis_off_vis_false(pt_line_plt):
     pt_line_plt.ax.xaxis.set_visible(False)
     pt_line_plt.ax.yaxis.set_visible(False)
     pt_line_plt.assert_axis_off()
+    plt.close()
 
 
 def test_axis_off_one_visible(pt_line_plt):
@@ -44,6 +47,7 @@ def test_axis_off_one_visible(pt_line_plt):
         AssertionError, match="Axis lines are displayed on plot"
     ):
         pt_line_plt.assert_axis_off()
+    plt.close()
 
 
 def test_axis_off_empty_ticks(pt_line_plt):
@@ -51,6 +55,7 @@ def test_axis_off_empty_ticks(pt_line_plt):
     pt_line_plt.ax.xaxis.set_ticks([])
     pt_line_plt.ax.yaxis.set_ticks([])
     pt_line_plt.assert_axis_off()
+    plt.close()
 
 
 def test_axis_off_non_empty_ticks(pt_line_plt):
@@ -69,16 +74,19 @@ def test_axis_off_non_empty_ticks(pt_line_plt):
         AssertionError, match="Axis lines are displayed on plot"
     ):
         pt_line_plt.assert_axis_off()
+    plt.close()
 
 
 def test_axis_label_contains_x(pt_line_plt):
     """Checks for assert_axis_label_contains for x axis"""
     pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "label"])
+    plt.close()
 
 
 def test_axis_label_contains_y(pt_line_plt):
     """Checks for assert_axis_label_contains for y axis"""
     pt_line_plt.assert_axis_label_contains(axis="y", lst=["y"])
+    plt.close()
 
 
 def test_axis_label_contains_invalid_axis(pt_line_plt):
@@ -86,6 +94,7 @@ def test_axis_label_contains_invalid_axis(pt_line_plt):
     # Fails when given an invalid axies
     with pytest.raises(ValueError, match="axis must be one of the following"):
         pt_line_plt.assert_axis_label_contains(axis="z", lst=["y"])
+    plt.close()
 
 
 def test_axis_label_contains_bad_text(pt_line_plt):
@@ -94,11 +103,13 @@ def test_axis_label_contains_bad_text(pt_line_plt):
         AssertionError, match="x axis label does not contain expected text:foo"
     ):
         pt_line_plt.assert_axis_label_contains(axis="x", lst=["x", "foo"])
+    plt.close()
 
 
 def test_axis_label_contains_expect_none(pt_line_plt):
     """Check assert_axis_label_contains passes when expected text is blank"""
     pt_multi_line_plt.assert_axis_label_contains(axis="x", lst=None)
+    plt.close()
 
 
 def test_axis_label_contains_expect_none(pt_multi_line_plt):
@@ -112,16 +123,19 @@ def test_axis_label_contains_expect_none(pt_multi_line_plt):
         AssertionError, match="Expected y axis label is not displayed"
     ):
         pt_multi_line_plt.assert_axis_label_contains(axis="y", lst=["foo"])
+    plt.close()
 
 
 def test_assert_lims_x_pass(pt_line_plt):
     """Test for axis limit assertion x axis (exact values)"""
     pt_line_plt.assert_lims([0, 100], axis="x")
+    plt.close()
 
 
 def test_assert_lims_y_pass(pt_line_plt):
     """Test for axis limit assertion y axis (exact values)"""
     pt_line_plt.assert_lims([0, 100], axis="y")
+    plt.close()
 
 
 def test_assert_lims_y_bad_lims(pt_line_plt):
@@ -132,6 +146,7 @@ def test_assert_lims_y_bad_lims(pt_line_plt):
     # Bad min
     with pytest.raises(AssertionError, match="Incorrect limits on the y axis"):
         pt_line_plt.assert_lims([1, 100], axis="y")
+    plt.close()
 
 
 def test_assert_lims_x_bad_lims(pt_line_plt):
@@ -142,6 +157,7 @@ def test_assert_lims_x_bad_lims(pt_line_plt):
     # Bad min
     with pytest.raises(AssertionError, match="Incorrect limits on the x axis"):
         pt_line_plt.assert_lims([1, 100], axis="x")
+    plt.close()
 
 
 def test_assert_lims_invalid_axis(pt_line_plt):
@@ -150,18 +166,21 @@ def test_assert_lims_invalid_axis(pt_line_plt):
         ValueError, match="axis must be one of the following string"
     ):
         pt_line_plt.assert_lims([0, 100], axis="z")
+    plt.close()
 
 
 def test_assert_lims_range_x_pass(pt_line_plt):
     """Test that x axis limit assertion range passes as expected"""
     pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="x")
     pt_line_plt.assert_lims_range(((0, 0), (100, 100)), axis="x")
+    plt.close()
 
 
 def test_assert_lims_range_y_pass(pt_line_plt):
     """Test that y axis limit assertion range passes as expected"""
     pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="y")
     pt_line_plt.assert_lims_range(((0, 0), (100, 100)), axis="y")
+    plt.close()
 
 
 def test_assert_lims_range_y_bad_lims(pt_line_plt):
@@ -174,6 +193,7 @@ def test_assert_lims_range_y_bad_lims(pt_line_plt):
         AssertionError, match="Incorrect min limit on the y axis"
     ):
         pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="y")
+    plt.close()
 
 
 def test_assert_lims_range_x_bad_lims(pt_line_plt):
@@ -186,6 +206,7 @@ def test_assert_lims_range_x_bad_lims(pt_line_plt):
         AssertionError, match="Incorrect min limit on the x axis"
     ):
         pt_line_plt.assert_lims_range(((1, 5), (95, 105)), axis="x")
+    plt.close()
 
 
 def test_assert_lims_range_invalid_axis(pt_line_plt):
@@ -194,11 +215,13 @@ def test_assert_lims_range_invalid_axis(pt_line_plt):
         ValueError, match="axis must be one of the following string"
     ):
         pt_line_plt.assert_lims_range(((-5, 5), (95, 105)), axis="z")
+    plt.close()
 
 
 def test_assert_equal_xlims_ylims(pt_line_plt):
     """Checks that axis xlims and ylims are equal, as expected"""
     pt_line_plt.assert_equal_xlims_ylims()
+    plt.close()
 
 
 def test_assert_equal_xlims_ylims_bad_xlims(pt_line_plt):
@@ -207,6 +230,7 @@ def test_assert_equal_xlims_ylims_bad_xlims(pt_line_plt):
     pt_line_plt.ax.set_xlim((0, 99))
     with pytest.raises(AssertionError, match="xlims and ylims are not equal"):
         pt_line_plt.assert_equal_xlims_ylims()
+    plt.close()
 
 
 def test_assert_equal_xlims_ylims_bad_ylims(pt_line_plt):
@@ -215,3 +239,4 @@ def test_assert_equal_xlims_ylims_bad_ylims(pt_line_plt):
     pt_line_plt.ax.set_ylim((1, 100))
     with pytest.raises(AssertionError, match="xlims and ylims are not equal"):
         pt_line_plt.assert_equal_xlims_ylims()
+    plt.close()
