@@ -115,5 +115,5 @@ Then setup all of the development requirements.
 
 ```
 pip install -e .
-pip install dev-requirements.txt
+pip install -r dev-requirements.txt
 ```
