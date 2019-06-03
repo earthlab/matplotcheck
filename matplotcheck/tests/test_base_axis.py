@@ -1,5 +1,6 @@
 """Tests for the base module -- axis"""
 import pytest
+import matplotlib.pyplot as plt
 
 
 """ AXIS TESTS """

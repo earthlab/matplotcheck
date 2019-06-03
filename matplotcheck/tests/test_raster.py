@@ -89,18 +89,23 @@ def test_raster_get_colorbars_length(raster_plt):
     # Should only be 1 object, and should be a colorbar object
     cb = raster_plt.get_colorbars()
     assert len(cb) == 1
+    plt.close()
+
+
 
 
 def test_raster_get_colorbars_type(raster_plt):
     """Check that get_colorbars retrieves a colorbar object"""
     cb = raster_plt.get_colorbars()
     assert isinstance(cb[0], matplotlib.colorbar.Colorbar)
+    plt.close()
 
 
 def test_raster_assert_colorbar_range(raster_plt, np_ar):
     """Colorbar range checker, should be set to min and max of input array"""
     # Colorbar range should be min and max
     raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max()])
+    plt.close()
 
 
 def test_raster_assert_colorbar_range_wrongmin(raster_plt, np_ar):
@@ -113,6 +118,7 @@ def test_raster_assert_colorbar_range_wrongmin(raster_plt, np_ar):
         ),
     ):
         raster_plt.assert_colorbar_range([np_ar.min() - 1, np_ar.max()])
+    plt.close()
 
 
 def test_raster_assert_colorbar_range_wrongmax(raster_plt, np_ar):
@@ -125,6 +131,7 @@ def test_raster_assert_colorbar_range_wrongmax(raster_plt, np_ar):
         ),
     ):
         raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max() + 0.1])
+    plt.close()
 
 
 def test_raster_assert_colorbar_range_multiple(raster_plt, np_ar):
@@ -136,6 +143,7 @@ def test_raster_assert_colorbar_range_multiple(raster_plt, np_ar):
         AssertionError, match="Exactly one colorbar should be displayed"
     ):
         raster_plt.assert_colorbar_range([np_ar.min(), np_ar.max()])
+    plt.close()
 
 
 def test_raster_assert_colorbar_range_blank(raster_plt_blank, np_ar):
@@ -143,6 +151,7 @@ def test_raster_assert_colorbar_range_blank(raster_plt_blank, np_ar):
     # Should fail with no image on axis
     with pytest.raises(AssertionError, match="No image found on axes"):
         raster_plt_blank.assert_colorbar_range([np_ar.min(), np_ar.max()])
+    plt.close()
 
 
 """ LEGEND TESTS """
@@ -156,6 +165,7 @@ def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
     raster_plt_class.assert_legend_accuracy_classified_image(
         np_ar_discrete, label_options
     )
+    plt.close()
 
 
 def test_raster_assert_legend_accuracy_badlabel(
@@ -170,6 +180,7 @@ def test_raster_assert_legend_accuracy_badlabel(
         raster_plt_class.assert_legend_accuracy_classified_image(
             np_ar_discrete, bad_label_options
         )
+    plt.close()
 
 
 def test_raster_assert_legend_accuracy_badvalues(
@@ -190,6 +201,7 @@ def test_raster_assert_legend_accuracy_badvalues(
         raster_plt_class.assert_legend_accuracy_classified_image(
             bad_image, label_options
         )
+    plt.close()
 
 
 def test_raster_assert_legend_accuracy_nolegend(raster_plt, np_ar_discrete):
@@ -202,6 +214,7 @@ def test_raster_assert_legend_accuracy_nolegend(raster_plt, np_ar_discrete):
         raster_plt.assert_legend_accuracy_classified_image(
             np_ar_discrete, label_options
         )
+    plt.close()
 
 
 def test_raster_assert_legend_accuracy_noimage(
@@ -216,6 +229,7 @@ def test_raster_assert_legend_accuracy_noimage(
         raster_plt_blank.assert_legend_accuracy_classified_image(
             np_ar_discrete, label_options
         )
+    plt.close()
 
 
 """ IMAGE TESTS """
@@ -224,6 +238,7 @@ def test_raster_assert_legend_accuracy_noimage(
 def test_raster_assert_image(raster_plt, np_ar):
     """Checks that assert_image passes only when plot data matches array"""
     raster_plt.assert_image(np_ar)
+    plt.close()
 
 
 def test_raster_assert_image_baddata(raster_plt, np_ar):
@@ -232,17 +247,20 @@ def test_raster_assert_image_baddata(raster_plt, np_ar):
     bad_ar = np_ar + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
         raster_plt.assert_image(bad_ar)
+    plt.close()
 
 
 def test_raster_assert_image_blank(raster_plt_blank, np_ar):
     """"assert_image should fail with blank image"""
     with pytest.raises(AssertionError, match="No Image Displayed"):
         raster_plt_blank.assert_image(np_ar)
+    plt.close()
 
 
 def test_raster_assert_image_rgb(raster_plt_rgb, np_ar_rgb):
     """Check assert_image for a 3-band RGB image"""
     raster_plt_rgb.assert_image(np_ar_rgb)
+    plt.close()
 
 
 def test_raster_assert_image_rgb_baddata(raster_plt_rgb, np_ar_rgb):
@@ -250,11 +268,13 @@ def test_raster_assert_image_rgb_baddata(raster_plt_rgb, np_ar_rgb):
     bad_ar = np_ar_rgb + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
         raster_plt_rgb.assert_image(bad_ar)
+    plt.close()
 
 
 def test_raster_assert_image_class(raster_plt_class, np_ar_discrete):
     """Check assert_image for a discrete, classified image"""
     raster_plt_class.assert_image(np_ar_discrete, im_classified=True)
+    plt.close()
 
 
 def test_raster_assert_image_class_baddata(raster_plt_class, np_ar_discrete):
@@ -262,11 +282,13 @@ def test_raster_assert_image_class_baddata(raster_plt_class, np_ar_discrete):
     bad_ar = np_ar_discrete + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
         raster_plt_class.assert_image(bad_ar)
+    plt.close()
 
 
 def test_raster_assert_image_fullscreen(raster_plt):
     """Checks that the first image on axis takes up full axis"""
     raster_plt.assert_image_full_screen()
+    plt.close()
 
 
 def test_raster_assert_image_fullscreen_fail_xlims(raster_plt):
@@ -277,6 +299,7 @@ def test_raster_assert_image_fullscreen_fail_xlims(raster_plt):
         AssertionError, match="Image is stretched inaccurately"
     ):
         raster_plt.assert_image_full_screen()
+    plt.close()
 
 
 def test_raster_assert_image_fullscreen_fail_ylims(raster_plt):
@@ -288,9 +311,11 @@ def test_raster_assert_image_fullscreen_fail_ylims(raster_plt):
         AssertionError, match="Image is stretched inaccurately"
     ):
         raster_plt.assert_image_full_screen()
+    plt.close()
 
 
 def test_raster_assert_image_fullscreen_blank(raster_plt_blank):
     """assert_image_fullscreen should fail with blank image"""
     with pytest.raises(AssertionError, match="No image found on axes"):
         raster_plt_blank.assert_image_full_screen()
+    plt.close()
