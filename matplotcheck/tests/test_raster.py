@@ -92,8 +92,6 @@ def test_raster_get_colorbars_length(raster_plt):
     plt.close()
 
 
-
-
 def test_raster_get_colorbars_type(raster_plt):
     """Check that get_colorbars retrieves a colorbar object"""
     cb = raster_plt.get_colorbars()

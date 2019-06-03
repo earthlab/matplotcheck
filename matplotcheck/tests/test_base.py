@@ -57,5 +57,3 @@ def test_correct_title(pt_line_plt):
 
     assert "Plot Title" in pt_line_plt.get_titles()[1]
     plt.close()
-
-
