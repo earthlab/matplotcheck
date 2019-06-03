@@ -1,5 +1,6 @@
 """Tests for the base module"""
 import pytest
+import matplotlib.pyplot as plt
 
 
 def test_line_plot(pt_line_plt):
@@ -11,6 +12,7 @@ def test_line_plot(pt_line_plt):
         pt_line_plt.assert_plot_type("bar")
     with pytest.raises(AssertionError):
         pt_line_plt.assert_plot_type("scatter")
+    plt.close()
 
 
 def test_scatter_plot(pt_scatter_plt):
@@ -22,6 +24,7 @@ def test_scatter_plot(pt_scatter_plt):
         pt_scatter_plt.assert_plot_type("bar")
     with pytest.raises(AssertionError):
         pt_scatter_plt.assert_plot_type("line")
+    plt.close()
 
 
 def test_bar_plot(pt_bar_plt):
@@ -33,6 +36,7 @@ def test_bar_plot(pt_bar_plt):
         pt_bar_plt.assert_plot_type("scatter")
     with pytest.raises(AssertionError):
         pt_bar_plt.assert_plot_type("line")
+    plt.close()
 
 
 def test_options(pt_line_plt):
@@ -44,6 +48,7 @@ def test_options(pt_line_plt):
         match="Plot_type to test must be either: scatter, bar or line",
     ):
         pt_line_plt.assert_plot_type("foo")
+    plt.close()
 
 
 def test_correct_title(pt_line_plt):
@@ -51,3 +56,4 @@ def test_correct_title(pt_line_plt):
     Note that get_titles maintains case."""
 
     assert "Plot Title" in pt_line_plt.get_titles()[1]
+    plt.close()

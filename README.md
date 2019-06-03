@@ -116,4 +116,5 @@ Then setup all of the development requirements.
 ```
 pip install -e .
 pip install -r dev-requirements.txt
+pre-commit install
 ```
