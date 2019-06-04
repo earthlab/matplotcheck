@@ -630,6 +630,7 @@ class PlotTester(object):
             error message provided to the student if assertion fails
         """
 
+        # If there data are spatial (geopandas), grab geometry data
         if type(xy_expected) == gpd.geodataframe.GeoDataFrame and not xcol:
             xy_expected = pd.DataFrame(
                 data={
@@ -646,6 +647,8 @@ class PlotTester(object):
                 self.assert_xlabel_ydata(xy_expected, xcol=xcol, ycol=ycol)
                 return
             xy_data = self.get_xy(points_only=points_only, xtime=xtime)
+
+            # Make sure the data are sorted the same
             xy_data, xy_expected = (
                 xy_data.sort_values(by="x"),
                 xy_expected.sort_values(by=xcol),
@@ -653,7 +656,7 @@ class PlotTester(object):
             if tolerence > 0:
                 if xtime:
                     raise ValueError(
-                        "tolerence must be 0 with datetime on x-axis"
+                        "tolerance must be 0 with datetime on x-axis"
                     )
                 np.testing.assert_allclose(
                     xy_data["x"], xy_expected[xcol], rtol=tolerence, err_msg=m
