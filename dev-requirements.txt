@@ -2,7 +2,7 @@ bumpversion
 sphinx==2.0.0
 sphinx-autobuild==0.7.1
 sphinx_rtd_theme
-pytest
+pytest==4.6.2
 pytest-cov
 pytest-vcr
 m2r
