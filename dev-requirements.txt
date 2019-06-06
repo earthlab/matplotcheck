@@ -3,7 +3,7 @@ sphinx==2.0.0
 sphinx-autobuild==0.7.1
 sphinx_rtd_theme
 pytest
-pytest-cov
+pytest-cov==2.7.1
 pytest-vcr
 m2r
 codecov
