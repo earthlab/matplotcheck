@@ -9,5 +9,5 @@ m2r
 codecov
 sphinx_gallery
 pre-commit
-setuptools==40.8.0
+setuptools==41.0.1
 pip==19.0.3
