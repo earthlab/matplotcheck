@@ -6,7 +6,7 @@ pytest==4.6.2
 pytest-cov
 pytest-vcr
 m2r
-codecov
+codecov==2.0.15
 sphinx_gallery
 pre-commit==1.17.0
 setuptools==40.8.0
