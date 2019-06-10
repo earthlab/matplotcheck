@@ -1,5 +1,5 @@
 bumpversion==0.5.3
-sphinx==2.0.0
+sphinx==2.1.1
 sphinx-autobuild==0.7.1
 sphinx_rtd_theme
 pytest==4.6.2
