@@ -3,10 +3,10 @@ sphinx==2.0.0
 sphinx_rtd_theme==0.4.3
 sphinx_gallery
 sphinx-autobuild==0.7.1
+m2r==0.2.1
 pytest-vcr==1.0.2
 pytest-cov==2.7.1
 pytest==4.6.2
-m2r
 codecov==2.0.15
 pre-commit==1.17.0
 setuptools==40.8.0
