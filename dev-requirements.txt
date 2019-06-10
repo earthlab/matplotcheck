@@ -1,5 +1,4 @@
 bumpversion==0.5.3
-sphinx==2.0.0
 sphinx_rtd_theme==0.4.3
 sphinx_gallery==0.3.1
 sphinx-autobuild==0.7.1
