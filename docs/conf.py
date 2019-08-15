@@ -14,19 +14,20 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath("../"))
 
 
 # -- Project information -----------------------------------------------------
 
 project = "matplotcheck"
-copyright = "2018, Leah Wasser, Kristin Curry"
+copyright = "2019, Leah Wasser, Kristin Curry"
 author = "Leah Wasser, Kristin Curry"
 
 # The short X.Y version
-version = ".2"
+version = "0.0.10"
 # The full version, including alpha/beta/rc tags
-release = ".2"
+release = "0.0.10"
 
 
 # -- General configuration ---------------------------------------------------
@@ -71,7 +72,13 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "matplotcheck/tests", "keepme"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "matplotcheck/tests",
+    "keepme",
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -193,4 +200,4 @@ epub_exclude_files = ["search.html"]
 # -- Options for todo extension ----------------------------------------------
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-#todo_include_todos = True
+# todo_include_todos = True

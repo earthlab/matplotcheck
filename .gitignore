@@ -8,6 +8,8 @@ matplotcheck.egg-info/
 .idea
 .pytest_cache/
 __pycache__/
+.DS_Store
+pip-wheel-metadata/
 
 
 # Sphinx documentation

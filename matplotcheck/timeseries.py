@@ -188,5 +188,5 @@ class TimeSeriesTester(PlotTester):
         x_exp: expected x_axis values, must be in a datetime format
         """
         x_data = [math.floor(d) for d in self.get_xy(xtime=False)["x"]]
-        x_exp = [d.toordinal() for d in x_exp]  # convert to days elasped
+        x_exp = [d.toordinal() for d in x_exp]  # convert to days elapsed
         assert np.array_equal(sorted(x_exp), sorted(x_data)), m
