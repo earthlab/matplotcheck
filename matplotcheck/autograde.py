@@ -16,20 +16,20 @@ def run_test(
 
     Parameters
     ---------
-    func: pre-defined test function to be run
+    func: name of pre-defined test function to run
     points: number of points assigned for passing test
-    args: arguments for test function
-    correct_message: custom message returned with passing test
-    error_message: custom message returned with failing test
-    kwargs: keyword arguments for test function
+    args: arguments provided to test function
+    correct_message: string of custom message returned with passing test
+    error_message: string of custom message returned with failing test
+    kwargs: keyword arguments provided to test function
 
     Returns
     -------
     results: dictionary with the following key:value pairs
         points: number of points assigned based on test results
-        pass: passing status of test [True, False]
-        description: name of test function that was run
-        message: custom message returned based on passing status
+        pass: boolean of passing status of test
+        description: string of test function name that was run
+        message: string of custom message returned based on passing status
             [correct_message or error_message]
         traceback: error message from test function (when pass is False)
     """
@@ -59,15 +59,15 @@ def output_results(results):
     ---------
     results: dictionary with the following key:value pairs
         points: number of points assigned based on test results
-        pass: passing status of test [True, False]
-        description: name of test function that was run
-        message: custom message returned based on passing status
+        pass: boolean of passing status of test
+        description: string of test function name that was run
+        message: string of custom message returned based on passing status
             [correct_message or error_message]
         traceback: error message from test function (when pass is False)
 
     Returns
     -------
-    points: total number of points summed across points in results dictionary
+    points: number of points summed across points in results dictionary
     """
     points = 0
     for r in results:
