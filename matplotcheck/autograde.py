@@ -30,7 +30,7 @@ def run_test(
         pass: boolean of passing status of test
         description: string of test function name that was run
         message: string of custom message returned based on passing status
-            [correct_message or error_message]
+        [correct_message or error_message]
         traceback: error message from test function (when pass is False)
     """
     results = {"points": 0, "pass": False}
@@ -62,7 +62,7 @@ def output_results(results):
         pass: boolean of passing status of test
         description: string of test function name that was run
         message: string of custom message returned based on passing status
-            [correct_message or error_message]
+        [correct_message or error_message]
         traceback: error message from test function (when pass is False)
 
     Returns
