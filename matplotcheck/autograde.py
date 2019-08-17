@@ -53,11 +53,11 @@ def run_test(
 
 def output_results(results):
     """Prints a formatted message containing the total number of points
-    summed across a dictionary of results (from one or more tests)
+    summed across a list of dictionaries with results from one or more tests
 
     Parameters
     ---------
-    results: dictionary with the following key:value pairs
+    results: list of dictionaries with the following key:value pairs
         points: number of points assigned based on test results
         pass: boolean of passing status of test
         description: string of test function name that was run
@@ -67,7 +67,7 @@ def output_results(results):
 
     Returns
     -------
-    points: number of points summed across points in results dictionary
+    points: number of points summed across points in results list
     """
     points = 0
     for r in results:
