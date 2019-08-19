@@ -1,6 +1,11 @@
-# Wrapper functions for matplotcheck functions that run
-# and track the passing status of test functions and
-# provide formatted results of tests
+"""
+matplotcheck.autograde
+======================
+
+Wrapper functions that run and track the passing status of
+matplotcheck functions and provide formatted results of tests.
+
+"""
 
 
 def run_test(
@@ -11,27 +16,32 @@ def run_test(
     error_message="default error",
     **kwargs
 ):
-    """Runs a pre-defined test function and creates a dictionary
+    """Run a pre-defined test function and creates a dictionary
     containing the results of the test
 
     Parameters
-    ---------
-    func: name of pre-defined test function to run
-    points: number of points assigned for passing test
-    args: arguments provided to test function
-    correct_message: string of custom message returned with passing test
-    error_message: string of custom message returned with failing test
-    kwargs: keyword arguments provided to test function
+    ----------
+    func : function or method
+        Pre-defined test function to run
+    points : int or float
+        Number of points assigned for passing test
+    *args
+        Variable arguments passed to test function
+    correct_message : str
+        Custom message returned with passing test
+    error_message : str
+        Custom message returned with failing test
+    **kwargs
+        Keyword arguments passed to test function
 
     Returns
     -------
-    results: dictionary with the following key:value pairs
-        points: number of points assigned based on test results
-        pass: boolean of passing status of test
-        description: string of test function name that was run
-        message: string of custom message returned based on passing status
-        [correct_message or error_message]
-        traceback: error message from test function (when pass is False)
+    results : dict with the following keys:
+        points : int or float : points assigned based on test results
+        pass : bool : passing status of test function
+        description : str : test function name that was run
+        message : str : custom message returned based on passing status
+        traceback : Exception : returned from test function when pass is False
     """
     results = {"points": 0, "pass": False}
     score = 0
@@ -52,22 +62,22 @@ def run_test(
 
 
 def output_results(results):
-    """Prints a formatted message containing the total number of points
+    """Print a formatted message containing the total number of points
     summed across a list of dictionaries with results from one or more tests
 
     Parameters
-    ---------
-    results: list of dictionaries with the following key:value pairs
-        points: number of points assigned based on test results
-        pass: boolean of passing status of test
-        description: string of test function name that was run
-        message: string of custom message returned based on passing status
-        [correct_message or error_message]
-        traceback: error message from test function (when pass is False)
+    ----------
+    results : dict with the following keys:
+        points : int or float : points assigned based on test results
+        pass : bool : passing status of test function
+        description : str : test function name that was run
+        message : str : custom message returned based on passing status
+        traceback : Exception : returned from test function when pass is False
 
     Returns
     -------
-    points: number of points summed across points in results list
+    points : int or float
+        Number of points summed across points in results list
     """
     points = 0
     for r in results:
