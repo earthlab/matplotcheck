@@ -67,7 +67,7 @@ def output_results(results):
 
     Parameters
     ----------
-    results : dict with the following keys:
+    results : list of dictionaries with the following keys:
         points : int or float : points assigned based on test results
         pass : bool : passing status of test function
         description : str : test function name that was run
