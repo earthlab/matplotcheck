@@ -1,33 +1,52 @@
-# Adapted from geopandas and earthpy setup
-# https://github.com/geopandas/geopandas/blob/master/appveyor.yml
-# https://github.com/earthlab/earthpy/blob/master/appveyor.yml
+build: false
 
 matrix:
   fast_finish: true     # immediately finish build once one of the jobs fails.
 
 environment:
   matrix:
-    - PYTHON_VERSION: "3.6"
-      MINICONDA: C:\Miniconda36-x64
-
-build: false
+    - PYTHON: "C:\\myminiconda3"
 
 init:
-  - "ECHO %PYTHON_VERSION% %MINICONDA%"
+  - "ECHO %PYTHON%"
 
 install:
   # cancel older builds for the same PR
+  #- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+  #      https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+  #      Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+  #      throw "There are newer queued builds for this pull request, failing early." }
+
+  # If there is a newer build queued for the same PR, cancel this one.
+  # The AppVeyor 'rollout builds' option is supposed to serve the same
+  # purpose but it is problematic because it tends to cancel builds pushed
+  # directly to master instead of just PR builds (or the converse).
+  # credits: JuliaLang developers.
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
-        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
-        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
-        throw "There are newer queued builds for this pull request, failing early." }
+     https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+     Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+       throw "There are newer queued builds for this pull request, failing early." }
 
   # set up environment
-  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
-  - conda config --set always_yes yes --set show_channel_urls true --set changeps1 no
-  - conda update -q conda
-  - conda config --add channels conda-forge
-  - conda info -a
+
+  - set URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe"
+  - curl -fsS -o miniconda3.exe %URL%
+  - start /wait "" miniconda3.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%PYTHON%
+
+  - "set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - call %PYTHON%\Scripts\activate
+
+  - conda config --set always_yes yes --set changeps1 no --set show_channel_urls true
+  - conda update conda
+  - conda config --add channels conda-forge --force
+  - conda config --set safety_checks disabled
+  - conda config --set channel_priority strict
+
+#  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
+  #- conda config --set always_yes yes --set show_channel_urls true --set changeps1 no
+  #- conda update -q conda
+  #- conda config --add channels conda-forge
+  #- conda info -a
   - conda env create -f environment.yml
   - activate matplotcheck-dev
   - python setup.py install
