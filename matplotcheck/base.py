@@ -166,7 +166,7 @@ class PlotTester(object):
             for s in lst:
                 assert (
                     s.lower().replace(" ", "") in title
-                ), "Title does not contain expected text: {0}".format(s)
+                ), "Title does not contain expected text:{0}".format(s)
 
     """CAPTION TEST/HELPER FUNCTIONS """
 
