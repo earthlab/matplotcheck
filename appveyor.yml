@@ -50,7 +50,7 @@ install:
   - conda env create -f environment.yml
   - conda activate matplotcheck-dev
   - conda list
-  - python setup.py install --no-deps
+  - pip install -e . --no-deps
   - pip install -r dev-requirements.txt --user
 
 test_script:
