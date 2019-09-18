@@ -15,6 +15,9 @@ import math
 from scipy import stats
 import pandas as pd
 import geopandas as gpd
+import datetime
+
+import pdb
 
 
 class InvalidPlotError(Exception):
@@ -699,6 +702,23 @@ class PlotTester(object):
                 xy_data.sort_values(by="x"),
                 xy_expected.sort_values(by=xcol),
             )
+
+            if isinstance(xy_data["x"][0], datetime.datetime):
+                pdb.set_trace()
+                for i, t in enumerate(xy_data["x"]):
+                    t = datetime.datetime(
+                        year=(t.year + 1970),
+                        month=t.month,
+                        day=t.day,
+                        hour=t.hour,
+                        minute=t.minute,
+                        second=t.second,
+                        microsecond=t.microsecond,
+                        # tzinfo=t.tzinfo,
+                    )
+                    xy_data["x"][i] = t
+                pdb.set_trace()
+
             if tolerence > 0:
                 if xtime:
                     raise ValueError(
