@@ -78,3 +78,9 @@ def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
     with pytest.raises(AssertionError, match="Incorrect data values"):
         pt_bar_plt.assert_xydata(pd_df, xcol="A", ycol="B", xlabels=True)
     plt.close()
+
+
+def test_assert_xydata_expected_none(pt_scatter_plt):
+    "Tests that assert_xydata passes when xy_expected is None"
+    pt_scatter_plt.assert_xydata(None)
+    plt.close()
