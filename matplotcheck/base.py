@@ -647,8 +647,6 @@ class PlotTester(object):
 
         Parameters
         ----------
-        ax : matplotlib.axes.Axes
-            (Required) Matplotlib Axis object to be tested
         xy_expected : pandas or geopandas dataframe
             (Required) DataFrame contains data expected to be on the plot (axis object)
         xcol : string
@@ -668,8 +666,10 @@ class PlotTester(object):
             Set ``True`` if using x axis labels rather than x data.
         tolerence : float
             Measure of relative error allowed.
-            For example, a value of .001 asserts values in array
-            are within .001 of each other. ## this isn't exactly correct.. ##
+            For example: Given a tolerance ``tolerence=0.1``, an expected value
+            ``e``, and an actual value ``a``, this asserts
+            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
+            with ``rtol=tolerence`` and ``atol=inf``.)
         m : string
             Error message provided to the student if assertion fails
 
@@ -678,9 +678,17 @@ class PlotTester(object):
         None :
             Nothing if no legends overlap, otherwise throws ``AssertionError`` with message `m`
         """
+        if xy_expected is None:
+            pass
+        elif not isinstance(xy_expected, pd.DataFrame):
+            raise ValueError(
+                "xy_expected must be of type: pandas dataframe or Geopandas Dataframe"
+            )
 
-        # If there data are spatial (geopandas), grab geometry data
-        if type(xy_expected) == gpd.geodataframe.GeoDataFrame and not xcol:
+        # If xy_expected is a GeoDataFrame, then we make is a normal DataFrame
+        # with the coordinates of the geometry in that GeoDataFrame as the x and
+        # y data
+        if isinstance(xy_expected, gpd.geodataframe.GeoDataFrame) and not xcol:
             xy_expected = pd.DataFrame(
                 data={
                     "x": [p.x for p in xy_expected.geometry],
@@ -688,57 +696,30 @@ class PlotTester(object):
                 }
             ).dropna()
             xcol, ycol = "x", "y"
-        if (
-            type(xy_expected) == pd.DataFrame
-            or type(xy_expected) == gpd.geodataframe.GeoDataFrame
-        ):
-            if xlabels:
-                self.assert_xlabel_ydata(xy_expected, xcol=xcol, ycol=ycol)
-                return
-            xy_data = self.get_xy(points_only=points_only, xtime=xtime)
 
-            # Make sure the data are sorted the same
-            xy_data, xy_expected = (
-                xy_data.sort_values(by="x"),
-                xy_expected.sort_values(by=xcol),
+        if xlabels:
+            self.assert_xlabel_ydata(xy_expected, xcol=xcol, ycol=ycol)
+            return
+        xy_data = self.get_xy(points_only=points_only, xtime=xtime)
+
+        # Make sure the data are sorted the same
+        xy_data, xy_expected = (
+            xy_data.sort_values(by="x"),
+            xy_expected.sort_values(by=xcol),
+        )
+
+        if tolerence > 0:
+            if xtime:
+                raise ValueError("tolerance must be 0 with datetime on x-axis")
+            np.testing.assert_allclose(
+                xy_data["x"], xy_expected[xcol], rtol=tolerence, err_msg=m
             )
-
-            if isinstance(xy_data["x"][0], datetime.datetime):
-                pdb.set_trace()
-                for i, t in enumerate(xy_data["x"]):
-                    t = datetime.datetime(
-                        year=(t.year + 1970),
-                        month=t.month,
-                        day=t.day,
-                        hour=t.hour,
-                        minute=t.minute,
-                        second=t.second,
-                        microsecond=t.microsecond,
-                        # tzinfo=t.tzinfo,
-                    )
-                    xy_data["x"][i] = t
-                pdb.set_trace()
-
-            if tolerence > 0:
-                if xtime:
-                    raise ValueError(
-                        "tolerance must be 0 with datetime on x-axis"
-                    )
-                np.testing.assert_allclose(
-                    xy_data["x"], xy_expected[xcol], rtol=tolerence, err_msg=m
-                )
-                np.testing.assert_allclose(
-                    xy_data["y"], xy_expected[ycol], rtol=tolerence, err_msg=m
-                )
-            else:
-                assert np.array_equal(xy_data["x"], xy_expected[xcol]), m
-                assert np.array_equal(xy_data["y"], xy_expected[ycol]), m
-        elif xy_expected == None:
-            pass
+            np.testing.assert_allclose(
+                xy_data["y"], xy_expected[ycol], rtol=tolerence, err_msg=m
+            )
         else:
-            raise ValueError(
-                "xy_expected must be of type: pandas dataframe or Geopandas Dataframe"
-            )
+            assert np.array_equal(xy_data["x"], xy_expected[xcol]), m
+            assert np.array_equal(xy_data["y"], xy_expected[ycol]), m
 
     def assert_xlabel_ydata(self, xy_expected, xcol, ycol, m="Incorrect Data"):
         """Asserts that the numbers in x labels and y values in Axes `ax` match
