@@ -663,7 +663,9 @@ class PlotTester(object):
             datetime objects to seconds? This parameter will ensure the provided
             x col values are converted if they are datetime elements.
         xlabels : boolean
-            Set ``True`` if using x axis labels rather than x data.
+            Set ``True`` if using x axis labels rather than x data. Instead of
+            comparing numbers in the x-column to expected, compares numbers in x
+            labels to expected.
         tolerence : float
             Measure of relative error allowed.
             For example: Given a tolerance ``tolerence=0.1``, an expected value
@@ -698,7 +700,7 @@ class PlotTester(object):
             xcol, ycol = "x", "y"
 
         if xlabels:
-            self.assert_xlabel_ydata(xy_expected, xcol=xcol, ycol=ycol)
+            self.assert_xlabel_ydata(xy_expected, xcol=xcol, ycol=ycol, m=m)
             return
         xy_data = self.get_xy(points_only=points_only, xtime=xtime)
 
