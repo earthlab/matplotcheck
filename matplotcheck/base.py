@@ -711,12 +711,22 @@ class PlotTester(object):
         if tolerence > 0:
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
+            """
+            for i in range(100):
+                np.testing.assert_allclose(
+                    xy_data.iloc[0, 0:i], xy_expected.iloc[0, 0:i], rtol=tolerence, err_msg=m
+                )
+                np.testing.assert_allclose(
+                    xy_data.iloc[1, 0:i], xy_expected.iloc[1, 0:i], rtol=tolerence, err_msg=m
+                )
+            """
             np.testing.assert_allclose(
                 xy_data["x"], xy_expected[xcol], rtol=tolerence, err_msg=m
             )
             np.testing.assert_allclose(
                 xy_data["y"], xy_expected[ycol], rtol=tolerence, err_msg=m
             )
+
         else:
             assert np.array_equal(xy_data["x"], xy_expected[xcol]), m
             assert np.array_equal(xy_data["y"], xy_expected[ycol]), m
