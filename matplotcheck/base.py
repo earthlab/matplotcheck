@@ -17,8 +17,6 @@ import pandas as pd
 import geopandas as gpd
 import datetime
 
-import pdb
-
 
 class InvalidPlotError(Exception):
     pass

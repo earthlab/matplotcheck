@@ -6,8 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotcheck.base import PlotTester
 
-import pdb
-
 
 @pytest.fixture
 def pd_df():
