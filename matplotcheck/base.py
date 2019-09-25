@@ -679,7 +679,7 @@ class PlotTester(object):
             Nothing if no legends overlap, otherwise throws ``AssertionError`` with message `m`
         """
         if xy_expected is None:
-            pass
+            return
         elif not isinstance(xy_expected, pd.DataFrame):
             raise ValueError(
                 "xy_expected must be of type: pandas dataframe or Geopandas Dataframe"
