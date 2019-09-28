@@ -76,7 +76,9 @@ class PlotTester(object):
                     return True
         return False
 
-    def assert_plot_type(self, plot_type=None):
+    def assert_plot_type(
+        self, plot_type=None, message="Plot is not of type {0}"
+    ):
         """Asserts Axes `ax` contains the type of plot specified in `plot_type`.
         if `plot_type` is ``None``, assertion is passed.
 
@@ -85,6 +87,10 @@ class PlotTester(object):
         plot_type: string
             String specifying the expected plot type. Options:
             `scatter`, `bar`, `line`
+        message : string
+            The error message to be displayed if Plot does not match `plot_type`. If
+            `message` contains ``'{0}'``, it will be replaced
+            with the epected plot type.
 
         Returns
         -------
@@ -93,17 +99,11 @@ class PlotTester(object):
         """
         if plot_type:
             if plot_type == "scatter":
-                assert self._is_scatter(), "Plot is not of type {0}".format(
-                    plot_type
-                )
+                assert self._is_scatter(), message.format(plot_type)
             elif plot_type == "bar":
-                assert self.ax.patches, "Plot is not of type {0}".format(
-                    plot_type
-                )
+                assert self.ax.patches, message.format(plot_type)
             elif plot_type == "line":
-                assert self._is_line(), "Plot is not of type {0}".format(
-                    plot_type
-                )
+                assert self._is_line(), message.format(plot_type)
             else:
                 raise ValueError(
                     "Plot_type to test must be either: scatter, bar or line"
@@ -126,7 +126,13 @@ class PlotTester(object):
             suptitle += fig._suptitle.get_text()
         return suptitle, self.ax.get_title()
 
-    def assert_title_contains(self, lst, title_type="either"):
+    def assert_title_contains(
+        self,
+        lst,
+        title_type="either",
+        message="Title does not contain expected text:{0}",
+        message_not_displayed="Expected title is not displayed",
+    ):
         """Asserts title contains each string in lst. Whether we test the axes title or figure title
             is described in title_type.
 
@@ -140,6 +146,12 @@ class PlotTester(object):
             'axes': only the axes title (suptitle) will be tested
             'either': either the figure title or axes title will pass this assertion.
             The combined title will be tested.
+        message : string
+            The error message to be displayed if the title does not contain one of the
+            expected strings. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the title.
+        message_not_displayed : string
+            The error message to be displayed if the expected title is not displayed.
 
         Returns
         -------
@@ -161,12 +173,10 @@ class PlotTester(object):
         if lst == None:
             pass
         else:
-            assert title, "Expected title is not displayed"
+            assert title, message_not_displayed
             title = title.lower().replace(" ", "")
             for s in lst:
-                assert (
-                    s.lower().replace(" ", "") in title
-                ), "Title does not contain expected text:{0}".format(s)
+                assert s.lower().replace(" ", "") in title, message.format(s)
 
     """CAPTION TEST/HELPER FUNCTIONS """
 
@@ -193,7 +203,12 @@ class PlotTester(object):
                 break
         return caption
 
-    def assert_caption_contains(self, strings_exp):
+    def assert_caption_contains(
+        self,
+        strings_exp,
+        message="Caption does not contain expected string: {0}",
+        message_no_caption="No caption exist in appropriate location",
+    ):
         """Asserts that Axes ax contains strings as expected in strings_exp.
         strings_exp is a list of lists. Each internal list is a list of
         strings where at least one string must be in the caption, barring
@@ -208,6 +223,13 @@ class PlotTester(object):
             list of lists in which each internal list is a list of strings.
             If ``strings_exp = None``, assertion passes.
             If ``strings_exp == []``, assertion passes.
+        message : string
+            The error message to be displayed if the caption does not contain one of the
+            expected strings. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the caption.
+        message_no_caption : string
+            The error message to be displayed if no caption exists in the appropriate
+            location.
 
         Returns
         -------
@@ -225,7 +247,7 @@ class PlotTester(object):
         if strings_exp == None:
             return
         else:
-            assert caption, "No caption exist in appropriate location"
+            assert caption, message_no_caption
 
         caption = caption.get_text().lower().replace(" ", "")
         for lst in strings_exp:
@@ -235,13 +257,11 @@ class PlotTester(object):
                     caption = caption.replace(s, "")
                     flag = True
                     break
-            assert (
-                flag
-            ), "Caption does not contain expected string: {0}".format(s)
+            assert flag, message.format(s)
 
     """ AXIS TEST/HELPER FUNCTIONS """
 
-    def assert_axis_off(self, m="Axis lines are displayed on plot"):
+    def assert_axis_off(self, message="Axis lines are displayed on plot"):
         """Asserts one of the three cases holds true with error message m:
         1) axis have been turned off
         2) both x and y axis have visibility set to false
@@ -249,8 +269,8 @@ class PlotTester(object):
 
         Parameters
         ----------
-        m : string
-            error message if assertion is not met
+        message : string
+            The error message to be displayed if the assertion is not met.
 
         Returns
         ----------
@@ -273,7 +293,7 @@ class PlotTester(object):
         ):
             flag = True
 
-        assert flag, m
+        assert flag, message
 
     def assert_axis_label_contains(self, axis="x", lst=[]):
         """Asserts axis label contains each of the strings in lst. Tests x or y
