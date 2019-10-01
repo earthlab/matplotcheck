@@ -15,7 +15,6 @@ import math
 from scipy import stats
 import pandas as pd
 import geopandas as gpd
-import datetime
 
 
 class InvalidPlotError(Exception):
