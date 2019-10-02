@@ -131,8 +131,7 @@ class PlotTester(object):
 
     def assert_title_contains(self, lst, title_type="either"):
         """Asserts title contains each string in lst. Whether we test the axes
-        title or figure title
-            is described in title_type.
+        title or figure title is described in title_type.
 
         Parameters
         ----------
@@ -602,12 +601,7 @@ class PlotTester(object):
         ax : matplotlib.axes.Axes
             Matplotlib Axes object to be tested
         points_only : boolean
-<<<<<<< HEAD
-            Set ``True`` to check only points, set ``False`` tp check all data
-            on plot.
-=======
             Set ``True`` to check only points, set ``False`` to check all data on plot.
->>>>>>> master
         xtime : boolean
             Set equal to True if the x axis of the plot contains datetime values
 
