@@ -107,13 +107,13 @@ def test_axis_label_contains_bad_text(pt_line_plt):
     plt.close()
 
 
-def test_axis_label_contains_expect_none(pt_line_plt):
+def test_axis_label_contains_expect_none(pt_multi_line_plt):
     """Check assert_axis_label_contains passes when expected text is blank"""
     pt_multi_line_plt.assert_axis_label_contains(axis="x", lst=None)
     plt.close()
 
 
-def test_axis_label_contains_expect_none(pt_multi_line_plt):
+def test_axis_label_contains_no_label(pt_multi_line_plt):
     """Check assert_axis_label_contains fails when there is no axis label"""
     with pytest.raises(
         AssertionError, match="Expected x axis label is not displayed"
