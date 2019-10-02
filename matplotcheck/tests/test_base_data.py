@@ -15,7 +15,8 @@ def test_assert_xydata_scatter(pt_scatter_plt, pd_df):
 
 
 def test_assert_xydata_tolerance(pt_scatter_plt, pd_df):
-    """Checks that slightly altered data still passes with an appropriate tolerance"""
+    """Checks that slightly altered data still passes with an appropriate
+    tolerance"""
     for i in range(len(pd_df["A"])):
         pd_df["A"][i] = pd_df["A"][i] + (np.floor(pd_df["A"][i] * 0.25))
         pd_df["B"][i] = pd_df["B"][i] + (np.floor(pd_df["B"][i] * 0.25))

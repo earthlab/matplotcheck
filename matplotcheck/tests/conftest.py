@@ -44,6 +44,7 @@ def pd_gdf():
 
 @pytest.fixture
 def pd_xlabels():
+    """Create a DataFrame which uses the column labels as x-data."""
     df = pd.DataFrame({"B": bp.random.randint(0, 100, size=100)})
 
 
@@ -129,6 +130,7 @@ def pt_time_line_plt(pd_df_timeseries):
 
 @pytest.fixture
 def pt_geo_plot(pd_gdf):
+    """Create a geo plot for testing"""
     fig, ax = plt.subplots()
 
     pd_gdf.plot(ax=ax)
