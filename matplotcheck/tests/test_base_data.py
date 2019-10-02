@@ -56,15 +56,6 @@ def test_assert_xydata_changed_data_points_only(pt_scatter_plt, pd_df):
     plt.close()
 
 
-'''
-def test_assert_xydata_timeseries(pt_time_line_plt, pd_df_timeseries):
-    """Commenting this out for now as this requires a time series data object
-    this is failing because the time data needs to be in seconds like how
-    mpl saves it. """
-    pt_time_line_plt.assert_xydata(pd_df_timeseries, xcol='time', ycol='A', xtime=True)
-'''
-
-
 def test_assert_xydata_xlabel(pt_bar_plt, pd_df):
     "Tests the xlabels flag on xydata"
     pd_df["A"] = pd_df["A"].apply(str)
