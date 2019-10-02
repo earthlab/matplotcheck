@@ -6,6 +6,14 @@ import matplotlib.pyplot as plt
 """ TITLE TESTS """
 
 
+def test_correct_title(pt_line_plt):
+    """Check that the correct plot title is grabbed from the axis object.
+    Note that get_titles maintains case."""
+
+    assert "Plot Title" in pt_line_plt.get_titles()[1]
+    plt.close()
+
+
 def test_get_titles(pt_line_plt):
     """Check that the correct plot title is grabbed from the axis object.
     Note that get_titles maintains case."""

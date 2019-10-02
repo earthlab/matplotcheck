@@ -1,6 +1,7 @@
 """Pytest fixtures for matplotcheck tests"""
 import pytest
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotcheck.base import PlotTester
@@ -23,6 +24,28 @@ def pd_df_timeseries():
             "A": np.random.randint(0, 100, size=100),
         }
     )
+
+
+@pytest.fixture
+def pd_gdf():
+    """Create a geopandas GeoDataFrame for testing"""
+    df = pd.DataFrame(
+        {
+            "lat": np.random.randint(-85, 85, size=100),
+            "lon": np.random.randint(-180, 180, size=100),
+        }
+    )
+    gdf = gpd.GeoDataFrame(
+        {"A": np.arange(100)}, geometry=gpd.points_from_xy(df.lon, df.lat)
+    )
+
+    return gdf
+
+
+@pytest.fixture
+def pd_xlabels():
+    """Create a DataFrame which uses the column labels as x-data."""
+    df = pd.DataFrame({"B": bp.random.randint(0, 100, size=100)})
 
 
 @pytest.fixture
@@ -99,6 +122,21 @@ def pt_time_line_plt(pd_df_timeseries):
     fig, ax = plt.subplots()
 
     pd_df_timeseries.plot("time", "A", kind="line", ax=ax)
+
+    axis = plt.gca()
+
+    return PlotTester(axis)
+
+
+@pytest.fixture
+def pt_geo_plot(pd_gdf):
+    """Create a geo plot for testing"""
+    fig, ax = plt.subplots()
+
+    pd_gdf.plot(ax=ax)
+    ax.set_title("My Plot Title", fontsize=30)
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
 
     axis = plt.gca()
 
