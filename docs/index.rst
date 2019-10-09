@@ -18,6 +18,9 @@ It currently supports.
    :caption: Contents:
 
    modules
+   Examples Gallery <gallery_vignettes/index>
+   contributing
+   code-of-conduct
 
 Indices and tables
 ==================

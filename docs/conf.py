@@ -40,12 +40,21 @@ release = "0.0.11"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "m2r",
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.napoleon",
     "matplotlib.sphinxext.plot_directive",
     "sphinx.ext.viewcode",
+    "sphinx_gallery.gen_gallery",
 ]
+
+sphinx_gallery_conf = {
+    # path to your examples scripts
+    "examples_dirs": "../examples",
+    # path where to save gallery generated examples
+    "gallery_dirs": "gallery_vignettes",
+}
 
 # Show the source code for any plots in the documentation by default
 plot_include_source = True
@@ -57,7 +66,8 @@ templates_path = ["_templates"]
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = ".rst"
+# "m2r" is needed to support markdown includes in sphinx
+source_suffix = [".rst", ".md"]
 
 # The master toctree document.
 master_doc = "index"
