@@ -83,6 +83,9 @@ class PlotTester(object):
         if not str_lst:
             return (True, None)
 
+        if isinstance(string, matplotlib.text.Text):
+            string = string.get_text()
+
         string = string.lower().replace(" ", "")
         for check in str_lst:
             if isinstance(check, str):
@@ -90,7 +93,10 @@ class PlotTester(object):
                     return (False, check)
             elif isinstance(check, list):
                 if not any([c.lower() in string for c in check]):
-                    return (False, check)
+                    if len(check) == 1:
+                        return (False, check[0])
+                    else:
+                        return (False, check)
             else:
                 raise ValueError(
                     "str_lst must be a list of: lists or strings."
@@ -254,17 +260,11 @@ class PlotTester(object):
         else:
             assert caption, "No caption exists in appropriate location"
 
-        caption = caption.get_text().lower().replace(" ", "")
-        for lst in strings_exp:
-            flag = False
-            for s in lst:
-                if s.lower().replace(" ", "") in caption:
-                    caption = caption.replace(s, "")
-                    flag = True
-                    break
-            assert (
-                flag
-            ), "Caption does not contain expected string: {0}".format(s)
+        passes, fail = self._string_contains(caption, strings_exp)
+        if not passes:
+            raise AssertionError(
+                "Caption does not contain expected string: {0}".format(fail)
+            )
 
     """ AXIS TEST/HELPER FUNCTIONS """
 
