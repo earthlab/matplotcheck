@@ -134,7 +134,7 @@ class PlotTester(object):
         lst,
         title_type="either",
         message="Title does not contain expected text:{0}",
-        message_not_displayed="Expected title is not displayed",
+        message_no_title="Expected title is not displayed",
     ):
         """Asserts title contains each string in lst. Whether we test the axes
         title or figure title is described in title_type.
@@ -152,10 +152,11 @@ class PlotTester(object):
             assertion.
             The combined title will be tested.
         message : string
-            The error message to be displayed if the title does not contain one of the
-            expected strings. If `message` contains ``'{0}'``, it
-            will be replaced with the first expected string not found in the title.
-        message_not_displayed : string
+            The error message to be displayed if the plot title does not contain
+            one of the expected strings. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the
+            plot title.
+        message_no_title : string
             The error message to be displayed if the expected title is not displayed.
 
         Returns
@@ -179,7 +180,7 @@ class PlotTester(object):
         if lst == None:
             pass
         else:
-            assert title, message_not_displayed
+            assert title, message_no_title
             title = title.lower().replace(" ", "")
             for s in lst:
                 assert s.lower().replace(" ", "") in title, message.format(s)
@@ -425,7 +426,8 @@ class PlotTester(object):
         message_max : string
             The error message to be displayed if the limits of ax do not fall
             within the expected limit maximum. If `message` contains ``'{0}'``,
-            it will be replaced with `axis`.
+            it will be replaced with the specified `axis` (i.e. it will be
+            replaced with 'x' or 'y').
 
         Returns
         ----------
