@@ -15,6 +15,7 @@ import math
 from scipy import stats
 import pandas as pd
 import geopandas as gpd
+import numbers
 
 
 class InvalidPlotError(Exception):
@@ -76,6 +77,26 @@ class PlotTester(object):
                 ):
                     return True
         return False
+
+    def _string_contains(self, string, str_lst):
+        # Returns true if str_lst == [] or str_lst == None
+        if not str_lst:
+            return (True, None)
+
+        string = string.lower().replace(" ", "")
+        for check in str_lst:
+            if isinstance(check, str):
+                if not check.lower() in string:
+                    return (False, check)
+            elif isinstance(check, list):
+                if not any([c.lower() in string for c in check]):
+                    return (False, check)
+            else:
+                raise ValueError(
+                    "str_lst must be a list of: lists or strings."
+                )
+
+        return (True, None)
 
     def assert_plot_type(self, plot_type=None):
         """Asserts Axes `ax` contains the type of plot specified in `plot_type`.
@@ -164,15 +185,12 @@ class PlotTester(object):
                 'title_type must be one of the following ["figure", "axes", "either"]'
             )
 
-        if lst == None:
-            pass
-        else:
-            assert title, "Expected title is not displayed"
-            title = title.lower().replace(" ", "")
-            for s in lst:
-                assert (
-                    s.lower().replace(" ", "") in title
-                ), "Title does not contain expected text:{0}".format(s)
+        assert title, "Expected title is not displayed"
+        passes, fail = self._string_contains(title, lst)
+        if not passes:
+            raise AssertionError(
+                "Title does not contain expected text:{0}".format(fail)
+            )
 
     """CAPTION TEST/HELPER FUNCTIONS """
 
@@ -201,8 +219,8 @@ class PlotTester(object):
         return caption
 
     def assert_caption_contains(self, strings_exp):
-        """Asserts that Axes ax contains strings as expected in strings_exp.
-        strings_exp is a list of lists. Each internal list is a list of
+        """Asserts that Axes ax contains strings as expected in `strings_exp`.
+        `strings_exp` is a list of lists. Each internal list is a list of
         strings where at least one string must be in the caption, barring
         capitalization. For example,
         ``assert_caption_contains([['A'], ['B'], ['C']])`` checks that all of
@@ -231,10 +249,10 @@ class PlotTester(object):
             some cases, the order of `strings_exp` does matter.
         """
         caption = self.get_caption()
-        if strings_exp == None:
+        if strings_exp is None:
             return
         else:
-            assert caption, "No caption exist in appropriate location"
+            assert caption, "No caption exists in appropriate location"
 
         caption = caption.get_text().lower().replace(" ", "")
         for lst in strings_exp:
@@ -285,9 +303,15 @@ class PlotTester(object):
 
         assert flag, m
 
-    def assert_axis_label_contains(self, axis="x", lst=[]):
-        """Asserts axis label contains each of the strings in lst. Tests x or y
-        axis based on 'axis' param. Not case sensitive
+    def assert_axis_label_contains(self, axis="x", strings_exp=None):
+        """Asserts axis label contains each of the strings in `strings_exp`. Tests x or y
+        axis based on 'axis' param. Not case sensitive. `strings_exp` is a list
+        of lists. Each internal list is a list of strings where at least one
+        string must be in the caption, barring capitalization. For example,
+        ``assert_caption_contains([['A'], ['B'], ['C']])`` checks that all of
+        ``'A'``, ``'B'``, and ``'C'`` exist in the caption. Alternatively,
+        ``assert_caption_contains([['A', 'B', 'C']])`` checks that any one of
+        ``'A'``, ``'B'``, and ``'C'`` exist in the caption.
 
 
         Parameters
@@ -314,19 +338,17 @@ class PlotTester(object):
             raise ValueError('axis must be one of the following ["x", "y"]')
 
         # Check that axis label contains the expected strings in lst
-        if lst is None:
-            pass
-        else:
-            assert label, "Expected {0} axis label is not displayed".format(
-                axis
-            )
-            label = label.lower().replace(" ", "")
-            for s in lst:
-                assert (
-                    s.lower().replace(" ", "") in label
-                ), "{0} axis label does not contain expected text:{1}".format(
-                    axis, s
+        if strings_exp is None:
+            return
+        assert label, "Expected {0} axis label is not displayed".format(axis)
+
+        passes, fail = self._string_contains(label, strings_exp)
+        if not passes:
+            raise AssertionError(
+                "{0} axis label does not contain expected text:{1}".format(
+                    axis, fail
                 )
+            )
 
     def assert_lims(self, lims_expected, axis="x"):
         """Assert the lims of ax match lims_expected. Tests x or y axis based on
@@ -686,8 +708,8 @@ class PlotTester(object):
             elements.
         xlabels : boolean
             Set ``True`` if using x axis labels rather than x data. Instead of
-            comparing numbers in the x-column to expected, compares numbers in x
-            labels to expected.
+            comparing numbers in the x-column to expected, compares numbers or
+            text in x labels to expected.
         tolerence : float
             Measure of relative error allowed.
             For example: Given a tolerance ``tolerence=0.1``, an expected value
@@ -744,8 +766,23 @@ class PlotTester(object):
             )
 
         else:
-            assert np.array_equal(xy_data["x"], xy_expected[xcol]), m
-            assert np.array_equal(xy_data["y"], xy_expected[ycol]), m
+            """We use `assert_array_max_ulp()` to compare the
+            two datasets because it is able to account for small errors in
+            floating point numbers, and it scales nicely between extremely
+            small or large numbers. We catch this error and throw our own so
+            that we can use our own message."""
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                )
+            except AssertionError:
+                raise AssertionError(m)
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                )
+            except AssertionError:
+                raise AssertionError(m)
 
     def assert_xlabel_ydata(self, xy_expected, xcol, ycol, m="Incorrect Data"):
         """Asserts that the numbers in x labels and y values in Axes `ax` match
@@ -773,7 +810,7 @@ class PlotTester(object):
         This is only testing the numbers in x-axis labels.
         """
         x_data = [
-            "".join(c for c in l.get_text() if c.isdigit())
+            "".join(c for c in l.get_text())
             for l in self.ax.xaxis.get_majorticklabels()
         ]
         y_data = self.get_xy()["y"]
@@ -782,12 +819,36 @@ class PlotTester(object):
             xy_expected.sort_values(by=xcol),
             xy_data.sort_values(by="x"),
         )
-        np.testing.assert_equal(
-            np.array(xy_data["x"]), np.array(xy_expected[xcol]), m
-        )
-        np.testing.assert_equal(
-            np.array(xy_data["y"]), np.array(xy_expected[ycol]), m
-        )
+
+        """
+        If our data is numeric, we use `assert_array_max_ulp()` to compare the
+        two datasets. This is done because it is able to account for small
+        errors in floating point numbers, and it scales nicely between extremely
+        small or large numbers. If our data is not numeric, we check that it
+        matches exactly.
+        """
+        if isinstance(xy_expected[xcol][0], numbers.Number):
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                )
+            except AssertionError:
+                raise AssertionError(m)
+        else:
+            np.testing.assert_equal(
+                np.array(xy_data["x"]), np.array(xy_expected[xcol]), m
+            )
+        if isinstance(xy_expected[ycol][0], numbers.Number):
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                )
+            except AssertionError:
+                raise AssertionError(m)
+        else:
+            np.testing.assert_equal(
+                np.array(xy_data["y"]), np.array(xy_expected[ycol]), m
+            )
 
     ### LINE TESTS/HELPER FUNCTIONS ###
 

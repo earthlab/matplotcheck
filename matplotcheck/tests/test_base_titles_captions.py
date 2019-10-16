@@ -144,7 +144,7 @@ def test_assert_caption_contains_badtext(pt_line_plt):
 def test_assert_caption_contains_nocaption(pt_bar_plt):
     """Test that caption_contains fails when there is no caption"""
     with pytest.raises(
-        AssertionError, match="No caption exist in appropriate location"
+        AssertionError, match="No caption exists in appropriate location"
     ):
         pt_bar_plt.assert_caption_contains([["Figure"], ["Caption"]])
     plt.close()

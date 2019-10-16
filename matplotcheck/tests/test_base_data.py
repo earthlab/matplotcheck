@@ -1,7 +1,9 @@
 """Tests for the base module -- Data"""
 import pytest
+from matplotcheck.base import PlotTester
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import random
 
 
@@ -69,6 +71,48 @@ def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
     pd_df.iloc[1, 0] = "this ain't it cheif"
     with pytest.raises(AssertionError, match="Incorrect data values"):
         pt_bar_plt.assert_xydata(pd_df, xcol="A", ycol="B", xlabels=True)
+    plt.close()
+
+
+def test_assert_xydata_xlabel_text():
+    "Tests the xlabels flag on xydata works to test labels with text data"
+    data = {
+        "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+    df = pd.DataFrame(data)
+
+    fig, ax = plt.subplots()
+    df.plot("months", "data", kind="bar", ax=ax)
+    axis = plt.gca()
+
+    pt = PlotTester(axis)
+    pt.assert_xydata(df, xcol="months", ycol="data", xlabels=True)
+
+    plt.close()
+
+
+def test_assert_xydata_xlabel_text_fails():
+    "Tests the xlabels flag on xydata fails when testing labels with wrong text data"
+    correct_data = {
+        "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+    plot_data = {
+        "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "Sept"],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+    correct_df = pd.DataFrame(correct_data)
+    plot_df = pd.DataFrame(plot_data)
+
+    fig, ax = plt.subplots()
+    plot_df.plot("months", "data", kind="bar", ax=ax)
+    axis = plt.gca()
+
+    pt = PlotTester(axis)
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt.assert_xydata(correct_df, xcol="months", ycol="data", xlabels=True)
+
     plt.close()
 
 
