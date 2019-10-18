@@ -14,6 +14,7 @@ pip-wheel-metadata/
 
 # Sphinx documentation
 docs/_build/
+docs/gallery_vignettes/
 
 # Jupyter Notebook
 .ipynb_checkpoints
