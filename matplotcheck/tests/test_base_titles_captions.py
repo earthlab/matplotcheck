@@ -50,7 +50,7 @@ def test_title_contains_axes(pt_line_plt):
 def test_title_contains_axes_badtext(pt_line_plt):
     """Check title_contains fails when given bad text"""
     with pytest.raises(
-        AssertionError, match="Title does not contain expected text:foo"
+        AssertionError, match="Title does not contain expected string: foo"
     ):
         pt_line_plt.assert_title_contains(
             ["Title", "foo", "bar"], title_type="axes"
@@ -97,7 +97,7 @@ def test_title_contains_both_axes_figure(pt_line_plt):
 def test_title_contains_both_axes_figure_badtext(pt_line_plt):
     """Check title_contains tester for combined titles, should fail with bad text"""
     with pytest.raises(
-        AssertionError, match="Title does not contain expected text:foo"
+        AssertionError, match="Title does not contain expected string: foo"
     ):
         pt_line_plt.assert_title_contains(
             ["My", "Figure", "Plot", "Title", "foo"], title_type="either"
@@ -110,7 +110,7 @@ def test_title_contains_both_axes_figure_badtext(pt_line_plt):
 
 def test_get_caption(pt_line_plt):
     """Make sure that get caption returns correct text string"""
-    assert "Figure Caption" == pt_line_plt.get_caption().get_text()
+    assert "Figure Caption" == pt_line_plt.get_caption()
     plt.close()
 
 

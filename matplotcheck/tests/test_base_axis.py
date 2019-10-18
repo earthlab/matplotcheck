@@ -81,14 +81,14 @@ def test_axis_off_non_empty_ticks(pt_line_plt):
 def test_axis_label_contains_x(pt_line_plt):
     """Checks for assert_axis_label_contains for x axis"""
     pt_line_plt.assert_axis_label_contains(
-        axis="x", strings_exp=["x", "label"]
+        axis="x", strings_expected=["x", "label"]
     )
     plt.close()
 
 
 def test_axis_label_contains_y(pt_line_plt):
     """Checks for assert_axis_label_contains for y axis"""
-    pt_line_plt.assert_axis_label_contains(axis="y", strings_exp=["y"])
+    pt_line_plt.assert_axis_label_contains(axis="y", strings_expected=["y"])
     plt.close()
 
 
@@ -96,24 +96,29 @@ def test_axis_label_contains_invalid_axis(pt_line_plt):
     """Check that assert_axis_label_contains fails when given unexpected axis"""
     # Fails when given an invalid axies
     with pytest.raises(ValueError, match="axis must be one of the following"):
-        pt_line_plt.assert_axis_label_contains(axis="z", strings_exp=["y"])
+        pt_line_plt.assert_axis_label_contains(
+            axis="z", strings_expected=["y"]
+        )
     plt.close()
 
 
 def test_axis_label_contains_bad_text(pt_line_plt):
     """Check that assert_axis_label_contains fails with text not in label"""
     with pytest.raises(
-        AssertionError, match="x axis label does not contain expected text:foo"
+        AssertionError,
+        match="x-axis label does not contain expected string: foo",
     ):
         pt_line_plt.assert_axis_label_contains(
-            axis="x", strings_exp=["x", "foo"]
+            axis="x", strings_expected=["x", "foo"]
         )
     plt.close()
 
 
 def test_axis_label_contains_expect_none(pt_multi_line_plt):
     """Check assert_axis_label_contains passes when expected text is blank"""
-    pt_multi_line_plt.assert_axis_label_contains(axis="x", strings_exp=None)
+    pt_multi_line_plt.assert_axis_label_contains(
+        axis="x", strings_expected=None
+    )
     plt.close()
 
 
@@ -123,14 +128,14 @@ def test_axis_label_contains_no_label(pt_multi_line_plt):
         AssertionError, match="Expected x axis label is not displayed"
     ):
         pt_multi_line_plt.assert_axis_label_contains(
-            axis="x", strings_exp=["foo"]
+            axis="x", strings_expected=["foo"]
         )
 
     with pytest.raises(
         AssertionError, match="Expected y axis label is not displayed"
     ):
         pt_multi_line_plt.assert_axis_label_contains(
-            axis="y", strings_exp=["foo"]
+            axis="y", strings_expected=["foo"]
         )
     plt.close()
 

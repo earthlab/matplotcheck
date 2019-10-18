@@ -78,31 +78,32 @@ class PlotTester(object):
                     return True
         return False
 
-    def _string_contains(self, string, str_lst):
-        # Returns true if str_lst == [] or str_lst == None
-        if not str_lst:
-            return (True, None)
-
-        if isinstance(string, matplotlib.text.Text):
-            string = string.get_text()
+    def assert_string_contains(
+        self,
+        string,
+        strings_expected,
+        message_default="String does not contain expected string: {0}",
+        message_or="String does not contain at least one of: {0}",
+    ):
+        # Assertion passes if strings_expected == [] or strings_expected == None
+        if not strings_expected:
+            return
 
         string = string.lower().replace(" ", "")
-        for check in str_lst:
+        for check in strings_expected:
             if isinstance(check, str):
                 if not check.lower() in string:
-                    return (False, check)
+                    raise AssertionError(message_default.format(check))
             elif isinstance(check, list):
                 if not any([c.lower() in string for c in check]):
                     if len(check) == 1:
-                        return (False, check[0])
+                        raise AssertionError(message_default.format(check[0]))
                     else:
-                        return (False, check)
+                        raise AssertionError(message_or.format(check))
             else:
                 raise ValueError(
                     "str_lst must be a list of: lists or strings."
                 )
-
-        return (True, None)
 
     def assert_plot_type(self, plot_type=None):
         """Asserts Axes `ax` contains the type of plot specified in `plot_type`.
@@ -156,16 +157,23 @@ class PlotTester(object):
             suptitle += fig._suptitle.get_text()
         return suptitle, self.ax.get_title()
 
-    def assert_title_contains(self, lst, title_type="either"):
-        """Asserts title contains each string in lst. Whether we test the axes
-        title or figure title is described in title_type.
+    def assert_title_contains(self, strings_expected, title_type="either"):
+        """Asserts that title defined by `title_type` contains the expected
+        strings from `strings_expected`.
 
         Parameters
         ----------
-        lst: list
-            List of strings to be searched for in title. strings must be lower
-            case.
-        title_type: string
+        strings_expected : list
+            Any string in `strings_expected` must be in the title for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the title for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
+        title_type : string
             One of the following strings ["figure", "axes", "either"]
             `figure`: only the figure title (suptitle) will be tested
             'axes': only the axes title (suptitle) will be tested
@@ -176,7 +184,7 @@ class PlotTester(object):
         Returns
         -------
         None :
-            Nothing if every element of `lst` exists in title, otherwise throws
+            Nothing if title title contains expected strings, otherwise throws
             ``AssertionError``
         """
         suptitle, axtitle = self.get_titles()
@@ -192,11 +200,13 @@ class PlotTester(object):
             )
 
         assert title, "Expected title is not displayed"
-        passes, fail = self._string_contains(title, lst)
-        if not passes:
-            raise AssertionError(
-                "Title does not contain expected text:{0}".format(fail)
-            )
+
+        self.assert_string_contains(
+            title,
+            strings_expected,
+            message_default="Title does not contain expected string: {0}",
+            message_or="Title does not contain at least one of: {0}",
+        )
 
     """CAPTION TEST/HELPER FUNCTIONS """
 
@@ -222,49 +232,45 @@ class PlotTester(object):
             ):
                 caption = tex
                 break
+        if isinstance(caption, matplotlib.text.Text):
+            caption = caption.get_text()
         return caption
 
-    def assert_caption_contains(self, strings_exp):
-        """Asserts that Axes ax contains strings as expected in `strings_exp`.
-        `strings_exp` is a list of lists. Each internal list is a list of
-        strings where at least one string must be in the caption, barring
-        capitalization. For example,
-        ``assert_caption_contains([['A'], ['B'], ['C']])`` checks that all of
-        ``'A'``, ``'B'``, and ``'C'`` exist in the caption. Alternatively,
-        ``assert_caption_contains([['A', 'B', 'C']])`` checks that any one of
-        ``'A'``, ``'B'``, and ``'C'`` exist in the caption.
+    def assert_caption_contains(self, strings_expected):
+        """
+        Asserts that caption contains expected strings from `strings_expected`.
 
         Parameters
         ----------
-        strings_exp: list of lists.
-            list of lists in which each internal list is a list of strings.
-            If ``strings_exp = None``, assertion passes.
-            If ``strings_exp == []``, assertion passes.
+        strings_expected : list
+            Any string in `strings_expected` must be in the title for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the title for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
 
         Returns
         -------
         None :
-            Nothing if caption contains strings matching `strings_exp`,
+            Nothing if caption contains strings matching `strings_expected`,
             otherwise throws ``AssertionError``
-
-        Notes
-        -----
-            This function enforces that no found strings can overlap.
-            Once a string is found, it is removed from the caption so that
-            another string does not match on overlapping text. Therefore, in
-            some cases, the order of `strings_exp` does matter.
         """
         caption = self.get_caption()
-        if strings_exp is None:
+        if strings_expected is None:
             return
         else:
             assert caption, "No caption exists in appropriate location"
 
-        passes, fail = self._string_contains(caption, strings_exp)
-        if not passes:
-            raise AssertionError(
-                "Caption does not contain expected string: {0}".format(fail)
-            )
+        self.assert_string_contains(
+            caption,
+            strings_expected,
+            message_default="Caption does not contain expected string: {0}",
+            message_or="Caption does not contain at least one of: {0}",
+        )
 
     """ AXIS TEST/HELPER FUNCTIONS """
 
@@ -303,30 +309,30 @@ class PlotTester(object):
 
         assert flag, m
 
-    def assert_axis_label_contains(self, axis="x", strings_exp=None):
-        """Asserts axis label contains each of the strings in `strings_exp`. Tests x or y
-        axis based on 'axis' param. Not case sensitive. `strings_exp` is a list
-        of lists. Each internal list is a list of strings where at least one
-        string must be in the caption, barring capitalization. For example,
-        ``assert_caption_contains([['A'], ['B'], ['C']])`` checks that all of
-        ``'A'``, ``'B'``, and ``'C'`` exist in the caption. Alternatively,
-        ``assert_caption_contains([['A', 'B', 'C']])`` checks that any one of
-        ``'A'``, ``'B'``, and ``'C'`` exist in the caption.
-
+    def assert_axis_label_contains(self, axis="x", strings_expected=None):
+        """
+        Asserts that the axis label contains the expected strings from
+        `strings_expected`. Tests x or y axis based on 'axis' param.
 
         Parameters
         ----------
         axis : string
             One of the following ['x','y'] stated which axis label to be tested
-        lst : list
-            List of strings to be searched for in axis label.
-            If ``lst == []``: assertion passes.
-            If ``lst = None``, assertion passes.
+        strings_expected : list
+            Any string in `strings_expected` must be in the axis label for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the axis label for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
 
         Returns
         ----------
         None :
-            Nothing if axis label contains strings in `lst`. Otherwise throws
+            Nothing if axis label contains expected strings. Otherwise throws
             ``AssertionError``
         """
         # Retrieve appropriate axis label, error if axis param is not x or y
@@ -338,17 +344,18 @@ class PlotTester(object):
             raise ValueError('axis must be one of the following ["x", "y"]')
 
         # Check that axis label contains the expected strings in lst
-        if strings_exp is None:
+        if strings_expected is None:
             return
         assert label, "Expected {0} axis label is not displayed".format(axis)
 
-        passes, fail = self._string_contains(label, strings_exp)
-        if not passes:
-            raise AssertionError(
-                "{0} axis label does not contain expected text:{1}".format(
-                    axis, fail
-                )
-            )
+        self.assert_string_contains(
+            label,
+            strings_expected,
+            message_default=axis
+            + "-axis label does not contain expected string: {0}",
+            message_or=axis
+            + "-axis label does not contain at least one of: {0}",
+        )
 
     def assert_lims(self, lims_expected, axis="x"):
         """Assert the lims of ax match lims_expected. Tests x or y axis based on
