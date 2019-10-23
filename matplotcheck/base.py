@@ -17,6 +17,8 @@ import pandas as pd
 import geopandas as gpd
 import numbers
 
+import pdb
+
 
 class InvalidPlotError(Exception):
     pass
@@ -982,10 +984,6 @@ class PlotTester(object):
         ]
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
-        xy_expected, xy_data = (
-            xy_expected.sort_values(by=xcol),
-            xy_data.sort_values(by="x"),
-        )
 
         """
         If our data is numeric, we use `assert_array_max_ulp()` to compare the
@@ -994,6 +992,10 @@ class PlotTester(object):
         small or large numbers. If our data is not numeric, we check that it
         matches exactly.
         """
+
+        """
+        x_is_numeric = all([s.isnumeric() for s in xy_expected[xcol]])
+        y_is_numeric = all([s.isnumeric() for s in xy_expected[ycol]])
         if isinstance(xy_expected[xcol][0], numbers.Number):
             try:
                 np.testing.assert_array_max_ulp(
@@ -1016,6 +1018,49 @@ class PlotTester(object):
             np.testing.assert_equal(
                 np.array(xy_data["y"]), np.array(xy_expected[ycol]), message
             )
+        """
+        # If we expect x-values to be strings
+        if all([isinstance(i, str) for i in xy_expected[xcol]]):
+            # If we expect x-values to be numeric strings
+            if all([s.isnumeric() for s in xy_expected[xcol]]):
+                # We attempt to convert numeric strings to numbers
+                try:
+                    x_expected = [float(s) for s in xy_expected[xcol]]
+                    x_data = [float(s) for s in xy_data["x"]]
+                except ValueError:
+                    x_is_numeric = False
+                else:
+                    x_is_numeric = True
+                    xy_expected[xcol] = x_expected
+                    xy_data["x"] = x_data
+            # We expect x-values to be non-numeric strings
+            else:
+                x_is_numeric = False
+        # If we expect x-values to be numbers
+        elif all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
+            x_is_numeric = True
+        # We expect x-values to be of mixed type or some other type
+        else:
+            x_is_numeric = False
+
+        if x_is_numeric:
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                )
+            except AssertionError:
+                raise AssertionError(message)
+        else:
+            np.testing.assert_equal(
+                np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
+            )
+
+        try:
+            np.testing.assert_array_max_ulp(
+                np.array(xy_data["y"]), np.array(xy_expected[ycol])
+            )
+        except AssertionError:
+            raise AssertionError(message)
 
     ### LINE TESTS/HELPER FUNCTIONS ###
 
