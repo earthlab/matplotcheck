@@ -10,6 +10,7 @@ matplotcheck.egg-info/
 __pycache__/
 .DS_Store
 pip-wheel-metadata/
+*.pyc
 
 
 # Sphinx documentation
