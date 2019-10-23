@@ -3,10 +3,6 @@ import pytest
 import matplotlib.pyplot as plt
 
 
-def test_string_contains(pt_line_plt):
-    pt_line_plt._string_contains("hello dolly", ["hello"])
-
-
 def test_line_plot(pt_line_plt):
     """Test that the line plot returns true for line but false for bar or
     scatter."""
