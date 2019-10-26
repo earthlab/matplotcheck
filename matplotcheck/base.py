@@ -1039,6 +1039,13 @@ class PlotTester(object):
         # If we expect x-values to be numbers
         elif all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
             x_is_numeric = True
+            try:
+                x_data_numeric = [float(i) for i in xy_data["x"]]
+            except ValueError:
+                raise AssertionError(message)
+            else:
+                xy_data["x"] = x_data_numeric
+
         # We expect x-values to be of mixed type or some other type
         else:
             x_is_numeric = False
