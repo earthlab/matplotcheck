@@ -985,40 +985,6 @@ class PlotTester(object):
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
 
-        """
-        If our data is numeric, we use `assert_array_max_ulp()` to compare the
-        two datasets. This is done because it is able to account for small
-        errors in floating point numbers, and it scales nicely between extremely
-        small or large numbers. If our data is not numeric, we check that it
-        matches exactly.
-        """
-
-        """
-        x_is_numeric = all([s.isnumeric() for s in xy_expected[xcol]])
-        y_is_numeric = all([s.isnumeric() for s in xy_expected[ycol]])
-        if isinstance(xy_expected[xcol][0], numbers.Number):
-            try:
-                np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
-                )
-            except AssertionError:
-                raise AssertionError(message)
-        else:
-            np.testing.assert_equal(
-                np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
-            )
-        if isinstance(xy_expected[ycol][0], numbers.Number):
-            try:
-                np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
-                )
-            except AssertionError:
-                raise AssertionError(message)
-        else:
-            np.testing.assert_equal(
-                np.array(xy_data["y"]), np.array(xy_expected[ycol]), message
-            )
-        """
         # If we expect x-values to be strings
         if all([isinstance(i, str) for i in xy_expected[xcol]]):
             # If we expect x-values to be numeric strings
