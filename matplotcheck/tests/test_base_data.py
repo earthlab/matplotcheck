@@ -171,7 +171,32 @@ def test_assert_xydata_xlabel_numeric_fails():
     plt.close()
 
 
-def test_assert_xydata_xlabel_numeric_fails():
+def test_assert_xydata_xlabel_numeric_fails_bad_y():
+    """Tests that the xlabels flag on xydata correctly fails with wrong numeric
+    y-data"""
+    "Tests the xlabels flag on xydata correctly fails with numeric expected x-labels."
+    correct_data = {
+        "months": [1, 2, 3, 4, 5, 6, 7],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+    plot_data = {
+        "months": [1, 2, 3, 4, 5, 6, 7],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 9999],
+    }
+    correct_df = pd.DataFrame(correct_data)
+    plot_df = pd.DataFrame(plot_data)
+
+    fig, ax = plt.subplots()
+    plot_df.plot("months", "data", kind="bar", ax=ax)
+    axis = plt.gca()
+
+    pt = PlotTester(axis)
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt.assert_xydata(correct_df, xcol="months", ycol="data", xlabels=True)
+    plt.close()
+
+
+def test_assert_xydata_xlabel_numeric_expected_string_actual():
     """Tests the xlabels flag on xydata correctly fails with numeric expected
     x-labels and non-numeric actial x-labels"""
     correct_data = {

@@ -985,8 +985,18 @@ class PlotTester(object):
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
 
+        # If we expect x-values to be numbers
+        if all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
+            x_is_numeric = True
+            try:
+                x_data_numeric = [float(i) for i in xy_data["x"]]
+            except ValueError:
+                raise AssertionError(message)
+            else:
+                xy_data["x"] = x_data_numeric
+
         # If we expect x-values to be strings
-        if all([isinstance(i, str) for i in xy_expected[xcol]]):
+        else:
             # If we expect x-values to be numeric strings
             if all([s.isnumeric() for s in xy_expected[xcol]]):
                 # We attempt to convert numeric strings to numbers
@@ -1002,20 +1012,8 @@ class PlotTester(object):
             # We expect x-values to be non-numeric strings
             else:
                 x_is_numeric = False
-        # If we expect x-values to be numbers
-        elif all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
-            x_is_numeric = True
-            try:
-                x_data_numeric = [float(i) for i in xy_data["x"]]
-            except ValueError:
-                raise AssertionError(message)
-            else:
-                xy_data["x"] = x_data_numeric
 
-        # We expect x-values to be of mixed type or some other type
-        else:
-            x_is_numeric = False
-
+        # Testing x-data
         if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
@@ -1028,6 +1026,7 @@ class PlotTester(object):
                 np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
             )
 
+        # Testing y-data
         try:
             np.testing.assert_array_max_ulp(
                 np.array(xy_data["y"]), np.array(xy_expected[ycol])
