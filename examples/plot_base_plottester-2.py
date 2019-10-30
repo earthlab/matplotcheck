@@ -15,6 +15,7 @@ This is an example of using the basic functionality of MatPlotCheck.
 
 import matplotlib.pyplot as plt
 import matplotcheck.base as mpc
+import matplotcheck.notebook as nb
 
 ###############################################################################
 # Plot
@@ -58,25 +59,31 @@ ax.set(
 )
 hold_axis_1 = fig.gca()
 
+plot_1_copy = nb.convert_axes(plt, which_axes="all")
 ###############################################################################
+# This is a section header
+# ------------------------
+#
+# .. note::
+#    In a Jupyter Notebook, a ``Matplotlib.axis.Axis`` object will not persisit
+#    beyond the cell it was created in. Therefore, if you need to run tests on
+#    an ```Axis`` object at the end of a Notebook, you will need to store a copy
+#    of the `Axis`` object in another variable. The ``nb.convert_axes()``
+#    function exists to make exactly this type of copy. It will pull ``Axes``
+#    objects from the most recently created figure, regardless of what method
+#    was used to create it. This can be very handy for grading students' work
+#    because they can use whichever method they want to create a plot, and their
+#    plot will be automatically copied and graded.
+#
 # Checking the plot
 # -----------------
-# Now we'll use matplotcheck to check the plot.
-pt1 = mpc.PlotTester(hold_axis_1)
+# Now we'll use matplotcheck to check the plot. We'll start by running a couple
+# tests that will pass.
+plot_1_copy = mpc.PlotTester(hold_axis_1)
 
-try:
-    pt1.assert_plot_type("bar")
-except:
-    print("pt1 is not a bar plot.")
-else:
-    print("pt1 is a bar plot.")
+pt1.assert_plot_type("bar")
 
-try:
-    pt1.assert_plot_type("line")
-except:
-    print("pt1 is not a line plot.")
-else:
-    print("pt1 is a line plot.")
+
 ###############################################################################
 # This is a section header
 # ------------------------
