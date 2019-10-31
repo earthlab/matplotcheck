@@ -15,6 +15,9 @@ import math
 from scipy import stats
 import pandas as pd
 import geopandas as gpd
+import numbers
+
+import pdb
 
 
 class InvalidPlotError(Exception):
@@ -77,6 +80,66 @@ class PlotTester(object):
                     return True
         return False
 
+    def assert_string_contains(
+        self,
+        string,
+        strings_expected,
+        message_default="String does not contain expected string: {0}",
+        message_or="String does not contain at least one of: {0}",
+    ):
+        """Asserts that `string` contains the expected strings from
+        `strings_expected`.
+
+        Parameters
+        ----------
+        strings_expected : list
+            Any string in `strings_expected` must be in the title for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the title for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
+        message_default : string
+            The error message to be displayed if the `string` does not contain
+            a string in strings_expected. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the
+            label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if `string` does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
+
+        Returns
+        -------
+        None :
+            Nothing if `string` contains expected strings, otherwise throws
+            ``AssertionError``
+        """
+        # Assertion passes if strings_expected == [] or strings_expected == None
+        if not strings_expected:
+            return
+
+        string = string.lower().replace(" ", "")
+        for check in strings_expected:
+            if isinstance(check, str):
+                if not check.lower() in string:
+                    raise AssertionError(message_default.format(check))
+            elif isinstance(check, list):
+                if not any([c.lower() in string for c in check]):
+                    if len(check) == 1:
+                        raise AssertionError(message_default.format(check[0]))
+                    else:
+                        raise AssertionError(message_or.format(check))
+            else:
+                raise ValueError(
+                    "str_lst must be a list of: lists or strings."
+                )
+
     def assert_plot_type(
         self, plot_type=None, message="Plot is not of type {0}"
     ):
@@ -131,38 +194,52 @@ class PlotTester(object):
 
     def assert_title_contains(
         self,
-        lst,
+        strings_expected,
         title_type="either",
-        message="Title does not contain expected text:{0}",
+        message_default="Title does not contain expected string: {0}",
+        message_or="Title does not contain at least one of: {0}",
         message_no_title="Expected title is not displayed",
     ):
-        """Asserts title contains each string in lst. Whether we test the axes
-        title or figure title is described in title_type.
+        """Asserts that title defined by `title_type` contains the expected
+        strings from `strings_expected`.
 
         Parameters
         ----------
-        lst: list
-            List of strings to be searched for in title. strings must be lower
-            case.
-        title_type: string
+        strings_expected : list
+            Any string in `strings_expected` must be in the title for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the title for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
+        title_type : string
             One of the following strings ["figure", "axes", "either"]
             `figure`: only the figure title (suptitle) will be tested
             'axes': only the axes title (suptitle) will be tested
             'either': either the figure title or axes title will pass this
             assertion.
             The combined title will be tested.
-        message : string
-            The error message to be displayed if the plot title does not contain
-            one of the expected strings. If `message` contains ``'{0}'``, it
+        message_default : string
+            The error message to be displayed if the axis label does not contain
+            a string in strings_expected. If `message` contains ``'{0}'``, it
             will be replaced with the first expected string not found in the
-            plot title.
+            label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if the axis label does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
         message_no_title : string
             The error message to be displayed if the expected title is not displayed.
 
         Returns
         -------
         None :
-            Nothing if every element of `lst` exists in title, otherwise throws
+            Nothing if title contains expected strings, otherwise throws
             ``AssertionError``
         """
         suptitle, axtitle = self.get_titles()
@@ -177,26 +254,26 @@ class PlotTester(object):
                 'title_type must be one of the following ["figure", "axes", "either"]'
             )
 
-        if lst == None:
-            pass
-        else:
-            assert title, message_no_title
-            title = title.lower().replace(" ", "")
-            for s in lst:
-                assert s.lower().replace(" ", "") in title, message.format(s)
+        assert title, message_no_title
+
+        self.assert_string_contains(
+            title,
+            strings_expected,
+            message_default=message_default,
+            message_or=message_or,
+        )
 
     """CAPTION TEST/HELPER FUNCTIONS """
 
     def get_caption(self):
-        """Returns matplotlib.text.Text that is located in the bottom right,
-        just below the right side of ax
+        """Returns the text that is located in the bottom right, just below the
+        right side of ax
         If no text is found in location, ``None`` is returned.
 
         Returns
         -------
         caption : string
-            matplotlib.text.Text if text is found in bottom right, ``None``
-            if no text is found
+            the text that is found in bottom right, ``None`` if no text is found
         """
         caption = None
         ax_position = self.ax.get_position()
@@ -209,65 +286,65 @@ class PlotTester(object):
             ):
                 caption = tex
                 break
+        if isinstance(caption, matplotlib.text.Text):
+            caption = caption.get_text()
         return caption
 
     def assert_caption_contains(
         self,
-        strings_exp,
-        message="Caption does not contain expected string: {0}",
-        message_no_caption="No caption exist in appropriate location",
+        strings_expected,
+        message_default="Caption does not contain expected string: {0}",
+        message_or="Caption does not contain at least one of: {0}",
+        message_no_caption="No caption exists in appropriate location",
     ):
-        """Asserts that Axes ax contains strings as expected in strings_exp.
-        strings_exp is a list of lists. Each internal list is a list of
-        strings where at least one string must be in the caption, barring
-        capitalization. For example,
-        ``assert_caption_contains([['A'], ['B'], ['C']])`` checks that all of
-        ``'A'``, ``'B'``, and ``'C'`` exist in the caption. Alternatively,
-        ``assert_caption_contains([['A', 'B', 'C']])`` checks that any one of
-        ``'A'``, ``'B'``, and ``'C'`` exist in the caption.
+        """
+        Asserts that caption contains expected strings from `strings_expected`.
 
         Parameters
         ----------
-        strings_exp: list of lists.
-            list of lists in which each internal list is a list of strings.
-            If ``strings_exp = None``, assertion passes.
-            If ``strings_exp == []``, assertion passes.
-        message : string
-            The error message to be displayed if the caption does not contain one of the
-            expected strings. If `message` contains ``'{0}'``, it
-            will be replaced with the first expected string not found in the caption.
+        strings_expected : list
+            Any string in `strings_expected` must be in the title for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the title for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
+        message_default : string
+            The error message to be displayed if the axis label does not contain
+            a string in strings_expected. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the
+            label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if the axis label does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
         message_no_caption : string
-            The error message to be displayed if no caption exists in the appropriate
-            location.
+            The error message to be displayed if no caption exists in the
+            appropriate location.
 
         Returns
         -------
         None :
-            Nothing if caption contains strings matching `strings_exp`,
+            Nothing if caption contains strings matching `strings_expected`,
             otherwise throws ``AssertionError``
-
-        Notes
-        -----
-            This function enforces that no found strings can overlap.
-            Once a string is found, it is removed from the caption so that
-            another string does not match on overlapping text. Therefore, in
-            some cases, the order of `strings_exp` does matter.
         """
         caption = self.get_caption()
-        if strings_exp == None:
+        if strings_expected is None:
             return
-        else:
-            assert caption, message_no_caption
 
-        caption = caption.get_text().lower().replace(" ", "")
-        for lst in strings_exp:
-            flag = False
-            for s in lst:
-                if s.lower().replace(" ", "") in caption:
-                    caption = caption.replace(s, "")
-                    flag = True
-                    break
-            assert flag, message.format(s)
+        assert caption, message_no_caption
+
+        self.assert_string_contains(
+            caption,
+            strings_expected,
+            message_default=message_default,
+            message_or=message_or,
+        )
 
     """ AXIS TEST/HELPER FUNCTIONS """
 
@@ -309,28 +386,42 @@ class PlotTester(object):
     def assert_axis_label_contains(
         self,
         axis="x",
-        lst=[],
-        message="{0} axis label does not contain expected text:{1}",
+        strings_expected=None,
+        message_default="{1}-axis label does not contain expected string: {0}",
+        message_or="{1}-axis label does not contain at least one of: {0}",
         message_not_displayed="Expected {0} axis label is not displayed",
     ):
-        """Asserts axis label contains each of the strings in lst. Tests x or y
-        axis based on 'axis' param. Not case sensitive
-
+        """
+        Asserts that the axis label contains the expected strings from
+        `strings_expected`. Tests x or y axis based on 'axis' param.
 
         Parameters
         ----------
         axis : string
             One of the following ['x','y'] stated which axis label to be tested
-        lst : list
-            List of strings to be searched for in axis label.
-            If ``lst == []``: assertion passes.
-            If ``lst = None``, assertion passes.
-        message : string
+        strings_expected : list
+            Any string in `strings_expected` must be in the axis label for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the axis label for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
+        message_default : string
             The error message to be displayed if the axis label does not contain
-            one of the expected strings. If `message` contains ``'{0}'``, it
-            will be replaced with `axis`. If `message` contains ``'{1}'``, it
+            a string in strings_expected. If `message` contains ``'{1}'``, it
+            will be replaced with `axis`. If `message` contains ``'{0}'``, it
             will be replaced with the first expected string not found in the
             label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if the axis label does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{1}'``, it will be replaced with `axis`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
         message_not_displayed : string
             The error message to be displayed if the expected axis label is not
             displayed. If `message_not_displayed` contains ``'{0}'``, it will
@@ -339,7 +430,7 @@ class PlotTester(object):
         Returns
         ----------
         None :
-            Nothing if axis label contains strings in `lst`. Otherwise throws
+            Nothing if axis label contains expected strings. Otherwise throws
             ``AssertionError``
         """
         # Retrieve appropriate axis label, error if axis param is not x or y
@@ -351,15 +442,18 @@ class PlotTester(object):
             raise ValueError('axis must be one of the following ["x", "y"]')
 
         # Check that axis label contains the expected strings in lst
-        if lst is None:
-            pass
-        else:
-            assert label, message_not_displayed.format(axis)
-            label = label.lower().replace(" ", "")
-            for s in lst:
-                assert s.lower().replace(" ", "") in label, message.format(
-                    axis, s
-                )
+        if strings_expected is None:
+            return
+        assert label, "Expected {0} axis label is not displayed".format(axis)
+
+        message_default = message_default.replace("{1}", axis)
+        message_or = message_or.replace("{1}", axis)
+        self.assert_string_contains(
+            label,
+            strings_expected,
+            message_default=message_default,
+            message_or=message_or,
+        )
 
     def assert_lims(
         self,
@@ -770,8 +864,8 @@ class PlotTester(object):
             elements.
         xlabels : boolean
             Set ``True`` if using x axis labels rather than x data. Instead of
-            comparing numbers in the x-column to expected, compares numbers in x
-            labels to expected.
+            comparing numbers in the x-column to expected, compares numbers or
+            text in x labels to expected.
         tolerence : float
             Measure of relative error allowed.
             For example: Given a tolerance ``tolerence=0.1``, an expected value
@@ -838,8 +932,23 @@ class PlotTester(object):
             )
 
         else:
-            assert np.array_equal(xy_data["x"], xy_expected[xcol]), message
-            assert np.array_equal(xy_data["y"], xy_expected[ycol]), message
+            """We use `assert_array_max_ulp()` to compare the
+            two datasets because it is able to account for small errors in
+            floating point numbers, and it scales nicely between extremely
+            small or large numbers. We catch this error and throw our own so
+            that we can use our own message."""
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                )
+            except AssertionError:
+                raise AssertionError(message)
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                )
+            except AssertionError:
+                raise AssertionError(message)
 
     def assert_xlabel_ydata(
         self, xy_expected, xcol, ycol, message="Incorrect Data"
@@ -870,21 +979,60 @@ class PlotTester(object):
         This is only testing the numbers in x-axis labels.
         """
         x_data = [
-            "".join(c for c in l.get_text() if c.isdigit())
+            "".join(c for c in l.get_text())
             for l in self.ax.xaxis.get_majorticklabels()
         ]
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
-        xy_expected, xy_data = (
-            xy_expected.sort_values(by=xcol),
-            xy_data.sort_values(by="x"),
-        )
-        np.testing.assert_equal(
-            np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
-        )
-        np.testing.assert_equal(
-            np.array(xy_data["y"]), np.array(xy_expected[ycol]), message
-        )
+
+        # If we expect x-values to be numbers
+        if all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
+            x_is_numeric = True
+            try:
+                x_data_numeric = [float(i) for i in xy_data["x"]]
+            except ValueError:
+                raise AssertionError(message)
+            else:
+                xy_data["x"] = x_data_numeric
+
+        # If we expect x-values to be strings
+        else:
+            # If we expect x-values to be numeric strings
+            if all([s.isnumeric() for s in xy_expected[xcol]]):
+                # We attempt to convert numeric strings to numbers
+                try:
+                    x_expected = [float(s) for s in xy_expected[xcol]]
+                    x_data = [float(s) for s in xy_data["x"]]
+                except ValueError:
+                    x_is_numeric = False
+                else:
+                    x_is_numeric = True
+                    xy_expected[xcol] = x_expected
+                    xy_data["x"] = x_data
+            # We expect x-values to be non-numeric strings
+            else:
+                x_is_numeric = False
+
+        # Testing x-data
+        if x_is_numeric:
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                )
+            except AssertionError:
+                raise AssertionError(message)
+        else:
+            np.testing.assert_equal(
+                np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
+            )
+
+        # Testing y-data
+        try:
+            np.testing.assert_array_max_ulp(
+                np.array(xy_data["y"]), np.array(xy_expected[ycol])
+            )
+        except AssertionError:
+            raise AssertionError(message)
 
     ### LINE TESTS/HELPER FUNCTIONS ###
 
