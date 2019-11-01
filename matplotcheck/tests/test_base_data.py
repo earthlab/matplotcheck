@@ -66,7 +66,7 @@ def test_assert_xydata_xlabel(pt_bar_plt, pd_df):
 
 
 def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
-    "Tests the xlabels flag on xydata"
+    """Tests the xlabels flag on xydata"""
     pd_df["A"] = pd_df["A"].apply(str)
     pd_df.iloc[1, 0] = "this ain't it cheif"
     with pytest.raises(AssertionError, match="Incorrect data values"):
@@ -75,7 +75,7 @@ def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
 
 
 def test_assert_xydata_xlabel_text():
-    "Tests the xlabels flag on xydata works to test labels with text data"
+    """Tests the xlabels flag on xydata works to test labels with text data"""
     data = {
         "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
         "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
@@ -93,7 +93,8 @@ def test_assert_xydata_xlabel_text():
 
 
 def test_assert_xydata_xlabel_text_fails():
-    "Tests the xlabels flag on xydata fails when testing labels with wrong text data"
+    """Tests the xlabels flag on xydata fails when testing labels with wrong
+    text data"""
     correct_data = {
         "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
         "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
@@ -117,6 +118,6 @@ def test_assert_xydata_xlabel_text_fails():
 
 
 def test_assert_xydata_expected_none(pt_scatter_plt):
-    "Tests that assert_xydata passes when xy_expected is None"
+    """Tests that assert_xydata passes when xy_expected is None"""
     pt_scatter_plt.assert_xydata(None)
     plt.close()
