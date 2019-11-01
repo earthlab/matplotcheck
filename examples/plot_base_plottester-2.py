@@ -1,8 +1,8 @@
 """
-Base Plot Tester Example 2 -- Fix This Title
-============================================
+The Basics of Testing Plots
+===========================
 
-This is an example of using the basic functionality of MatPlotCheck.
+These are some examples of using the basic functionality of MatPlotCheck.
 
 """
 
@@ -16,6 +16,7 @@ This is an example of using the basic functionality of MatPlotCheck.
 import matplotlib.pyplot as plt
 import matplotcheck.base as mpc
 import matplotcheck.notebook as nb
+import pandas as pd
 
 ###############################################################################
 # Plot
@@ -50,6 +51,7 @@ percip = [
     1.22,
     0.94,
 ]
+
 fig, ax = plt.subplots()
 ax.bar(months, percip, color="blue")
 ax.set(
@@ -57,43 +59,129 @@ ax.set(
     xlabel="Month",
     ylabel="Percipitation (in)",
 )
-hold_axis_1 = fig.gca()
 
-plot_1_copy = nb.convert_axes(plt, which_axes="all")
+plot_1_hold = nb.convert_axes(plt, which_axes="current")
 ###############################################################################
-# This is a section header
-# ------------------------
 #
 # .. note::
-#    In a Jupyter Notebook, a ``Matplotlib.axis.Axis`` object will not persisit
-#    beyond the cell it was created in. Therefore, if you need to run tests on
-#    an ```Axis`` object at the end of a Notebook, you will need to store a copy
-#    of the `Axis`` object in another variable. The ``nb.convert_axes()``
-#    function exists to make exactly this type of copy. It will pull ``Axes``
-#    objects from the most recently created figure, regardless of what method
-#    was used to create it. This can be very handy for grading students' work
-#    because they can use whichever method they want to create a plot, and their
-#    plot will be automatically copied and graded.
+#    To use matplotcheck to test a plot, we need a copy of the
+#    ``Matplotlib.axis.Axis`` object that the plot is stored in. This can be
+#    prove difficult when testing plots in a Jupyter Notebook, where a
+#    ``Matplotlib.axis.Axis`` object will not persisit beyond the cell it was
+#    created in. We'll use ``nb.convert_axes()`` to hold the most recently
+#    created plot in the variable ``plot_1_hold``. There are other ways to do
+#    this, but in a Jupyter Notebook you *must* use ``nb.convert_axes()`` to
+#    save the ``Axis`` object.
 #
-# Checking the plot
-# -----------------
-# Now we'll use matplotcheck to check the plot. We'll start by running a couple
-# tests that will pass.
-plot_1_copy = mpc.PlotTester(hold_axis_1)
+# Testing the plot
+# ----------------
+# Now we'll use matplotcheck to check that the plot has certain attributes that
+# we expect. We need to create a ``PlotTester`` object, and then we'll run some
+# tests.
 
-pt1.assert_plot_type("bar")
+plot_tester_1 = mpc.PlotTester(plot_1_hold)
+
+
+# Test that the plot is a bar plot
+plot_tester_1.assert_plot_type("bar")
+
+# Test that the plot title contains specific words
+plot_tester_1.assert_title_contains(["average", "month", "percip", "boulder"])
+
+# Test that the axis labels contain specific words
+plot_tester_1.assert_axis_label_contains(axis="x", strings_expected=["month"])
+plot_tester_1.assert_axis_label_contains(
+    axis="y", strings_expected=["percip", "in"]
+)
+
+###############################################################################
+# Now we'll create a DataFrame to store the data that we expect to see in our
+# plot. Then we'll test wether that data exists in the plot.
+
+expected_x_data = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+]
+expected_y_data = [
+    0.75,
+    0.83,
+    2.20,
+    2.87,
+    2.80,
+    2.20,
+    1.77,
+    1.85,
+    1.69,
+    1.54,
+    1.22,
+    0.94,
+]
+expected_data = pd.DataFrame(
+    {"Months": expected_x_data, "Percip": expected_y_data}
+)
+
+plot_tester_1.assert_xydata(
+    expected_data, xcol="Months", ycol="Percip", xlabels=True
+)
+
+###############################################################################
+# Since no errors have been raised by the above assertions, we know that all
+# those tests passed. Now we'll run some tests that will fail.
+
+
+# Test that the plot is a scatter plot
+try:
+    plot_tester_1.assert_plot_type("scatter")
+except AssertionError as message:
+    print("AssertionError:", message)
+
+# Test that the title contains specific strings
+try:
+    plot_tester_1.assert_title_contains(["Denver", "wind speed"])
+except AssertionError as message:
+    print("AssertionError:", message)
+
+# Test that the axis labels contain specific strings
+try:
+    plot_tester_1.assert_axis_label_contains(
+        axis="x", strings_expected=["year"]
+    )
+except AssertionError as message:
+    print("AssertionError:", message)
+try:
+    plot_tester_1.assert_axis_label_contains(
+        axis="y", strings_expected=["wind speed"]
+    )
+except AssertionError as message:
+    print("AssertionError:", message)
 
 
 ###############################################################################
-# This is a section header
-# ------------------------
+# in some cases, you may not want the error message to display exactly what
+# words you are expecting. If you'd like to set your own error message for an
+# assertion, you can use the ``message`` flag. For more details, see the
+# documentation for :py:func:`base.assert_plot_type`.
+
+try:
+    plot_tester_1.assert_plot_type(
+        plot_type="line", message="Make sure you have the correct plot type!"
+    )
+except AssertionError as message:
+    print("AssertionError:", message)
+
+###############################################################################
 #
 # .. note::
-#    This is a note highlight.
-#
-# Overview text here.
-
-
-###############################################################################
-# Start the Vignette
-# ------------------
+#    Some assert functions use a slightly different flag to set a custom error
+#    message, and some have special functionality. See the documantation for
+#    details.

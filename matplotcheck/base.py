@@ -170,6 +170,7 @@ class PlotTester(object):
 
         Parameters
         ----------
+
         strings_expected : list
             Any string in `strings_expected` must be in the title for the
             assertion to pass. If there is a list of strings in
