@@ -1038,6 +1038,10 @@ class PlotTester(object):
             Nothing if number of bins of type `which_bins` is at least `n`,
             otherwise throws ``AssertionError``.
         """
+        import pdb
+
+        pdb.set_trace()
+        debug_data = self.get_xy(xtime=False)
         x_data = self.get_xy(xtime=False)["x"]
         if which_bins == "negative":
             n_bins = len(x_data[x_data < 0])

@@ -89,6 +89,7 @@ def test_assert_num_bins():
 
     # df.hist(column='A')
     # df.hist(column='B')
+
     import pdb
 
     pdb.set_trace()
