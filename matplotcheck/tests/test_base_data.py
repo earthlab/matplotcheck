@@ -3,6 +3,7 @@ import pytest
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+import pandas as pd
 
 
 """DATACHECK TESTS"""
@@ -75,4 +76,25 @@ def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
 def test_assert_xydata_expected_none(pt_scatter_plt):
     "Tests that assert_xydata passes when xy_expected is None"
     pt_scatter_plt.assert_xydata(None)
+    plt.close()
+
+
+"""Histogram Tests"""
+
+
+def test_assert_num_bins():
+    dfa = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    dfb = pd.DataFrame({"B": (7.4 - (np.exp(np.arange(1, 2, 0.01)) - np.e))})
+    # fig, ax = plt.subplots()
+
+    # df.hist(column='A')
+    # df.hist(column='B')
+    import pdb
+
+    pdb.set_trace()
+    mybins = [2, 3, 4, 5, 6, 7, 8]
+    plt.hist(dfa["A"], bins=mybins, alpha=0.5, color="seagreen")
+    plt.hist(dfb["B"], bins=mybins, alpha=0.5, color="coral")
+
+    plt.show()
     plt.close()
