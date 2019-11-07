@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+* fix pip version to ensure pyproj installs in black tox envt (@lwasser, #144)
 * Changed `get_caption()` to return a string (@ryla5068, #125)
 * Updated `assert_xlabel_ydata()` to support pulling text from x-labels (@ryla5068, #125)
 * Fixed `assert_xydata()` incorrectly failing on some floating point numbers (@ryla5068, #124)
