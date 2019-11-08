@@ -1,4 +1,4 @@
-"""Tests for the base module -- Data"""
+"""Tests for the base module that check data"""
 import pytest
 from matplotcheck.base import PlotTester
 import matplotlib.pyplot as plt
@@ -195,7 +195,7 @@ def test_assert_xydata_xlabel_numeric_fails_bad_y(
 
 
 def test_assert_xydata_xlabel_numeric_expected_string_actual(
-    pd_df_monthly_data_numeric
+    pd_df_monthly_data_numeric,
 ):
     """Tests the xlabels flag on xydata correctly fails with numeric expected
     x-labels and non-numeric actual x-labels"""
