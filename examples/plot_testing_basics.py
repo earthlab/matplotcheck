@@ -9,7 +9,7 @@ These are some examples of using the basic functionality of MatPlotCheck.
 ###############################################################################
 # Setup
 # -----
-# We will start by importing the required packages. We will be using
+# You will start by importing the required packages. You will be using
 # ``matplotlib.pyplot`` to create our plots, but any ``matplotlib`` based
 # plotter (such as ``pandas.DataFrame.plot``) can be used.
 
@@ -21,7 +21,7 @@ import pandas as pd
 ###############################################################################
 # Plot
 # ----
-# Now we'll create some data and plot it.
+# Now you will create some data and plot it.
 
 months = [
     "Jan",
@@ -64,20 +64,20 @@ plot_1_hold = nb.convert_axes(plt, which_axes="current")
 ###############################################################################
 #
 # .. note::
-#    To use matplotcheck to test a plot, we need a copy of the
+#    To use matplotcheck to test a plot, you need a copy of the
 #    ``Matplotlib.axis.Axis`` object that the plot is stored in. This can be
 #    prove difficult when testing plots in a Jupyter Notebook, where a
 #    ``Matplotlib.axis.Axis`` object will not persisit beyond the cell it was
-#    created in. We'll use ``nb.convert_axes()`` to hold the most recently
-#    created plot in the variable ``plot_1_hold``. There are other ways to do
-#    this, but in a Jupyter Notebook you *must* use ``nb.convert_axes()`` to
-#    save the ``Axis`` object.
+#    created in. In this case, ``nb.convert_axes()`` is used to hold the most
+#    recently created plot in the variable ``plot_1_hold``. There are other ways
+#    to do this, but in a Jupyter Notebook you *must* use ``nb.convert_axes()``
+#    to save the ``Axis`` object.
 #
 # Testing the plot
 # ----------------
-# Now we'll use matplotcheck to check that the plot has certain attributes that
-# we expect. We need to create a ``PlotTester`` object, and then we'll run some
-# tests.
+# Now you can use matplotcheck to check that the plot has certain attributes
+# that you expect. You need to create a ``PlotTester`` object, and then you can
+# run some tests.
 
 plot_tester_1 = mpc.PlotTester(plot_1_hold)
 
@@ -95,8 +95,8 @@ plot_tester_1.assert_axis_label_contains(
 )
 
 ###############################################################################
-# Now we'll create a DataFrame to store the data that we expect to see in our
-# plot. Then we'll test wether that data exists in the plot.
+# Now you can create a DataFrame to store the data that you expect to see in our
+# plot. Then you test wether that data exists in the plot.
 
 expected_x_data = [
     "Jan",
@@ -135,8 +135,8 @@ plot_tester_1.assert_xydata(
 )
 
 ###############################################################################
-# Since no errors have been raised by the above assertions, we know that all
-# those tests passed. Now we'll run some tests that will fail.
+# Since no errors have been raised by the above assertions, you know that all
+# those tests passed. Now you can run some tests that will fail.
 
 
 # Test that the plot is a scatter plot
@@ -167,7 +167,7 @@ except AssertionError as message:
 
 
 ###############################################################################
-# in some cases, you may not want the error message to display exactly what
+# In some cases, you may not want the error message to display exactly what
 # words you are expecting. If you'd like to set your own error message for an
 # assertion, you can use the ``message`` flag. For more details, see the
 # documentation for :py:func:`base.assert_plot_type`.
