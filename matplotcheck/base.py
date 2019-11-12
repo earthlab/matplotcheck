@@ -1160,42 +1160,34 @@ class PlotTester(object):
 
     def assert_num_bins(
         self,
-        n=3,
-        which_bins="positive",
-        message="Not enough {0} value bins on histogram",
+        num_bins,
+        message="Expected {0} bins in histogram, instead found {1}.",
     ):
-        """Asserts number of bins of type `which_bins` is at least `n`
+        """Asserts number of bins is at least `num_bins`.
 
         Parameters
         ----------
-        n : int
-            Minimum number of bins of type `which_bin`
-        which_bins : string
-            Value may be one of: ['negative', 'positive']
-            'negative': all bins with values centered at a positive value
-            'positite': all bins with values centered at a negative value
+        num_bins : int
+            Number of bins expected.
         message : string
             The error message to be displayed if there exist fewer bins than
             `n`. If `message` contains ``'{0}'`` it will be replaced with
-            `which_bins`.
+            expected number of bins. If `message` contains ``'{1}'``, it will
+            be replaced with the number of bins found.
 
         Returns
         -------
         None :
-            Nothing if number of bins of type `which_bins` is at least `n`,
-            otherwise throws ``AssertionError``.
+            Nothing if plot contains the expected number of bins, otherwise
+            throws ``AssertionError``.
         """
-        import pdb
 
-        pdb.set_trace()
         debug_data = self.get_xy(xtime=False)
         x_data = self.get_xy(xtime=False)["x"]
-        if which_bins == "negative":
-            n_bins = len(x_data[x_data < 0])
-        elif which_bins == "positive":
-            n_bins = len(x_data[x_data > 0])
-        else:
-            raise ValueError(
-                "which_bins must be from list ['negative', 'positive']"
-            )
-        assert n_bins >= n, message.format(which_bins)
+        unique_x_data = list(set(x_data))
+
+        num_bins_found = len(unique_x_data)
+
+        assert num_bins == num_bins_found, message.format(
+            num_bins, num_bins_found
+        )

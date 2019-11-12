@@ -50,6 +50,19 @@ def pt_monthly_data_numeric(pd_df_monthly_data_numeric):
     return PlotTester(axis)
 
 
+@pytest.fixture
+def hist_resources():
+    """Create two dataframes with data for histograms."""
+    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    dataframe_b = pd.DataFrame(
+        {"B": (7.4 - (np.exp(np.arange(1, 2, 0.01)) - np.e))}
+    )
+    bins = [2, 3, 4, 5, 6, 7, 8]
+
+    resources = {"dfa": dataframe_a, "dfb": dataframe_b, "bins": bins}
+    return resources
+
+
 """DATACHECK TESTS"""
 
 
@@ -106,6 +119,7 @@ def test_assert_xydata_floatingpoint_error(pt_scatter_plt, pd_df):
     for i in range(len(pd_df["A"])):
         pd_df["A"][i] = pd_df["A"][i] + 1.0e-10
     pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", points_only=True)
+    plt.close()
 
 
 """ LABELS DATA TESTS """
@@ -230,20 +244,70 @@ def test_assert_xydata_expected_none(pt_scatter_plt):
 """Histogram Tests"""
 
 
-def test_assert_num_bins():
-    dfa = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
-    dfb = pd.DataFrame({"B": (7.4 - (np.exp(np.arange(1, 2, 0.01)) - np.e))})
-    # fig, ax = plt.subplots()
+def test_assert_num_bins(hist_resources):
+    plt.hist(hist_resources["dfa"]["A"], bins=hist_resources["bins"])
 
-    # df.hist(column='A')
-    # df.hist(column='B')
+    axis = plt.gca()
+    pt = PlotTester(axis)
+    pt.assert_num_bins(6)
 
-    import pdb
+    plt.close()
 
-    pdb.set_trace()
-    mybins = [2, 3, 4, 5, 6, 7, 8]
-    plt.hist(dfa["A"], bins=mybins, alpha=0.5, color="seagreen")
-    plt.hist(dfb["B"], bins=mybins, alpha=0.5, color="coral")
 
-    plt.show()
+def test_assert_num_bins_incorrect(hist_resources):
+    plt.hist(hist_resources["dfa"]["A"], bins=hist_resources["bins"])
+
+    axis = plt.gca()
+    pt = PlotTester(axis)
+
+    with pytest.raises(
+        AssertionError, match="Expected 5 bins in histogram, instead found 6."
+    ):
+        pt.assert_num_bins(5)
+
+    plt.close()
+
+
+def test_assert_num_bins_double_histogram(hist_resources):
+    plt.hist(
+        hist_resources["dfa"]["A"],
+        bins=hist_resources["bins"],
+        alpha=0.5,
+        color="seagreen",
+    )
+    plt.hist(
+        hist_resources["dfb"]["B"],
+        bins=hist_resources["bins"],
+        alpha=0.5,
+        color="coral",
+    )
+
+    axis = plt.gca()
+    pt = PlotTester(axis)
+    pt.assert_num_bins(6)
+
+    plt.close()
+
+
+def test_assert_num_bins_double_histogram_incorrect(hist_resources):
+    plt.hist(
+        hist_resources["dfa"]["A"],
+        bins=hist_resources["bins"],
+        alpha=0.5,
+        color="seagreen",
+    )
+    plt.hist(
+        hist_resources["dfb"]["B"],
+        bins=hist_resources["bins"],
+        alpha=0.5,
+        color="coral",
+    )
+
+    axis = plt.gca()
+    pt = PlotTester(axis)
+    with pytest.raises(
+        AssertionError, match="Expected 5 bins in histogram, instead found 6."
+    ):
+        pt.assert_num_bins(5)
+
     plt.close()

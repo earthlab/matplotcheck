@@ -59,6 +59,7 @@ def test_assert_string_contains(pt_line_plt):
     test_string = "this is a test string"
     string_expected = ["this", "is", "a", "test"]
     pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_fails(pt_line_plt):
@@ -69,6 +70,7 @@ def test_assert_string_contains_fails(pt_line_plt):
         AssertionError, match="String does not contain expected string: not"
     ):
         pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_or(pt_line_plt):
@@ -76,6 +78,7 @@ def test_assert_string_contains_or(pt_line_plt):
     test_string = "this is a test string"
     string_expected = ["this", ["is", "not"], "a", "test"]
     pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_or_fails(pt_line_plt):
@@ -86,6 +89,7 @@ def test_assert_string_contains_or_fails(pt_line_plt):
         AssertionError, match="String does not contain at least one of: "
     ):
         pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_handles_short_list_passes(pt_line_plt):
@@ -94,6 +98,7 @@ def test_assert_string_contains_handles_short_list_passes(pt_line_plt):
     test_string = "this is a test string"
     string_expected = [["this"], ["is"]]
     pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_handles_short_list_fails(pt_line_plt):
@@ -105,6 +110,7 @@ def test_assert_string_contains_handles_short_list_fails(pt_line_plt):
         AssertionError, match="String does not contain expected string: not"
     ):
         pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_passes_with_none(pt_line_plt):
@@ -112,6 +118,7 @@ def test_assert_string_contains_passes_with_none(pt_line_plt):
     test_string = "this is a test string"
     string_expected = None
     pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
 
 
 def test_assert_string_contains_passes_with_empty(pt_line_plt):
@@ -119,3 +126,4 @@ def test_assert_string_contains_passes_with_empty(pt_line_plt):
     test_string = "this is a test string"
     string_expected = []
     pt_line_plt.assert_string_contains(test_string, string_expected)
+    plt.close()
