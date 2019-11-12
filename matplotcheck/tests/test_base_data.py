@@ -1,10 +1,53 @@
-"""Tests for the base module -- Data"""
+"""Tests for the base module that check data"""
 import pytest
 from matplotcheck.base import PlotTester
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import random
+
+
+"""Fixtures"""
+
+
+@pytest.fixture
+def pd_df_monthly_data():
+    """Create a pandas dataframe with monthy data"""
+    monthly_data = {
+        "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+    return pd.DataFrame(monthly_data)
+
+
+@pytest.fixture
+def pt_monthly_data(pd_df_monthly_data):
+    """Create a PlotTester object from a bar plot with monthly data"""
+    fig, ax = plt.subplots()
+
+    pd_df_monthly_data.plot("months", "data", kind="bar", ax=ax)
+    axis = plt.gca()
+    return PlotTester(axis)
+
+
+@pytest.fixture
+def pd_df_monthly_data_numeric():
+    """Create a pandas dataframe with monthly data and numeric month labels"""
+    monthly_data = {
+        "months": [1, 2, 3, 4, 5, 6, 7],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+    return pd.DataFrame(monthly_data)
+
+
+@pytest.fixture
+def pt_monthly_data_numeric(pd_df_monthly_data_numeric):
+    """Create a PlotTester object from a bar plot with monthly data and numeric
+    month labels"""
+    fig, ax = plt.subplots()
+
+    pd_df_monthly_data_numeric.plot("months", "data", kind="bar", ax=ax)
+    axis = plt.gca()
+    return PlotTester(axis)
 
 
 """DATACHECK TESTS"""
@@ -58,15 +101,25 @@ def test_assert_xydata_changed_data_points_only(pt_scatter_plt, pd_df):
     plt.close()
 
 
+def test_assert_xydata_floatingpoint_error(pt_scatter_plt, pd_df):
+    """Tests the assert_xydata correctly handles floating point error"""
+    for i in range(len(pd_df["A"])):
+        pd_df["A"][i] = pd_df["A"][i] + 1.0e-10
+    pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", points_only=True)
+
+
+""" LABELS DATA TESTS """
+
+
 def test_assert_xydata_xlabel(pt_bar_plt, pd_df):
-    "Tests the xlabels flag on xydata"
+    """Tests the xlabels flag on xydata"""
     pd_df["A"] = pd_df["A"].apply(str)
     pt_bar_plt.assert_xydata(pd_df, xcol="A", ycol="B", xlabels=True)
     plt.close()
 
 
 def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
-    "Tests the xlabels flag on xydata"
+    """Tests the xlabels flag on xydata"""
     pd_df["A"] = pd_df["A"].apply(str)
     pd_df.iloc[1, 0] = "this ain't it cheif"
     with pytest.raises(AssertionError, match="Incorrect data values"):
@@ -74,49 +127,101 @@ def test_assert_xydata_xlabel_fails(pt_bar_plt, pd_df):
     plt.close()
 
 
-def test_assert_xydata_xlabel_text():
-    "Tests the xlabels flag on xydata works to test labels with text data"
-    data = {
-        "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
-        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
-    }
-    df = pd.DataFrame(data)
+def test_assert_xydata_xlabel_text(pd_df_monthly_data, pt_monthly_data):
+    """Tests the xlabels flag on xydata works to test labels with text data"""
 
-    fig, ax = plt.subplots()
-    df.plot("months", "data", kind="bar", ax=ax)
-    axis = plt.gca()
+    pt_monthly_data.assert_xydata(
+        pd_df_monthly_data, xcol="months", ycol="data", xlabels=True
+    )
+    plt.close()
 
-    pt = PlotTester(axis)
-    pt.assert_xydata(df, xcol="months", ycol="data", xlabels=True)
+
+def test_assert_xydata_xlabel_text_fails(pd_df_monthly_data, pt_monthly_data):
+    """Tests the xlabels flag on xydata fails when testing labels with wrong
+    text data"""
+
+    pd_df_expected_data = pd_df_monthly_data
+    pd_df_expected_data.loc[6, "months"] = "Aug"
+
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt_monthly_data.assert_xydata(
+            pd_df_expected_data, xcol="months", ycol="data", xlabels=True
+        )
 
     plt.close()
 
 
-def test_assert_xydata_xlabel_text_fails():
-    "Tests the xlabels flag on xydata fails when testing labels with wrong text data"
-    correct_data = {
-        "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
-        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
-    }
-    plot_data = {
-        "months": ["Jan", "Feb", "Mar", "Apr", "May", "June", "Sept"],
-        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
-    }
-    correct_df = pd.DataFrame(correct_data)
-    plot_df = pd.DataFrame(plot_data)
+def test_assert_xydata_xlabel_numeric(
+    pd_df_monthly_data_numeric, pt_monthly_data_numeric
+):
+    """Tests the xlabels flag on xydata works with numeric expected x-labels."""
 
+    pt_monthly_data_numeric.assert_xydata(
+        pd_df_monthly_data_numeric, xcol="months", ycol="data", xlabels=True
+    )
+    plt.close()
+
+
+def test_assert_xydata_xlabel_numeric_fails(
+    pd_df_monthly_data_numeric, pt_monthly_data_numeric
+):
+    """Tests the xlabels flag on xydata correctly fails with numeric expected
+    x-labels."""
+
+    pd_df_expected_data = pd_df_monthly_data_numeric
+    pd_df_expected_data.loc[6, "months"] = 99999
+
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt_monthly_data_numeric.assert_xydata(
+            pd_df_expected_data, xcol="months", ycol="data", xlabels=True
+        )
+    plt.close()
+
+
+def test_assert_xydata_xlabel_numeric_fails_bad_y(
+    pd_df_monthly_data_numeric, pt_monthly_data_numeric
+):
+    """Tests that the xlabels flag on xydata correctly fails with wrong numeric
+    y-data"""
+
+    pd_df_expected_data = pd_df_monthly_data_numeric
+    pd_df_expected_data.loc[6, "data"] = 99999
+
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt_monthly_data_numeric.assert_xydata(
+            pd_df_expected_data, xcol="months", ycol="data", xlabels=True
+        )
+    plt.close()
+
+
+def test_assert_xydata_xlabel_numeric_expected_string_actual(
+    pd_df_monthly_data_numeric,
+):
+    """Tests the xlabels flag on xydata correctly fails with numeric expected
+    x-labels and non-numeric actual x-labels"""
+
+    plot_data = {
+        "months": ["1", "2", "3", "4", "5", "6", "foo"],
+        "data": [0.635, 0.795, 1.655, 3.085, 2.64, 1.44, 1.02],
+    }
+
+    plot_df = pd.DataFrame(plot_data)
     fig, ax = plt.subplots()
     plot_df.plot("months", "data", kind="bar", ax=ax)
     axis = plt.gca()
 
     pt = PlotTester(axis)
     with pytest.raises(AssertionError, match="Incorrect data values"):
-        pt.assert_xydata(correct_df, xcol="months", ycol="data", xlabels=True)
-
+        pt.assert_xydata(
+            pd_df_monthly_data_numeric,
+            xcol="months",
+            ycol="data",
+            xlabels=True,
+        )
     plt.close()
 
 
 def test_assert_xydata_expected_none(pt_scatter_plt):
-    "Tests that assert_xydata passes when xy_expected is None"
+    """Tests that assert_xydata passes when xy_expected is None"""
     pt_scatter_plt.assert_xydata(None)
     plt.close()

@@ -85,6 +85,39 @@ class PlotTester(object):
         message_default="String does not contain expected string: {0}",
         message_or="String does not contain at least one of: {0}",
     ):
+        """Asserts that `string` contains the expected strings from
+        `strings_expected`.
+
+        Parameters
+        ----------
+        strings_expected : list
+            Any string in `strings_expected` must be in the title for the
+            assertion to pass. If there is a list of strings in
+            `strings_expected`, at least one of the strings in that list must
+            be in the title for the assertion to pass. For example, if
+            ``strings_expected=['a', 'b', 'c']``, then ``'a'`` AND ``'b'`` AND
+            ``'c'`` must be in the title for the assertion to pass.
+            Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
+            ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
+            in the title for the assertion to pass. Case insensitive.
+        message_default : string
+            The error message to be displayed if the `string` does not contain
+            a string in strings_expected. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the
+            label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if `string` does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
+
+        Returns
+        -------
+        None :
+            Nothing if `string` contains expected strings, otherwise throws
+            ``AssertionError``
+        """
         # Assertion passes if strings_expected == [] or strings_expected == None
         if not strings_expected:
             return
@@ -170,7 +203,6 @@ class PlotTester(object):
 
         Parameters
         ----------
-
         strings_expected : list
             Any string in `strings_expected` must be in the title for the
             assertion to pass. If there is a list of strings in
@@ -188,18 +220,24 @@ class PlotTester(object):
             'either': either the figure title or axes title will pass this
             assertion.
             The combined title will be tested.
-        message : string
-            The error message to be displayed if the plot title does not contain
-            one of the expected strings. If `message` contains ``'{0}'``, it
+        message_default : string
+            The error message to be displayed if the axis label does not contain
+            a string in strings_expected. If `message` contains ``'{0}'``, it
             will be replaced with the first expected string not found in the
-            plot title.
+            label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if the axis label does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
         message_no_title : string
             The error message to be displayed if the expected title is not displayed.
 
         Returns
         -------
         None :
-            Nothing if title title contains expected strings, otherwise throws
+            Nothing if title contains expected strings, otherwise throws
             ``AssertionError``
         """
         suptitle, axtitle = self.get_titles()
@@ -226,15 +264,14 @@ class PlotTester(object):
     """CAPTION TEST/HELPER FUNCTIONS """
 
     def get_caption(self):
-        """Returns matplotlib.text.Text that is located in the bottom right,
-        just below the right side of ax
+        """Returns the text that is located in the bottom right, just below the
+        right side of ax
         If no text is found in location, ``None`` is returned.
 
         Returns
         -------
         caption : string
-            matplotlib.text.Text if text is found in bottom right, ``None``
-            if no text is found
+            the text that is found in bottom right, ``None`` if no text is found
         """
         caption = None
         ax_position = self.ax.get_position()
@@ -273,13 +310,20 @@ class PlotTester(object):
             Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
             ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
             in the title for the assertion to pass. Case insensitive.
-        message : string
-            The error message to be displayed if the caption does not contain one of the
-            expected strings. If `message` contains ``'{0}'``, it
-            will be replaced with the first expected string not found in the caption.
+        message_default : string
+            The error message to be displayed if the axis label does not contain
+            a string in strings_expected. If `message` contains ``'{0}'``, it
+            will be replaced with the first expected string not found in the
+            label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if the axis label does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
         message_no_caption : string
-            The error message to be displayed if no caption exists in the appropriate
-            location.
+            The error message to be displayed if no caption exists in the
+            appropriate location.
 
         Returns
         -------
@@ -341,7 +385,8 @@ class PlotTester(object):
         self,
         axis="x",
         strings_expected=None,
-        message="{0} axis label does not contain expected text:{1}",
+        message_default="{1}-axis label does not contain expected string: {0}",
+        message_or="{1}-axis label does not contain at least one of: {0}",
         message_not_displayed="Expected {0} axis label is not displayed",
     ):
         """
@@ -362,12 +407,19 @@ class PlotTester(object):
             Alternatively, if ``strings_expected=['a', 'b', ['c', 'd']]``, then
             ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
             in the title for the assertion to pass. Case insensitive.
-        message : string
+        message_default : string
             The error message to be displayed if the axis label does not contain
-            one of the expected strings. If `message` contains ``'{0}'``, it
-            will be replaced with `axis`. If `message` contains ``'{1}'``, it
+            a string in strings_expected. If `message` contains ``'{1}'``, it
+            will be replaced with `axis`. If `message` contains ``'{0}'``, it
             will be replaced with the first expected string not found in the
             label.
+        message_or : string
+            Similar to `message_default`, `message_or` is the error message to
+            be displated if the axis label does not contain at least one of
+            the strings in an inner list in `strings_expected`. If `message`
+            contains ``'{1}'``, it will be replaced with `axis`. If `message`
+            contains ``'{0}'``, it will be replaced with the first failing inner
+            list in `strings_expected`.
         message_not_displayed : string
             The error message to be displayed if the expected axis label is not
             displayed. If `message_not_displayed` contains ``'{0}'``, it will
@@ -392,13 +444,13 @@ class PlotTester(object):
             return
         assert label, "Expected {0} axis label is not displayed".format(axis)
 
+        message_default = message_default.replace("{1}", axis)
+        message_or = message_or.replace("{1}", axis)
         self.assert_string_contains(
             label,
             strings_expected,
-            message_default=axis
-            + "-axis label does not contain expected string: {0}",
-            message_or=axis
-            + "-axis label does not contain at least one of: {0}",
+            message_default=message_default,
+            message_or=message_or,
         )
 
     def assert_lims(
@@ -930,19 +982,37 @@ class PlotTester(object):
         ]
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
-        xy_expected, xy_data = (
-            xy_expected.sort_values(by=xcol),
-            xy_data.sort_values(by="x"),
-        )
 
-        """
-        If our data is numeric, we use `assert_array_max_ulp()` to compare the
-        two datasets. This is done because it is able to account for small
-        errors in floating point numbers, and it scales nicely between extremely
-        small or large numbers. If our data is not numeric, we check that it
-        matches exactly.
-        """
-        if isinstance(xy_expected[xcol][0], numbers.Number):
+        # If we expect x-values to be numbers
+        if all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
+            x_is_numeric = True
+            try:
+                x_data_numeric = [float(i) for i in xy_data["x"]]
+            except ValueError:
+                raise AssertionError(message)
+            else:
+                xy_data["x"] = x_data_numeric
+
+        # If we expect x-values to be strings
+        else:
+            # If we expect x-values to be numeric strings
+            if all([s.isnumeric() for s in xy_expected[xcol]]):
+                # We attempt to convert numeric strings to numbers
+                try:
+                    x_expected = [float(s) for s in xy_expected[xcol]]
+                    x_data = [float(s) for s in xy_data["x"]]
+                except ValueError:
+                    x_is_numeric = False
+                else:
+                    x_is_numeric = True
+                    xy_expected[xcol] = x_expected
+                    xy_data["x"] = x_data
+            # We expect x-values to be non-numeric strings
+            else:
+                x_is_numeric = False
+
+        # Testing x-data
+        if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
                     np.array(xy_data["x"]), np.array(xy_expected[xcol])
@@ -953,17 +1023,14 @@ class PlotTester(object):
             np.testing.assert_equal(
                 np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
             )
-        if isinstance(xy_expected[ycol][0], numbers.Number):
-            try:
-                np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
-                )
-            except AssertionError:
-                raise AssertionError(message)
-        else:
-            np.testing.assert_equal(
-                np.array(xy_data["y"]), np.array(xy_expected[ycol]), message
+
+        # Testing y-data
+        try:
+            np.testing.assert_array_max_ulp(
+                np.array(xy_data["y"]), np.array(xy_expected[ycol])
             )
+        except AssertionError:
+            raise AssertionError(message)
 
     ### LINE TESTS/HELPER FUNCTIONS ###
 
