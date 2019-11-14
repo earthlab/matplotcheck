@@ -1158,20 +1158,37 @@ class PlotTester(object):
 
     ## HISTOGRAM FUCNTIONS ##
 
+    def get_num_bins(self):
+        """Gets the number of bins in histogram with a unique x-position.
+
+        Returns
+        -------
+        Int :
+            Returns the number of bins with a unique x-position. For a normal
+            histogram, this is just the number of bins. If there are two
+            overlapping or stacked histograms in the same `matplotlib.axis.Axis`
+            object, and the two histograms have the same bin edges, then this
+            function returns the number of bins from one """
+        x_data = self.get_xy(xtime=False)["x"]
+        unique_x_data = list(set(x_data))
+        num_bins = len(unique_x_data)
+
+        return num_bins
+
     def assert_num_bins(
         self,
         num_bins,
         message="Expected {0} bins in histogram, instead found {1}.",
     ):
-        """Asserts number of bins is at least `num_bins`.
+        """Asserts number of bins is `num_bins`.
 
         Parameters
         ----------
         num_bins : int
             Number of bins expected.
         message : string
-            The error message to be displayed if there exist fewer bins than
-            `n`. If `message` contains ``'{0}'`` it will be replaced with
+            The error message to be displayed if plot does not contain
+            `num_bins`. If `message` contains ``'{0}'`` it will be replaced with
             expected number of bins. If `message` contains ``'{1}'``, it will
             be replaced with the number of bins found.
 
@@ -1182,12 +1199,75 @@ class PlotTester(object):
             throws ``AssertionError``.
         """
 
-        debug_data = self.get_xy(xtime=False)
-        x_data = self.get_xy(xtime=False)["x"]
-        unique_x_data = list(set(x_data))
-
-        num_bins_found = len(unique_x_data)
+        num_bins_found = self.get_num_bins()
 
         assert num_bins == num_bins_found, message.format(
             num_bins, num_bins_found
         )
+
+    def get_bin_heights(self):
+        """Gets the heights of bins"""
+
+        bin_heights = self.get_xy(xtime=False)["y"].tolist()
+
+        return bin_heights
+
+    def assert_bin_heights(
+        self,
+        bin_heights,
+        tolerance=0,
+        message="Did not find expected bin heights in plot",
+    ):
+        """Asserts that the heights of histogram bins match `bin_heights`.
+
+        Parameters
+        ----------
+        bin_heights : list
+            A list of numbers representing the expected heights of each condecutive
+            bin.
+        tolerence : float
+            Measure of relative error allowed.
+            For example: Given a tolerance ``tolerence=0.1``, an expected value
+            ``e``, and an actual value ``a``, this asserts
+            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
+            with ``rtol=tolerence`` and ``atol=inf``.)
+        message : string
+            The error message to be displayed if the bin heights do not match
+            `bin_heights`
+
+        Raises
+        ------
+        AssertionError
+            if the heights of histogram bins do not match `bin_heights`
+
+
+        Notes
+        -----
+            `bin_heights` can be difficult to figure know. The easiest way to obtain
+            them may be to create a histogram with your expected data, create a
+            `PlotTester` object, and use ``get_bin_heights()``. This method will
+            return exactly the type of list required for `bin_heights`.
+        """
+        expected_bin_heights = bin_heights
+        plot_bin_heights = self.get_bin_heights()
+
+        if tolerance > 0:
+            np.testing.assert_allclose(
+                plot_bin_heights,
+                expected_bin_heightsd,
+                rtol=tolerence,
+                err_msg=message,
+            )
+
+        else:
+            """We use `assert_array_max_ulp()` to compare the
+            two datasets because it is able to account for small errors in
+            floating point numbers, and it scales nicely between extremely
+            small or large numbers. We catch this error and throw our own so
+            that we can use our own message."""
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(plot_bin_heights), np.array(expected_bin_heights)
+                )
+            except AssertionError:
+                raise AssertionError(message)

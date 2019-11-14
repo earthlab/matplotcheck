@@ -63,6 +63,29 @@ def hist_resources():
     return resources
 
 
+@pytest.fixture
+def pt_hist_overlapping():
+    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    dataframe_b = pd.DataFrame(
+        {"B": (7.4 - (np.exp(np.arange(1, 2, 0.01)) - np.e))}
+    )
+    bins = [2, 3, 4, 5, 6, 7, 8]
+
+    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
+    plt.hist(dataframe_b["B"], bins=bins, alpha=0.5, color="coral")
+    axis = plt.gca()
+    return PlotTester(axis)
+
+
+@pytest.fixture
+def pt_hist():
+    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    bins = [2, 3, 4, 5, 6, 7, 8]
+    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
+    axis = plt.gca()
+    return PlotTester(axis)
+
+
 """DATACHECK TESTS"""
 
 
@@ -244,70 +267,40 @@ def test_assert_xydata_expected_none(pt_scatter_plt):
 """Histogram Tests"""
 
 
-def test_assert_num_bins(hist_resources):
-    plt.hist(hist_resources["dfa"]["A"], bins=hist_resources["bins"])
+def test_assert_num_bins(pt_hist):
 
-    axis = plt.gca()
-    pt = PlotTester(axis)
-    pt.assert_num_bins(6)
+    pt_hist.assert_num_bins(6)
 
     plt.close()
 
 
-def test_assert_num_bins_incorrect(hist_resources):
-    plt.hist(hist_resources["dfa"]["A"], bins=hist_resources["bins"])
-
-    axis = plt.gca()
-    pt = PlotTester(axis)
-
+def test_assert_num_bins_incorrect(pt_hist):
     with pytest.raises(
         AssertionError, match="Expected 5 bins in histogram, instead found 6."
     ):
-        pt.assert_num_bins(5)
+        pt_hist.assert_num_bins(5)
 
     plt.close()
 
 
-def test_assert_num_bins_double_histogram(hist_resources):
-    plt.hist(
-        hist_resources["dfa"]["A"],
-        bins=hist_resources["bins"],
-        alpha=0.5,
-        color="seagreen",
-    )
-    plt.hist(
-        hist_resources["dfb"]["B"],
-        bins=hist_resources["bins"],
-        alpha=0.5,
-        color="coral",
-    )
-
-    axis = plt.gca()
-    pt = PlotTester(axis)
-    pt.assert_num_bins(6)
+def test_assert_num_bins_double_histogram(pt_hist_overlapping):
+    pt_hist_overlapping.assert_num_bins(6)
 
     plt.close()
 
 
-def test_assert_num_bins_double_histogram_incorrect(hist_resources):
-    plt.hist(
-        hist_resources["dfa"]["A"],
-        bins=hist_resources["bins"],
-        alpha=0.5,
-        color="seagreen",
-    )
-    plt.hist(
-        hist_resources["dfb"]["B"],
-        bins=hist_resources["bins"],
-        alpha=0.5,
-        color="coral",
-    )
-
-    axis = plt.gca()
-    pt = PlotTester(axis)
+def test_assert_num_bins_double_histogram_incorrect(pt_hist_overlapping):
     with pytest.raises(
         AssertionError, match="Expected 5 bins in histogram, instead found 6."
     ):
-        pt.assert_num_bins(5)
+        pt_hist_overlapping.assert_num_bins(5)
+
+    plt.close()
+
+
+def test_this_and_that(pt_hist_overlapping):
+    bin_heights = pt_hist_overlapping.get_bin_heights()
+
+    pt_hist_overlapping.assert_bin_heights(bin_heights)
 
     plt.close()
