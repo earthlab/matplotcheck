@@ -51,16 +51,12 @@ def pt_monthly_data_numeric(pd_df_monthly_data_numeric):
 
 
 @pytest.fixture
-def hist_resources():
-    """Create two dataframes with data for histograms."""
+def pt_hist():
     dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
-    dataframe_b = pd.DataFrame(
-        {"B": (7.4 - (np.exp(np.arange(1, 2, 0.01)) - np.e))}
-    )
     bins = [2, 3, 4, 5, 6, 7, 8]
-
-    resources = {"dfa": dataframe_a, "dfb": dataframe_b, "bins": bins}
-    return resources
+    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
+    axis = plt.gca()
+    return PlotTester(axis)
 
 
 @pytest.fixture
@@ -73,15 +69,6 @@ def pt_hist_overlapping():
 
     plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
     plt.hist(dataframe_b["B"], bins=bins, alpha=0.5, color="coral")
-    axis = plt.gca()
-    return PlotTester(axis)
-
-
-@pytest.fixture
-def pt_hist():
-    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
-    bins = [2, 3, 4, 5, 6, 7, 8]
-    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
     axis = plt.gca()
     return PlotTester(axis)
 
@@ -298,9 +285,48 @@ def test_assert_num_bins_double_histogram_incorrect(pt_hist_overlapping):
     plt.close()
 
 
-def test_this_and_that(pt_hist_overlapping):
+def test_get_bin_heights(pt_hist):
+    bin_heights = pt_hist.get_bin_heights()
+    assert bin_heights == [10.0, 29.0, 22.0, 19.0, 15.0, 5.0]
+
+    plt.close()
+
+
+def test_get_bin_heights_overlapping(pt_hist_overlapping):
+    bin_heights = pt_hist_overlapping.get_bin_heights()
+    assert bin_heights == [
+        10.0,
+        29.0,
+        22.0,
+        19.0,
+        15.0,
+        5.0,
+        3.0,
+        15.0,
+        18.0,
+        22.0,
+        28.0,
+        14.0,
+    ]
+
+    plt.close()
+
+
+def test_assert_bin_heights(pt_hist_overlapping):
     bin_heights = pt_hist_overlapping.get_bin_heights()
 
     pt_hist_overlapping.assert_bin_heights(bin_heights)
+
+    plt.close()
+
+
+def test_assert_bin_heights_incorrect(pt_hist_overlapping):
+    bin_heights = pt_hist_overlapping.get_bin_heights()
+    bin_heights[0] += 1
+
+    with pytest.raises(
+        AssertionError, match="Did not find expected bin heights in plot"
+    ):
+        pt_hist_overlapping.assert_bin_heights(bin_heights)
 
     plt.close()
