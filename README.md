@@ -29,6 +29,11 @@ tests. MatPlotCheck was developed to make it easier to test data, titles, axes
 and other elements of Matplotlib plots in support of both autograding and other
 testing needs.
 
+MatPlotCheck was inspired by [plotChecker][cdeac58a] developed by Jess Hamrick.
+
+  [cdeac58a]: https://github.com/jhamrick/plotchecker "Plot Checker"
+
+We spoke with her about our development and decided to extend plotChecker to suite some of the grading needs in our classes which include plots with spatial data using numpy for images and geopandas for vector data.
 
 ## Install MatPlotCheck
 
