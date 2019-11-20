@@ -330,30 +330,3 @@ def test_assert_bin_heights_incorrect(pt_hist_overlapping):
         pt_hist_overlapping.assert_bin_heights(bin_heights)
 
     plt.close()
-
-
-def test_assert_bin_heights_tolerance(pt_hist_overlapping):
-    """Test that assert_bin_heights correctly passes when using tolerance
-    flag."""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
-    for i in range(len(bin_heights)):
-        bin_heights[i] = bin_heights[i] * 1.1
-
-    pt_hist_overlapping.assert_bin_heights(bin_heights, tolerance=0.11)
-
-    plt.close()
-
-
-def test_assert_bin_heights_tolerance_fails(pt_hist_overlapping):
-    """Test that assert_bin_heights correctly fails when using tolerance
-    flag."""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
-    for i in range(len(bin_heights)):
-        bin_heights[i] = bin_heights[i] * 1.1
-
-    with pytest.raises(
-        AssertionError, match="Did not find expected bin heights in plot"
-    ):
-        pt_hist_overlapping.assert_bin_heights(bin_heights, tolerance=0.09)
-
-    plt.close()
