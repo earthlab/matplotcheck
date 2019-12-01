@@ -7,6 +7,6 @@ pytest-vcr==1.0.2
 pytest-cov==2.7.1
 pytest==5.2.4
 codecov==2.0.15
-setuptools==41.6.0
+setuptools==42.0.2
 pre-commit==1.20.0
 pip==19.0.3
