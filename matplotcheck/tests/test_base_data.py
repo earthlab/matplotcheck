@@ -255,13 +255,14 @@ def test_assert_xydata_expected_none(pt_scatter_plt):
 
 
 def test_assert_num_bins(pt_hist):
-
+    """Tests that assert_num_bins() correctly passes"""
     pt_hist.assert_num_bins(6)
 
     plt.close()
 
 
 def test_assert_num_bins_incorrect(pt_hist):
+    """Tests that assert_num_bins() correctly fails"""
     with pytest.raises(
         AssertionError, match="Expected 5 bins in histogram, instead found 6."
     ):
@@ -271,12 +272,16 @@ def test_assert_num_bins_incorrect(pt_hist):
 
 
 def test_assert_num_bins_double_histogram(pt_hist_overlapping):
+    """Tests that assert_num_bins correctly passes with overlapping
+    histograms"""
     pt_hist_overlapping.assert_num_bins(6)
 
     plt.close()
 
 
 def test_assert_num_bins_double_histogram_incorrect(pt_hist_overlapping):
+    """Tests that assert_num_bins() correctly fails with overlapping
+    histograms"""
     with pytest.raises(
         AssertionError, match="Expected 5 bins in histogram, instead found 6."
     ):
@@ -286,6 +291,7 @@ def test_assert_num_bins_double_histogram_incorrect(pt_hist_overlapping):
 
 
 def test_get_bin_heights(pt_hist):
+    """Tests that get_bin_heights() returns the correct bin heights."""
     bin_heights = pt_hist.get_bin_heights()
     assert bin_heights == [10.0, 29.0, 22.0, 19.0, 15.0, 5.0]
 
@@ -293,6 +299,8 @@ def test_get_bin_heights(pt_hist):
 
 
 def test_get_bin_heights_overlapping(pt_hist_overlapping):
+    """Tests that get_bin_heights returns the correct bin heights with
+    overlapping histograms"""
     bin_heights = pt_hist_overlapping.get_bin_heights()
     assert bin_heights == [
         10.0,
@@ -313,6 +321,8 @@ def test_get_bin_heights_overlapping(pt_hist_overlapping):
 
 
 def test_assert_bin_heights(pt_hist_overlapping):
+    """Tests that assert_bin_heights() correctly passes with overlapping
+    histograms"""
     bin_heights = pt_hist_overlapping.get_bin_heights()
 
     pt_hist_overlapping.assert_bin_heights(bin_heights)
@@ -321,6 +331,8 @@ def test_assert_bin_heights(pt_hist_overlapping):
 
 
 def test_assert_bin_heights_incorrect(pt_hist_overlapping):
+    """Tests that assert_bin_heights() correctly fails with overlapping
+    histograms"""
     bin_heights = pt_hist_overlapping.get_bin_heights()
     bin_heights[0] += 1
 
