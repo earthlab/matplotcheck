@@ -50,6 +50,29 @@ def pt_monthly_data_numeric(pd_df_monthly_data_numeric):
     return PlotTester(axis)
 
 
+@pytest.fixture
+def pt_hist():
+    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    bins = [2, 3, 4, 5, 6, 7, 8]
+    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
+    axis = plt.gca()
+    return PlotTester(axis)
+
+
+@pytest.fixture
+def pt_hist_overlapping():
+    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    dataframe_b = pd.DataFrame(
+        {"B": (7.4 - (np.exp(np.arange(1, 2, 0.01)) - np.e))}
+    )
+    bins = [2, 3, 4, 5, 6, 7, 8]
+
+    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
+    plt.hist(dataframe_b["B"], bins=bins, alpha=0.5, color="coral")
+    axis = plt.gca()
+    return PlotTester(axis)
+
+
 """DATACHECK TESTS"""
 
 
@@ -106,6 +129,7 @@ def test_assert_xydata_floatingpoint_error(pt_scatter_plt, pd_df):
     for i in range(len(pd_df["A"])):
         pd_df["A"][i] = pd_df["A"][i] + 1.0e-10
     pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", points_only=True)
+    plt.close()
 
 
 """ LABELS DATA TESTS """
@@ -224,4 +248,124 @@ def test_assert_xydata_xlabel_numeric_expected_string_actual(
 def test_assert_xydata_expected_none(pt_scatter_plt):
     """Tests that assert_xydata passes when xy_expected is None"""
     pt_scatter_plt.assert_xydata(None)
+    plt.close()
+
+
+"""Histogram Tests"""
+
+
+def test_assert_num_bins(pt_hist):
+    """Tests that assert_num_bins() correctly passes"""
+    pt_hist.assert_num_bins(6)
+
+    plt.close()
+
+
+def test_assert_num_bins_incorrect(pt_hist):
+    """Tests that assert_num_bins() correctly fails"""
+    with pytest.raises(
+        AssertionError, match="Expected 5 bins in histogram, instead found 6."
+    ):
+        pt_hist.assert_num_bins(5)
+
+    plt.close()
+
+
+def test_assert_num_bins_double_histogram(pt_hist_overlapping):
+    """Tests that assert_num_bins correctly passes with overlapping
+    histograms"""
+    pt_hist_overlapping.assert_num_bins(6)
+
+    plt.close()
+
+
+def test_assert_num_bins_double_histogram_incorrect(pt_hist_overlapping):
+    """Tests that assert_num_bins() correctly fails with overlapping
+    histograms"""
+    with pytest.raises(
+        AssertionError, match="Expected 5 bins in histogram, instead found 6."
+    ):
+        pt_hist_overlapping.assert_num_bins(5)
+
+    plt.close()
+
+
+def test_get_bin_values(pt_hist):
+    """Tests that get_bin_values() returns the correct bin valuess."""
+    bin_values = pt_hist.get_bin_values()
+    assert bin_values == [10.0, 29.0, 22.0, 19.0, 15.0, 5.0]
+
+    plt.close()
+
+
+def test_get_bin_values_overlapping(pt_hist_overlapping):
+    """Tests that get_bin_values returns the correct bin values with
+    overlapping histograms"""
+    bin_values = pt_hist_overlapping.get_bin_values()
+    assert bin_values == [
+        10.0,
+        29.0,
+        22.0,
+        19.0,
+        15.0,
+        5.0,
+        3.0,
+        15.0,
+        18.0,
+        22.0,
+        28.0,
+        14.0,
+    ]
+
+    plt.close()
+
+
+def test_assert_bin_values(pt_hist_overlapping):
+    """Tests that assert_bin_values() correctly passes with overlapping
+    histograms"""
+    bin_values = pt_hist_overlapping.get_bin_values()
+
+    pt_hist_overlapping.assert_bin_values(bin_values)
+
+    plt.close()
+
+
+def test_assert_bin_values_incorrect(pt_hist_overlapping):
+    """Tests that assert_bin_values() correctly fails with overlapping
+    histograms"""
+    bin_values = pt_hist_overlapping.get_bin_values()
+    bin_values[0] += 1
+
+    with pytest.raises(
+        AssertionError, match="Did not find expected bin values in plot"
+    ):
+        pt_hist_overlapping.assert_bin_values(bin_values)
+
+    plt.close()
+
+
+def test_assert_bin_values_tolerance(pt_hist_overlapping):
+    """Test that assert_bin_values correctly passes when using tolerance
+    flag."""
+    bin_values = pt_hist_overlapping.get_bin_values()
+    for i in range(len(bin_values)):
+        bin_values[i] = bin_values[i] * 1.1
+
+    pt_hist_overlapping.assert_bin_values(bin_values, tolerance=0.11)
+
+    plt.close()
+
+
+def test_assert_bin_values_tolerance_fails(pt_hist_overlapping):
+    """Test that assert_bin_values correctly fails when using tolerance
+    flag."""
+    bin_values = pt_hist_overlapping.get_bin_values()
+    for i in range(len(bin_values)):
+        bin_values[i] = bin_values[i] * 1.1
+
+    with pytest.raises(
+        AssertionError, match="Did not find expected bin values in plot"
+    ):
+        pt_hist_overlapping.assert_bin_values(bin_values, tolerance=0.09)
+
     plt.close()

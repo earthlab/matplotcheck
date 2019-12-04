@@ -1155,42 +1155,124 @@ class PlotTester(object):
                     ),
                 )
 
-    ## HISTOGRAM FUCNTIONS ##
+    ## HISTOGRAM FUNCTIONS ##
+
+    def get_num_bins(self):
+        """Gets the number of bins in histogram with a unique x-position.
+
+        Returns
+        -------
+        Int :
+            Returns the number of bins with a unique x-position. For a normal
+            histogram, this is just the number of bins. If there are two
+            overlapping or stacked histograms in the same `matplotlib.axis.Axis`
+            object, then this returns the number of bins with unique edges. """
+        x_data = self.get_xy(xtime=False)["x"]
+        unique_x_data = list(set(x_data))
+        num_bins = len(unique_x_data)
+
+        return num_bins
 
     def assert_num_bins(
         self,
-        n=3,
-        which_bins="positive",
-        message="Not enough {0} value bins on histogram",
+        num_bins,
+        message="Expected {0} bins in histogram, instead found {1}.",
     ):
-        """Asserts number of bins of type `which_bins` is at least `n`
+        """Asserts number of bins is `num_bins`.
 
         Parameters
         ----------
-        n : int
-            Minimum number of bins of type `which_bin`
-        which_bins : string
-            Value may be one of: ['negative', 'positive']
-            'negative': all bins with values centered at a positive value
-            'positite': all bins with values centered at a negative value
+        num_bins : int
+            Number of bins expected.
         message : string
-            The error message to be displayed if there exist fewer bins than
-            `n`. If `message` contains ``'{0}'`` it will be replaced with
-            `which_bins`.
+            The error message to be displayed if plot does not contain
+            `num_bins`. If `message` contains ``'{0}'`` it will be replaced with
+            expected number of bins. If `message` contains ``'{1}'``, it will
+            be replaced with the number of bins found.
 
         Returns
         -------
         None :
-            Nothing if number of bins of type `which_bins` is at least `n`,
-            otherwise throws ``AssertionError``.
+            Nothing if plot contains the expected number of bins, otherwise
+            throws ``AssertionError``.
         """
-        x_data = self.get_xy(xtime=False)["x"]
-        if which_bins == "negative":
-            n_bins = len(x_data[x_data < 0])
-        elif which_bins == "positive":
-            n_bins = len(x_data[x_data > 0])
-        else:
-            raise ValueError(
-                "which_bins must be from list ['negative', 'positive']"
+
+        num_bins_found = self.get_num_bins()
+
+        assert num_bins == num_bins_found, message.format(
+            num_bins, num_bins_found
+        )
+
+    def get_bin_values(self):
+        """Returns the value of each bin in a histogram (i.e. the height of each
+        bar in a histogram.)
+
+        Returns
+        -------
+        Int :
+            The number of bins in the histogram"""
+
+        bin_values = self.get_xy(xtime=False)["y"].tolist()
+
+        return bin_values
+
+    def assert_bin_values(
+        self,
+        bin_values,
+        tolerance=0,
+        message="Did not find expected bin values in plot",
+    ):
+        """Asserts that the values of histogram bins match `bin_values`.
+
+        Parameters
+        ----------
+        bin_values : list
+            A list of numbers representing the expected values of each consecutive
+            bin (i.e. the heights of the bars in the histogram).
+        tolerence : float
+            Measure of relative error allowed.
+            For example: Given a tolerance ``tolerence=0.1``, an expected value
+            ``e``, and an actual value ``a``, this asserts
+            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
+            with ``rtol=tolerence`` and ``atol=inf``.)
+        message : string
+            The error message to be displayed if the bin values do not match
+            `bin_values`
+
+        Raises
+        ------
+        AssertionError
+            if the Values of histogram bins do not match `bin_values`
+
+
+        Notes
+        -----
+            `bin_values` can be difficult to know. The easiest way to obtain
+            them may be to create a histogram with your expected data, create a
+            `PlotTester` object, and use ``get_bin_values()``.
+            ``get_bin_values()`` will return exactly the type of list required
+            for `bin_values` in this method.
+        """
+        expected_bin_values = bin_values
+        plot_bin_values = self.get_bin_values()
+
+        if tolerance > 0:
+            np.testing.assert_allclose(
+                plot_bin_values,
+                expected_bin_values,
+                rtol=tolerance,
+                err_msg=message,
             )
-        assert n_bins >= n, message.format(which_bins)
+
+        else:
+            """We use `assert_array_max_ulp()` to compare the
+            two datasets because it is able to account for small errors in
+            floating point numbers, and it scales nicely between extremely
+            small or large numbers. We catch this error and throw our own so
+            that we can use our own message."""
+            try:
+                np.testing.assert_array_max_ulp(
+                    np.array(plot_bin_values), np.array(expected_bin_values)
+                )
+            except AssertionError:
+                raise AssertionError(message)
