@@ -1251,12 +1251,15 @@ class PlotTester(object):
         plot_bin_heights = self.get_bin_heights()
 
         if tolerance > 0:
-            np.testing.assert_allclose(
-                plot_bin_heights,
-                expected_bin_heights,
-                rtol=tolerance,
-                err_msg=message,
-            )
+            try:
+                np.testing.assert_allclose(
+                    plot_bin_heights,
+                    expected_bin_heights,
+                    rtol=tolerance,
+                    err_msg=message,
+                )
+            except AssertionError:
+                raise AssertionError(message)
 
         else:
             """We use `assert_array_max_ulp()` to compare the

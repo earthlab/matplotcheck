@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.1.0]
+* Created a vignette covering the testing of histograms (@ryla5068, #149)
 * Added test for bin heights of histograms (@ryla5068, #124)
 * Added support for overlapping histograms in histogram tests (@ryla5068, #123)
 * Created a vignette covering base plot tester functionality (@ryla5068, #122)
