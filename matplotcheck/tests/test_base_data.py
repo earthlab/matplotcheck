@@ -290,19 +290,19 @@ def test_assert_num_bins_double_histogram_incorrect(pt_hist_overlapping):
     plt.close()
 
 
-def test_get_bin_heights(pt_hist):
-    """Tests that get_bin_heights() returns the correct bin heights."""
-    bin_heights = pt_hist.get_bin_heights()
-    assert bin_heights == [10.0, 29.0, 22.0, 19.0, 15.0, 5.0]
+def test_get_bin_values(pt_hist):
+    """Tests that get_bin_values() returns the correct bin valuess."""
+    bin_values = pt_hist.get_bin_values()
+    assert bin_values == [10.0, 29.0, 22.0, 19.0, 15.0, 5.0]
 
     plt.close()
 
 
-def test_get_bin_heights_overlapping(pt_hist_overlapping):
-    """Tests that get_bin_heights returns the correct bin heights with
+def test_get_bin_values_overlapping(pt_hist_overlapping):
+    """Tests that get_bin_values returns the correct bin values with
     overlapping histograms"""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
-    assert bin_heights == [
+    bin_values = pt_hist_overlapping.get_bin_values()
+    assert bin_values == [
         10.0,
         29.0,
         22.0,
@@ -320,52 +320,52 @@ def test_get_bin_heights_overlapping(pt_hist_overlapping):
     plt.close()
 
 
-def test_assert_bin_heights(pt_hist_overlapping):
-    """Tests that assert_bin_heights() correctly passes with overlapping
+def test_assert_bin_values(pt_hist_overlapping):
+    """Tests that assert_bin_values() correctly passes with overlapping
     histograms"""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
+    bin_values = pt_hist_overlapping.get_bin_values()
 
-    pt_hist_overlapping.assert_bin_heights(bin_heights)
+    pt_hist_overlapping.assert_bin_values(bin_values)
 
     plt.close()
 
 
-def test_assert_bin_heights_incorrect(pt_hist_overlapping):
-    """Tests that assert_bin_heights() correctly fails with overlapping
+def test_assert_bin_values_incorrect(pt_hist_overlapping):
+    """Tests that assert_bin_values() correctly fails with overlapping
     histograms"""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
-    bin_heights[0] += 1
+    bin_values = pt_hist_overlapping.get_bin_values()
+    bin_values[0] += 1
 
     with pytest.raises(
-        AssertionError, match="Did not find expected bin heights in plot"
+        AssertionError, match="Did not find expected bin values in plot"
     ):
-        pt_hist_overlapping.assert_bin_heights(bin_heights)
+        pt_hist_overlapping.assert_bin_values(bin_values)
 
     plt.close()
 
 
-def test_assert_bin_heights_tolerance(pt_hist_overlapping):
-    """Test that assert_bin_heights correctly passes when using tolerance
+def test_assert_bin_values_tolerance(pt_hist_overlapping):
+    """Test that assert_bin_values correctly passes when using tolerance
     flag."""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
-    for i in range(len(bin_heights)):
-        bin_heights[i] = bin_heights[i] * 1.1
+    bin_values = pt_hist_overlapping.get_bin_values()
+    for i in range(len(bin_values)):
+        bin_values[i] = bin_values[i] * 1.1
 
-    pt_hist_overlapping.assert_bin_heights(bin_heights, tolerance=0.11)
+    pt_hist_overlapping.assert_bin_values(bin_values, tolerance=0.11)
 
     plt.close()
 
 
-def test_assert_bin_heights_tolerance_fails(pt_hist_overlapping):
-    """Test that assert_bin_heights correctly fails when using tolerance
+def test_assert_bin_values_tolerance_fails(pt_hist_overlapping):
+    """Test that assert_bin_values correctly fails when using tolerance
     flag."""
-    bin_heights = pt_hist_overlapping.get_bin_heights()
-    for i in range(len(bin_heights)):
-        bin_heights[i] = bin_heights[i] * 1.1
+    bin_values = pt_hist_overlapping.get_bin_values()
+    for i in range(len(bin_values)):
+        bin_values[i] = bin_values[i] * 1.1
 
     with pytest.raises(
-        AssertionError, match="Did not find expected bin heights in plot"
+        AssertionError, match="Did not find expected bin values in plot"
     ):
-        pt_hist_overlapping.assert_bin_heights(bin_heights, tolerance=0.09)
+        pt_hist_overlapping.assert_bin_values(bin_values, tolerance=0.09)
 
     plt.close()

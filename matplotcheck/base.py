@@ -1203,26 +1203,32 @@ class PlotTester(object):
             num_bins, num_bins_found
         )
 
-    def get_bin_heights(self):
-        """Gets the heights of bins"""
+    def get_bin_values(self):
+        """Returns the value of each bin in a histogram (i.e. the height of each
+        bar in a histogram.)
 
-        bin_heights = self.get_xy(xtime=False)["y"].tolist()
+        Returns
+        -------
+        Int :
+            The number of bins in the histogram"""
 
-        return bin_heights
+        bin_values = self.get_xy(xtime=False)["y"].tolist()
 
-    def assert_bin_heights(
+        return bin_values
+
+    def assert_bin_values(
         self,
-        bin_heights,
+        bin_values,
         tolerance=0,
-        message="Did not find expected bin heights in plot",
+        message="Did not find expected bin values in plot",
     ):
-        """Asserts that the heights of histogram bins match `bin_heights`.
+        """Asserts that the values of histogram bins match `bin_values`.
 
         Parameters
         ----------
-        bin_heights : list
-            A list of numbers representing the expected heights of each consecutive
-            bin.
+        bin_values : list
+            A list of numbers representing the expected values of each consecutive
+            bin (i.e. the heights of the bars in the histogram).
         tolerence : float
             Measure of relative error allowed.
             For example: Given a tolerance ``tolerence=0.1``, an expected value
@@ -1230,29 +1236,30 @@ class PlotTester(object):
             ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
             with ``rtol=tolerence`` and ``atol=inf``.)
         message : string
-            The error message to be displayed if the bin heights do not match
-            `bin_heights`
+            The error message to be displayed if the bin values do not match
+            `bin_values`
 
         Raises
         ------
         AssertionError
-            if the heights of histogram bins do not match `bin_heights`
+            if the Values of histogram bins do not match `bin_values`
 
 
         Notes
         -----
-            `bin_heights` can be difficult to figure know. The easiest way to obtain
+            `bin_values` can be difficult to know. The easiest way to obtain
             them may be to create a histogram with your expected data, create a
-            `PlotTester` object, and use ``get_bin_heights()``. This method will
-            return exactly the type of list required for `bin_heights`.
+            `PlotTester` object, and use ``get_bin_values()``.
+            ``get_bin_values()`` will return exactly the type of list required
+            for `bin_values` in this method.
         """
-        expected_bin_heights = bin_heights
-        plot_bin_heights = self.get_bin_heights()
+        expected_bin_values = bin_values
+        plot_bin_values = self.get_bin_values()
 
         if tolerance > 0:
             np.testing.assert_allclose(
-                plot_bin_heights,
-                expected_bin_heights,
+                plot_bin_values,
+                expected_bin_values,
                 rtol=tolerance,
                 err_msg=message,
             )
@@ -1265,7 +1272,7 @@ class PlotTester(object):
             that we can use our own message."""
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(plot_bin_heights), np.array(expected_bin_heights)
+                    np.array(plot_bin_values), np.array(expected_bin_values)
                 )
             except AssertionError:
                 raise AssertionError(message)
