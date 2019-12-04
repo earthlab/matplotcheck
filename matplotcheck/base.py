@@ -1166,7 +1166,7 @@ class PlotTester(object):
             Returns the number of bins with a unique x-position. For a normal
             histogram, this is just the number of bins. If there are two
             overlapping or stacked histograms in the same `matplotlib.axis.Axis`
-            object, then this returns the number of bins with unique edges."""
+            object, then this returns the number of bins with unique edges. """
         x_data = self.get_xy(xtime=False)["x"]
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
