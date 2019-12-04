@@ -29,14 +29,21 @@ plot_1_hold = nb.convert_axes(plt, which_axes="current")
 # Testing the Histogram
 # ---------------------
 # Now you can make a PlotTester object and test the histogram. We'll test both
-# the number of bins and the heights of those bins.
+# the number of bins and the values of those bins.
+
+###############################################################################
+#
+# .. note::
+#   Throughout this vignette, the term `bin value` is used. The value
+#   of a bin is the number of datapoints that fall within that bin. It may be
+#   easier to think about this as the height of a bar correspinding to the bin.
 
 plot_tester_1 = mpc.PlotTester(plot_1_hold)
 
 plot_tester_1.assert_num_bins(5)
 
-expected_bin_heights = [341, 68, 40, 28, 23]
-plot_tester_1.assert_bin_heights(expected_bin_heights)
+expected_bin_values = [341, 68, 40, 28, 23]
+plot_tester_1.assert_bin_values(expected_bin_values)
 ################################################################################
 # And we can also run some tests that will fail.
 #
@@ -46,21 +53,30 @@ except AssertionError as message:
     print("AssertionError:", message)
 
 try:
-    plot_tester_1.assert_bin_heights([1, 4, 1, 3, 4])
+    plot_tester_1.assert_bin_values([1, 4, 1, 3, 4])
 except AssertionError as message:
     print("AssertionError:", message)
 
 ################################################################################
 # Determining Expected Values
 # ---------------------------
-# With a histogram, you may not always know the heights of each bin that you
-# expect to see. Instead, you might just know how to make the histogram you
-# expect. In this case, matplotcheck provides a method for extracting the bin
-# heights from a plot.
+# With a histogram, you may not know the values you expect to find for each bin
+# before you begin testing. (More simply, you may know how you expect a
+# histogram to look and how you expect it to be made. But you may not know
+# the exact height of each bar.) In this case, matplotcheck provides a method
+# for extracting the bin values from an existing histogram:
+# ``get_bin_values()``.
 #
-# To use this, you will start by creating a plot with unknown bin heights. This
-# will serve as a reference; this is how we expect our histogram to look. Then
-# you will store this plot in ``expected_plot_hold``.
+# To use this, you can create a histogram however you think it should be created
+# (this will be called the expected histogram) and use it as a reference. Then
+# you can extract the bin values from it (called the expected values). These
+# expected values can be used to test whether another histogram (e.g. a student's
+# histogram) also contains the expected values.
+#
+# For this example, you will start by creating a histogram that will serve as
+# your expected histogram, and then extracting the bin values (in this case, the
+# expected values) from it. To do this, you need to create a `PlotTester` object
+# from it and use the ``get_bin_values()`` method.
 
 expected_data = np.sin(np.arange(0, 2 * np.pi, np.pi / 50))
 
@@ -68,46 +84,55 @@ fig, ax = plt.subplots()
 ax.hist(expected_data, bins=8, color="gold")
 
 expected_plot_hold = nb.convert_axes(plt, which_axes="current")
-
-################################################################################
-# Now that you have our expected plot, or reference plot, you will need create a
-# `PlotTester` object. This will allow you to extract the bin heights from the
-# expected plot.
-
 plot_tester_expected = mpc.PlotTester(expected_plot_hold)
-print(plot_tester_expected.get_bin_heights())
+print(plot_tester_expected.get_bin_values())
 
 ################################################################################
-# Great! Now you know the bin heights that you expect to see in a plot that you
-# are testing.
+# Great! Now you know the bin values that you expect to see when you test a
+# plot.
 #
-# Now you will create another histogram and then test it against your expected
-# bin heights.
+# Now you will create another histogram (our testing histogram) and check
+# whether it matches our expected histogram (i.e. check wether its bin values
+# match the expected bin values).
 
-# Create and plot histogram to be tested
+# Create and plot the testing histogram
 testing_data = np.sin(np.arange(2 * np.pi, 4 * np.pi, np.pi / 50))
 fig, ax = plt.subplots()
 ax.hist(testing_data, bins=8, color="orange")
 testing_plot_hold = nb.convert_axes(plt, which_axes="current")
 
-# Testing the histogram against the expected bin heights
+# Testing the histogram against the expected bin values
 plot_tester_testing = mpc.PlotTester(testing_plot_hold)
-plot_tester_testing.assert_bin_heights(
+plot_tester_testing.assert_bin_values(
     [23.0, 10.0, 8.0, 9.0, 9.0, 8.0, 10.0, 23.0]
 )
 
 ################################################################################
-# Since this did not raise an ``AssertionError``, you know that the test passed,
-# as expected. The plot you tested has the same bin heights as you expected.
+# Since ``assert_bin_values()`` did not raise an ``AssertionError``, you know
+# that the test passed. This means the testing histogram had the same bin values
+# as the expected histogram.
+
+###############################################################################
+#
+# .. note::
+#   In this example, you have created the expected histogram and the testing
+#   histogram in the same file. Normally you would create the expected histogram
+#   in one location, extract the expected bin values from it, and use those to
+#   test the testing histogram in another location (e.g. within a student's
+#   homework assignment.)
+
 
 ################################################################################
 # Testing with tolerances
 # -----------------------
 # In some cases, you might want to run a test that doesn't require the bin
-# heights to match exactly. Here you can use the tolerance flag.
+# values to match exactly. For this, you can use the ``tolerance`` argument of
+# the ``assert_bin_values()`` method.
 #
 # You will start by making two histograms with slightly different data and
-# storing the plots with ``nb.convert_axes()``.
+# storing the plots with ``nb.convert_axes()``. The gold plot will serve as the
+# expected plot, and the orange plot will serve as the testing plot.
+
 expected_data = 0.1 * np.power(np.arange(0, 10, 0.1), 2)
 bins = np.arange(0, 10, 1)
 
@@ -126,43 +151,46 @@ ax2.hist(test_data, color="orange", bins=bins)
 testing_plot_2_hold = nb.convert_axes(plt, which_axes="current")
 
 ################################################################################
-# Now you will extract the expected bin heights from the expected plot and make a
-# `PlotTester` object from the testing plot.
+# Now you will create a `PlotTester` object for each plot. This allows you to
+# extract the expected bin values from the expected plot and allows you to
+# test the testing plot.
 
 plot_tester_expected_2 = mpc.PlotTester(expected_plot_2_hold)
-bins_expected_2 = plot_tester_expected_2.get_bin_heights()
+bins_expected_2 = plot_tester_expected_2.get_bin_values()
 
 plot_tester_testing_2 = mpc.PlotTester(testing_plot_2_hold)
 
 ################################################################################
 # You'll notice that the test (orange) plot differs somewhat from the
 # expected (gold) plot, but still has a similar shape and similar bin
-# heights.
+# values.
 #
-# If you test it normally, the assertion will fail.
+# If you test it without the ``tolerance`` argument, the assertion will fail.
 
 try:
-    plot_tester_testing_2.assert_bin_heights(bins_expected_2)
+    plot_tester_testing_2.assert_bin_values(bins_expected_2)
 except AssertionError as message:
     print("AssertionError:", message)
 
 ################################################################################
 # However, if you set a tolerance, the assertion can pass. Here you will test it
-# with a tolerance of 0.2.
+# with ``tolerance=0.2``.
 
-plot_tester_testing_2.assert_bin_heights(bins_expected_2, tolerance=0.2)
+plot_tester_testing_2.assert_bin_values(bins_expected_2, tolerance=0.2)
 
 ################################################################################
 # Because no ``AssertionError`` is raised, you know that the test passed with
 # a tolerance of 0.2. However, the test will not pass with a tolerance that is
-# too small. Here, you see that the test will fail with a tolerance of 0.02.
+# too small. Here, you see that the test will fail with ``tolerance=0.1``.
 
 try:
-    plot_tester_testing_2.assert_bin_heights(bins_expected_2, tolerance=0.02)
+    plot_tester_testing_2.assert_bin_values(bins_expected_2, tolerance=0.1)
 except AssertionError as message:
     print("AssertionError:", message)
 
-################################################################################
-#  When using tolerances, the ``tolerance`` argument is taken as a relative
-# tolerance. For more information, see the documentation for the
-# ``base.assert_bin_heights()`` method.
+###############################################################################
+#
+# .. note::
+#   When using tolerances, the ``tolerance`` argument is taken as a relative
+#   tolerance. For more information, see the documentation for the
+#   ``base.assert_bin_heights()`` method.
