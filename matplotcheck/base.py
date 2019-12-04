@@ -1155,7 +1155,7 @@ class PlotTester(object):
                     ),
                 )
 
-    ## HISTOGRAM FUCNTIONS ##
+    ## HISTOGRAM FUNCTIONS ##
 
     def get_num_bins(self):
         """Gets the number of bins in histogram with a unique x-position.
@@ -1221,7 +1221,7 @@ class PlotTester(object):
         Parameters
         ----------
         bin_heights : list
-            A list of numbers representing the expected heights of each condecutive
+            A list of numbers representing the expected heights of each consecutive
             bin.
         tolerence : float
             Measure of relative error allowed.
