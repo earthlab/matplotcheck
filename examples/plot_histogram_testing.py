@@ -34,9 +34,11 @@ plot_1_hold = nb.convert_axes(plt, which_axes="current")
 ###############################################################################
 #
 # .. note::
-#   Throughout this vignette, the term `bin value` is used. The value
-#   of a bin is the number of datapoints that fall within that bin. It may be
-#   easier to think about this as the height of a bar correspinding to the bin.
+#   Throughout this vignette, the term `bin value` is used to describe the
+#   number of datapoints that fall within a bin. In other words, a bin's value
+#   is equal to the height of the bar correspondign to that bin. For example,
+#   the value of the first bin in the above histogram is 341. Note that the
+#   height of the first bar is also 341.
 
 plot_tester_1 = mpc.PlotTester(plot_1_hold)
 
@@ -61,22 +63,22 @@ except AssertionError as message:
 # Determining Expected Values
 # ---------------------------
 # With a histogram, you may not know the values you expect to find for each bin
-# before you begin testing. (More simply, you may know how you expect a
-# histogram to look and how you expect it to be made. But you may not know
-# the exact height of each bar.) In this case, matplotcheck provides a method
-# for extracting the bin values from an existing histogram:
+# before you begin testing. (More simply, you probably know how you expect a
+# histogram to look and how you expect it to be made. But you might not know
+# the exact height of each bar in that histogram.) In this case, matplotcheck
+# provides a method for extracting the bin values from an existing histogram:
 # ``get_bin_values()``.
 #
 # To use this, you can create a histogram however you think it should be created
 # (this will be called the expected histogram) and use it as a reference. Then
 # you can extract the bin values from it (called the expected values). These
-# expected values can be used to test whether another histogram (e.g. a student's
-# histogram) also contains the expected values.
+# expected values can be used to test whether another histogram (e.g. a
+# student's histogram) also contains the expected values.
 #
 # For this example, you will start by creating a histogram that will serve as
-# your expected histogram, and then extracting the bin values (in this case, the
-# expected values) from it. To do this, you need to create a `PlotTester` object
-# from it and use the ``get_bin_values()`` method.
+# your expected histogram, and then extracting the expected values from it. To
+# do this, you need to create a `PlotTester` object from it and use the
+# ``get_bin_values()`` method.
 
 expected_data = np.sin(np.arange(0, 2 * np.pi, np.pi / 50))
 
@@ -91,8 +93,8 @@ print(plot_tester_expected.get_bin_values())
 # Great! Now you know the bin values that you expect to see when you test a
 # plot.
 #
-# Now you will create another histogram (our testing histogram) and check
-# whether it matches our expected histogram (i.e. check wether its bin values
+# Now you can create another histogram (our testing histogram) and check
+# whether it matches the expected histogram (i.e. check wether its bin values
 # match the expected bin values).
 
 # Create and plot the testing histogram
@@ -123,7 +125,7 @@ plot_tester_testing.assert_bin_values(
 
 
 ################################################################################
-# Testing with tolerances
+# Testing with Tolerances
 # -----------------------
 # In some cases, you might want to run a test that doesn't require the bin
 # values to match exactly. For this, you can use the ``tolerance`` argument of
@@ -181,7 +183,7 @@ plot_tester_testing_2.assert_bin_values(bins_expected_2, tolerance=0.2)
 ################################################################################
 # Because no ``AssertionError`` is raised, you know that the test passed with
 # a tolerance of 0.2. However, the test will not pass with a tolerance that is
-# too small. Here, you see that the test will fail with ``tolerance=0.1``.
+# too small; the test will fail with ``tolerance=0.1``.
 
 try:
     plot_tester_testing_2.assert_bin_values(bins_expected_2, tolerance=0.1)

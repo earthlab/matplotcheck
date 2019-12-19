@@ -1259,8 +1259,8 @@ class PlotTester(object):
         if tolerance > 0:
             try:
                 np.testing.assert_allclose(
-                    plot_bin_heights,
-                    expected_bin_heights,
+                    plot_bin_values,
+                    expected_bin_values,
                     rtol=tolerance,
                     err_msg=message,
                 )
