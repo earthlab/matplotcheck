@@ -1266,7 +1266,6 @@ class PlotTester(object):
                 )
             except AssertionError:
                 raise AssertionError(message)
-
         else:
             """We use `assert_array_max_ulp()` to compare the
             two datasets because it is able to account for small errors in

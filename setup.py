@@ -21,7 +21,7 @@ if __name__ == "__main__":
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         long_description_content_type="text/markdown",
-        version="0.1.0",
+        version="0.1.1",
         packages=["matplotcheck"],
         install_requires=[
             "numpy>=1.14.0",
