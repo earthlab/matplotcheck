@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 import matplotcheck.base as mpc
 import matplotcheck.notebook as nb
 import numpy as np
-import pandas as pd
 
 
 data = np.exp(np.arange(0, 5, 0.01))
