@@ -1240,13 +1240,15 @@ class PlotTester(object):
         plot_bin_values = self.get_bin_values()
 
         if tolerance > 0:
-            np.testing.assert_allclose(
-                plot_bin_values,
-                expected_bin_values,
-                rtol=tolerance,
-                err_msg=message,
-            )
-
+            try:
+                np.testing.assert_allclose(
+                    plot_bin_values,
+                    expected_bin_values,
+                    rtol=tolerance,
+                    err_msg=message,
+                )
+            except AssertionError:
+                raise AssertionError(message)
         else:
             """We use `assert_array_max_ulp()` to compare the
             two datasets because it is able to account for small errors in
