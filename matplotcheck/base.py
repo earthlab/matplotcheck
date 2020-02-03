@@ -113,11 +113,10 @@ class PlotTester(object):
             contains ``'{0}'``, it will be replaced with the first failing inner
             list in `strings_expected`.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if `string` contains expected strings, otherwise throws
-            ``AssertionError``
+        AssertionError
+            if `string` does not contain expected strings
         """
         # Assertion passes if strings_expected == [] or strings_expected == None
         if not strings_expected:
@@ -155,11 +154,10 @@ class PlotTester(object):
             `message` contains ``'{0}'``, it will be replaced
             with the epected plot type.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if Plot matches `plot_type`, otherwise throws
-            ``AssertionError``
+        AssertionError
+            if Plot does not match `plot_type`
         """
         if plot_type:
             if plot_type == "scatter":
@@ -235,11 +233,10 @@ class PlotTester(object):
         message_no_title : string
             The error message to be displayed if the expected title is not displayed.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if title contains expected strings, otherwise throws
-            ``AssertionError``
+        AssertionError
+            if title does not contain expected strings
         """
         suptitle, axtitle = self.get_titles()
         if title_type == "either":
@@ -326,11 +323,10 @@ class PlotTester(object):
             The error message to be displayed if no caption exists in the
             appropriate location.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if caption contains strings matching `strings_expected`,
-            otherwise throws ``AssertionError``
+        AssertionError
+            if caption does not contain strings matching `strings_expected`
         """
         caption = self.get_caption()
         if strings_expected is None:
@@ -358,11 +354,10 @@ class PlotTester(object):
         message : string
             The error message to be displayed if the assertion is not met.
 
-        Returns
+        Raises
         ----------
-        None :
-            Nothing if axis lines are not displayed on plot. Otherwise throws
-            ``AssertionError`` with message `m`
+        AssertionError
+            with message `m` if axis lines are displayed on plot
         """
         flag = False
         # Case 1: check if axis have been turned off
@@ -426,11 +421,10 @@ class PlotTester(object):
             displayed. If `message_not_displayed` contains ``'{0}'``, it will
             be replaced with `axis`.
 
-        Returns
+        Raises
         ----------
-        None :
-            Nothing if axis label contains expected strings. Otherwise throws
-            ``AssertionError``
+        AssertionError
+            if axis label does not contain expected strings
         """
         # Retrieve appropriate axis label, error if axis param is not x or y
         if axis == "x":
@@ -475,11 +469,10 @@ class PlotTester(object):
             the expected limits. If `message` contains ``'{0}'``, it will be
             replaced with `axis`.
 
-        Returns
+        Raises
         ----------
-        None :
-            Nothing if `lims_expected` matches the limits of ax, otherwise
-            throws ``AssertionError``
+        AssertionError
+            if `lims_expected` does not match the limits of ax
         """
         # Get axis limit values
         if axis == "x":
@@ -522,11 +515,10 @@ class PlotTester(object):
             it will be replaced with the specified `axis` (i.e. it will be
             replaced with 'x' or 'y').
 
-        Returns
+        Raises
         ----------
-        None :
-            Nothing if axis limits fall within `lims_range`, otherwise throws
-            ``AssertionError``
+        AssertionError
+            if axis limits does not fall within `lims_range`
         """
         # Get ax axis limits
         if axis == "x":
@@ -557,11 +549,11 @@ class PlotTester(object):
             The error message to be displayed if the x limits and y limits are
             equal.
 
-        Returns
+        Raises
         ----------
-        None :
-            Nothing if limits are equal, otherwise throws ``AssertionError``
-            with message `m`
+        AssertionError
+            with message `m` if limits are not equal
+
         """
         xlims = self.ax.get_xlim()
         ylims = self.ax.get_ylim()
@@ -604,11 +596,10 @@ class PlotTester(object):
             `message_num_titles` contains ``'{1}'`` it will be replaced with the
             expected number of titles.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if legend titles contain expected text, otherwise throws
-            ``AssertionError``
+        AssertionError
+            if legend titles do not contain expected text
         """
         legends = self.get_legends()
 
@@ -657,11 +648,10 @@ class PlotTester(object):
             expected number of labels.
 
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if legend labeles match `labels_exp`, otherwise throws
-            ``AssertionError``
+        AssertionError
+            if legend labeles do not match `labels_exp`
 
         Notes
         -----
@@ -695,11 +685,10 @@ class PlotTester(object):
             The error message to be displayed if the legend overlays the plot
             window.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if legend does not overlay plot window. Otherwise throws
-            ``AssertionError`` with message `m`
+        AssertionError
+            with message `m` if legend does not overlay plot window
         """
         # RendererBase() is needed to get extent, otherwise raises an error
         plot_extent = self.ax.get_window_extent(RendererBase()).get_points()
@@ -745,11 +734,10 @@ class PlotTester(object):
         message : string
             The error message to be displayed if two legends overlap.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if no legends overlap, otherwise throws ``AssertionError``
-            with message `m`
+        AssertionError
+            with message `m` if legends overlap
         """
         legends = self.get_legends()
         n = len(legends)
@@ -892,11 +880,10 @@ class PlotTester(object):
             `xy_expected`
 
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if no legends overlap, otherwise throws ``AssertionError``
-            with message `m`
+        AssertionError
+            with message `m` if legends overlap
         """
         if xy_expected is None:
             return
@@ -1008,11 +995,10 @@ class PlotTester(object):
             The error message to be displayed if data in the x-labels and
             y-values do not match `xy_expected`.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if no legends overlap, otherwise throws ``AssertionError``
-            with message `m`
+        AssertionError
+            with message `m` if legends overlap
 
         Notes
         -----
@@ -1126,11 +1112,10 @@ class PlotTester(object):
             The error message to be displayed if the line exists but does not
             cover the dataset.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if line exists and covers dataset, otherwise throws
-            ``AssertionError`` with message `m` or `m2`
+        AssertionError
+            with message `m` or `m2` if no line exists that covers the dataset
         """
         flag_exist, flag_length = False, False
         xy = self.get_xy(points_only=True)
@@ -1162,11 +1147,10 @@ class PlotTester(object):
             Acceptable strings in line_types are as follows
             ``['regression', 'onetoone']``.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if each line of type in `line_types` exists on `ax`,
-            otherwise throws ``AssertionError``.
+        AssertionError
+            if at least one line of type in `line_types` does not exist on `ax`
 
         Notes
         -----
@@ -1232,11 +1216,10 @@ class PlotTester(object):
             expected number of bins. If `message` contains ``'{1}'``, it will
             be replaced with the number of bins found.
 
-        Returns
+        Raises
         -------
-        None :
-            Nothing if plot contains the expected number of bins, otherwise
-            throws ``AssertionError``.
+        AssertionError
+            if plot does not contain the expected number of bins
         """
 
         num_bins_found = self.get_num_bins()

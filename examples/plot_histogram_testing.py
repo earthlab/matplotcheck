@@ -2,7 +2,12 @@
 Testing Histograms
 ==================
 
+<<<<<<< HEAD
 These are some examples of using the basic functionality of MatPlotCheck.
+=======
+These are some examples of using the basic functionality of MatPlotCheck
+to test histogram plots in Python.
+>>>>>>> master
 
 """
 
