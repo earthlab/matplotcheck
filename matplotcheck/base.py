@@ -16,6 +16,7 @@ from scipy import stats
 import pandas as pd
 import geopandas as gpd
 import numbers
+from datetime import datetime
 
 
 class InvalidPlotError(Exception):
@@ -779,7 +780,8 @@ class PlotTester(object):
         points_only : boolean
             Set ``True`` to check only points, set ``False`` to check all data on plot.
         xtime : boolean
-            Set equal to True if the x axis of the plot contains datetime values
+            Set equal to True if the x axis of the plot contains datetime
+            values. This function will return ``datetime.datetime`` objects.
 
         Returns
         -------
@@ -820,9 +822,24 @@ class PlotTester(object):
         xy_data = xy_data[xy_data["x"] >= lims[0]]
         xy_data = xy_data[xy_data["x"] <= lims[1]].reset_index(drop=True)
 
-        # change to datetime dtype if needed
+        """
+        matplotlib converts datetime data to days since epoch which is an
+        inconvinent (and issue-prone) datatype. Note that epoch (in this case)
+        is Jan 1 1970. Note that it can store fractions of days as well, so time
+        precision is preserved. Therefore, we convert this to a
+        datetime.timedelta object (using mdates.num2timedelta). Then we add it
+        to a datetime.datetime object that represents Jan 1 1970 (we get this
+        from datetime.utcfromtimestamp()). This gives us a final
+        datetime.datetime object that is more usable.
+        """
         if xtime:
-            xy_data["x"] = mdates.num2date(xy_data["x"])
+            xy_data["x"] = np.array(
+                [
+                    datetime.utcfromtimestamp(0) + mdates.num2timedelta(i)
+                    for i in xy_data["x"]
+                ]
+            )
+
         return xy_data
 
     def assert_xydata(
@@ -913,6 +930,18 @@ class PlotTester(object):
             xy_expected.sort_values(by=xcol),
         )
 
+        if xtime:
+            """
+            matplotcheck converts date/time datatypes to days since epoch.
+            pandas converts date/time datatypes into its own timestamp datatype.
+            To compare them, we convert them both to the datetime.datetime
+            datatype. For xy_data, this is handled in get_xydata(). For
+            xy_expected, we handle that conversion here.
+            """
+            xy_expected[xcol] = np.array(
+                [i.to_pydatetime() for i in xy_expected[xcol]]
+            )
+
         if tolerence > 0:
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
@@ -934,13 +963,26 @@ class PlotTester(object):
             two datasets because it is able to account for small errors in
             floating point numbers, and it scales nicely between extremely
             small or large numbers. We catch this error and throw our own so
-            that we can use our own message."""
-            try:
-                np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
-                )
-            except AssertionError:
-                raise AssertionError(message)
+            that we can use our own message. We can't use this to compare
+            datetime.datetime objects, so we use our own comparison."""
+            if xtime:
+                if not all(
+                    [
+                        xy_data["x"][i] == xy_expected[xcol][i]
+                        for i in range(len(xy_expected[xcol]))
+                    ]
+                ):
+                    raise AssertionError(message)
+                elif len(xy_expected[xcol]) != len(xy_data["x"]):
+                    raise AssertionError(message)
+            else:
+                try:
+                    np.testing.assert_array_max_ulp(
+                        np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    )
+                except AssertionError:
+                    raise AssertionError(message)
+
             try:
                 np.testing.assert_array_max_ulp(
                     np.array(xy_data["y"]), np.array(xy_expected[ycol])
