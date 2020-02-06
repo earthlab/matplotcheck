@@ -80,7 +80,7 @@ class VectorTester(PlotTester):
 
     def _convert_length(self, arr, n):
         """ helper function for 'get_points_by_attributes' and 'get_lines_by_attributes'
-		takes an array of either legnth 1 or n. 
+		takes an array of either legnth 1 or n.
 		If array is length 1: array of array's only element repeating n times is returned
 		If array is length n: original array is returned
 		Else: function raises value error
@@ -106,7 +106,7 @@ class VectorTester(PlotTester):
             )
 
     def get_points_by_attributes(self):
-        """Returns a sorted list of lists where each list contains tuples of xycoords for points of 
+        """Returns a sorted list of lists where each list contains tuples of xycoords for points of
 		the same attributes: color, marker, and markersize
 
 		Returns
@@ -287,11 +287,11 @@ class VectorTester(PlotTester):
         return (ls[0], onoffseq)
 
     def get_lines(self):
-        """Returns a dataframe with all lines on ax 
+        """Returns a dataframe with all lines on ax
 
 		Returns
 		-------
-		output: DataFrame with column 'lines'. Each row represents one line segment. 
+		output: DataFrame with column 'lines'. Each row represents one line segment.
 		Its value in 'lines' is a list of tuples representing the line segement.
 		"""
         lines = [
@@ -473,14 +473,16 @@ class VectorTester(PlotTester):
     ):
         """Asserts the polygon data in Axes ax is equal to polygons_expected to decimal place dec with error message m
 		If polygons_expected is am empty list or None, assertion is passed
-		
+
 		Parameters
 		----------
 		polygons_expected: list of polygons expected to be founds on Axes ax
 		dec: int stating the desired decimal precision. If None, polygons must be exact
 		m: string error message if assertion is not met
 		"""
-        if polygons_expected:
+        if len(polygons_expected) != 0 :
+            if type(polygons_expected) == gpd.geodataframe.GeoDataFrame:
+                polygons_expected = self._convert_multipolygons(polygons_expected['geometry'])
             polygons = self.get_polygons()
             if dec:
                 assert len(polygons_expected) == len(polygons), m
