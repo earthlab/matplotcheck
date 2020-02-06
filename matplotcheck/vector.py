@@ -481,7 +481,7 @@ class VectorTester(PlotTester):
 		m: string error message if assertion is not met
 		"""
         if len(polygons_expected) != 0 :
-            if type(polygons_expected) == gpd.geodataframe.GeoDataFrame:
+            if isinstance(polygons_expected, gpd.geodataframe.GeoDataFrame):
                 polygons_expected = self._convert_multipolygons(polygons_expected['geometry'])
             polygons = self.get_polygons()
             if dec:
