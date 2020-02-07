@@ -480,9 +480,11 @@ class VectorTester(PlotTester):
 		dec: int stating the desired decimal precision. If None, polygons must be exact
 		m: string error message if assertion is not met
 		"""
-        if len(polygons_expected) != 0 :
+        if len(polygons_expected) != 0:
             if isinstance(polygons_expected, gpd.geodataframe.GeoDataFrame):
-                polygons_expected = self._convert_multipolygons(polygons_expected['geometry'])
+                polygons_expected = self._convert_multipolygons(
+                    polygons_expected["geometry"]
+                )
             polygons = self.get_polygons()
             if dec:
                 assert len(polygons_expected) == len(polygons), m
