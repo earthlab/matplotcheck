@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 from matplotcheck.vector import VectorTester
 
-"""Fixtures"""
-
 @pytest.fixture
 def basic_polygon():
     """
@@ -46,7 +44,6 @@ def poly_geo_plot(basic_polygon_gdf):
 
     return VectorTester(axis)
 
-""" Assert Polygon Tests"""
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
     """Check that the polygon assert works with a list of polygons."""
     x, y = basic_polygon.exterior.coords.xy
