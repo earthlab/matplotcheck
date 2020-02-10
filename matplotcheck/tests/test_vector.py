@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 from matplotcheck.vector import VectorTester
 
+"""Fixtures"""
+
 @pytest.fixture
 def basic_polygon():
     """
