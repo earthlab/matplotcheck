@@ -80,7 +80,8 @@ def test_polygon_dec_check(poly_geo_plot, basic_polygon):
     """
     Check that the polygon assert passes when the polygon is off by less than
     the maximum decimal precision.
-    """    x, y = basic_polygon.exterior.coords.xy
+    """
+    x, y = basic_polygon.exterior.coords.xy
     poly_list = [[(x[0]+.1, x[1]) for x in list(zip(x,y))]]
     poly_geo_plot.assert_polygons(poly_list, dec=1)
     plt.close()
