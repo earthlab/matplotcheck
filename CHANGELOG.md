@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Created a vignette covering the testing of histograms (@ryla5068, #149)
+* Allowed `assert_polygons()` to accept GeoDataFrames and added tests (@nkorinek, #188)
 
 ## [0.1.1]
 * Added test for bin heights of histograms (@ryla5068, #124)
