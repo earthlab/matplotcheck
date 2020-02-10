@@ -1,6 +1,6 @@
 """Tests for the vector module"""
 import pytest
-from shapely.geometry import Polygon, LineString
+from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
 import geopandas as gpd
 from matplotcheck.vector import VectorTester
@@ -33,7 +33,7 @@ def basic_polygon_gdf(basic_polygon):
 @pytest.fixture
 def poly_geo_plot(basic_polygon_gdf):
     """Create a polygon vector tester object."""
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     basic_polygon_gdf.plot(ax=ax)
     ax.set_title("My Plot Title", fontsize=30)
@@ -45,7 +45,6 @@ def poly_geo_plot(basic_polygon_gdf):
     return VectorTester(axis)
 
 """ Assert Polygon Tests"""
-
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
     """Check that the polygon assert works with a list of polygons."""
     x, y = basic_polygon.exterior.coords.xy
