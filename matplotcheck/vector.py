@@ -476,11 +476,21 @@ class VectorTester(PlotTester):
 
 		Parameters
 		----------
-		polygons_expected: list of polygons expected to be founds on Axes ax
-		dec: int stating the desired decimal precision. If None, polygons must be exact
-		m: string error message if assertion is not met
+		polygons_expected: List or GeoDataFrame
+            List of polygons expected to be founds on Axes ax or a GeoDataFrame
+            containing the expected polygons.
+		dec: int (Optional)
+            Int stating the desired decimal precision. If None, polygons must
+            be exact.
+		m: string (default = "Incorrect Polygon Data")
+            String error message if assertion is not met.
 		"""
         if len(polygons_expected) != 0:
+            if isinstance(polygons_expected, list):
+                if len(polygons_expected[0]) == 0:
+                    raise ValueError(
+                        "Empty list or GeoDataFrame passed into assert_polygons."
+                    )
             if isinstance(polygons_expected, gpd.geodataframe.GeoDataFrame):
                 polygons_expected = self._convert_multipolygons(
                     polygons_expected["geometry"]
@@ -498,3 +508,7 @@ class VectorTester(PlotTester):
                     )
             else:
                 np.testing.assert_equal(polygons, sorted(polygons_expected), m)
+        else:
+            raise ValueError(
+                "Empty list or GeoDataFrame passed into assert_polygons."
+            )
