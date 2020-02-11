@@ -1,8 +1,39 @@
 import numpy as np
-from earthpy.spatial import bytescale
 
 from .base import PlotTester
 
+def _image_shape_correction(
+    image, scale=False, shape=False
+):
+    """Fixes three dimensional numpy array inputs to be comprable
+     to matplotlib axes objects.
+
+    Parameters
+    ----------
+    im_expected: Numpy Array
+        Array containing the expected image data.
+    scale: Boolean
+        Set to True if the expected image needs to be scaled using
+        EarthPy's bytescale function to match the matplotlib data.
+    shape: boolean
+        Set to True if the expected image is the incorrect shape to be
+        compared to the matplotlib data.
+
+    Returns
+    ----------
+    image: Numpy Array
+        Modified array that should now be comparable to the data from
+        matplotlib.
+    """
+    if scale:
+        min, max = image.min(), image.max()
+        range = max - min
+        scale = float(255)/range
+        fix = (image-min)*scale
+        image = (fix.clip(0,255)+.5).astype("uint8")
+    if shape:
+        image = image.transpose([1, 2, 0])
+    return image
 
 class RasterTester(PlotTester):
     """A PlotTester for spatial raster plots.
@@ -161,35 +192,6 @@ class RasterTester(PlotTester):
         assert np.array_equal(
             im_data_labels, im_expected_labels
         ), "Incorrect legend to data relation"
-
-    def _image_shape_correction(
-        image, scale=False, shape=False
-    ):
-        """Fixes three dimensional numpy array inputs to be comprable
-         to matplotlib axes objects.
-
-        Parameters
-        ----------
-        im_expected: Numpy Array
-            Array containing the expected image data.
-        scale: Boolean
-            Set to True if the expected image needs to be scaled using
-            EarthPy's bytescale function to match the matplotlib data.
-        shape: boolean
-            Set to True if the expected image is the incorrect shape to be
-            compared to the matplotlib data.
-
-        Returns
-        ----------
-        image: Numpy Array
-            Modified array that should now be comparable to the data from
-            matplotlib.
-        """
-        if scale:
-            image = bytescale(image)
-        if shape:
-            image = image.transpose([1, 2, 0])
-        return image
 
     def assert_image(
         self, im_expected, im_classified=False, m="Incorrect Image Displayed",
