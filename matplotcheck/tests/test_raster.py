@@ -60,7 +60,7 @@ def raster_plt_rgb(np_ar_rgb):
 def raster_plt_rgb_shape(np_ar_rgb_shape):
     """Create 3-band raster RGB plot with wrong shape for testing"""
     fig, ax = plt.subplots()
-    ax.imshow(np_ar_rgb_shape)
+    ax.imshow(_image_shape_correction(np_ar_rgb_shape, shape=True))
 
     axis = plt.gca()
     return RasterTester(axis)
@@ -346,4 +346,11 @@ def test_raster_assert_image_fullscreen_blank(raster_plt_blank):
     plt.close()
 
 def test_raster_assert_image_scaled_image_fail(raster_plt_rgb_scale, np_ar_rgb_scale):
-    raster_plt_rgb_scale.assert_image(np_ar_rgb_scale)
+    with pytest.raises(AssertionError, match="Arrays are not equal"):
+        raster_plt_rgb_scale.assert_image(np_ar_rgb_scale)
+
+def test_raster_assert_image_scaled_image(raster_plt_rgb_scale, np_ar_rgb_scale):
+    raster_plt_rgb_scale.assert_image(np_ar_rgb_scale, scale=True)
+
+def test_raster_assert_image_wrong_shape_fix(raster_plt_rgb_shape, np_ar_rgb_shape):
+    raster_plt_rgb_shape.assert_image(np_ar_rgb_shape)
