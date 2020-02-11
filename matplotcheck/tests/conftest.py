@@ -1,9 +1,10 @@
 """Pytest fixtures for matplotcheck tests"""
 import pytest
-import pandas as pd
-import geopandas as gpd
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Polygon, LineString
 from matplotcheck.base import PlotTester
 
 
@@ -31,21 +32,90 @@ def pd_gdf():
     """Create a geopandas GeoDataFrame for testing"""
     df = pd.DataFrame(
         {
-            "lat": np.random.randint(-85, 85, size=100),
-            "lon": np.random.randint(-180, 180, size=100),
+            "lat": np.random.randint(-85, 85, size=5),
+            "lon": np.random.randint(-180, 180, size=5),
         }
     )
     gdf = gpd.GeoDataFrame(
-        {"A": np.arange(100)}, geometry=gpd.points_from_xy(df.lon, df.lat)
+        {"A": np.arange(5)}, geometry=gpd.points_from_xy(df.lon, df.lat)
     )
+    gdf["attr"] = ["Tree", "Tree", "Bush", "Bush", "Bush"]
+    return gdf
 
+
+@pytest.fixture
+def basic_polygon():
+    """
+    A square polygon spanning (2, 2) to (4.25, 4.25) in x and y directions.
+    Borrowed from rasterio/tests/conftest.py.
+    Returns
+    -------
+    dict: GeoJSON-style geometry object.
+        Coordinates are in grid coordinates (Affine.identity()).
+    """
+    return Polygon([(2, 2), (2, 4.25), (4.25, 4.25), (4.25, 2), (2, 2)])
+
+
+@pytest.fixture
+def basic_polygon_gdf(basic_polygon):
+    """
+    A GeoDataFrame containing the basic polygon geometry.
+    Returns
+    -------
+    GeoDataFrame containing the basic_polygon polygon.
+    """
+    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs="epsg:4326")
+    return gdf
+
+
+@pytest.fixture
+def two_line_gdf():
+    """ Create Line Objects For Testing """
+    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
+    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
+    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
+    return gdf
+
+
+@pytest.fixture
+def basic_polygon():
+    """
+    A square polygon spanning (2, 2) to (4.25, 4.25) in x and y directions.
+    Borrowed from rasterio/tests/conftest.py.
+    Returns
+    -------
+    dict: GeoJSON-style geometry object.
+        Coordinates are in grid coordinates (Affine.identity()).
+    """
+    return Polygon([(2, 2), (2, 4.25), (4.25, 4.25), (4.25, 2), (2, 2)])
+
+
+@pytest.fixture
+def basic_polygon_gdf(basic_polygon):
+    """
+    A GeoDataFrame containing the basic polygon geometry.
+    Returns
+    -------
+    GeoDataFrame containing the basic_polygon polygon.
+    """
+    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs="epsg:4326")
+    return gdf
+
+
+@pytest.fixture
+def two_line_gdf():
+    """ Create Line Objects For Testing """
+    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
+    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
+    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
     return gdf
 
 
 @pytest.fixture
 def pd_xlabels():
     """Create a DataFrame which uses the column labels as x-data."""
-    df = pd.DataFrame({"B": bp.random.randint(0, 100, size=100)})
+    df = pd.DataFrame({"B": np.random.randint(0, 100, size=100)})
+    return df
 
 
 @pytest.fixture
@@ -58,9 +128,7 @@ def pt_scatter_plt(pd_df):
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -83,9 +151,7 @@ def pt_line_plt(pd_df):
         ax_position.ymax - 0.25, ax_position.ymin - 0.075, "Figure Caption"
     )
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -96,9 +162,7 @@ def pt_multi_line_plt(pd_df):
     ax.set_ylim((0, 140))
     ax.legend(loc="center left", title="Legend", bbox_to_anchor=(1, 0.5))
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -111,9 +175,7 @@ def pt_bar_plt(pd_df):
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -123,21 +185,22 @@ def pt_time_line_plt(pd_df_timeseries):
 
     pd_df_timeseries.plot("time", "A", kind="line", ax=ax)
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
 def pt_geo_plot(pd_gdf):
     """Create a geo plot for testing"""
     fig, ax = plt.subplots()
+    size = 0
+    point_symb = {"Tree": "green", "Bush": "brown"}
 
-    pd_gdf.plot(ax=ax)
-    ax.set_title("My Plot Title", fontsize=30)
-    ax.set_xlabel("x label")
-    ax.set_ylabel("y label")
+    for ctype, points in pd_gdf.groupby("attr"):
+        color = point_symb[ctype]
+        label = ctype
+        size += 100
+        points.plot(color=color, ax=ax, label=label, markersize=size)
 
-    axis = plt.gca()
+    ax.legend(title="Legend", loc=(1.1, 0.1))
 
-    return PlotTester(axis)
+    return PlotTester(ax)
