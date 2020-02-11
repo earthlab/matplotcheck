@@ -165,7 +165,7 @@ class RasterTester(PlotTester):
     def _image_shape_correction(
         image, scale=False, shape=False
     ):
-        """Fixes three dimensional numpy array inputs to be comprable
+        """Fixes three dimensional numpy array inputs to be comparable
          to matplotlib axes objects.
 
         Parameters
