@@ -1,4 +1,5 @@
 import numpy as np
+from earthpy.spatial import bytescale
 
 from .base import PlotTester
 
@@ -161,21 +162,54 @@ class RasterTester(PlotTester):
             im_data_labels, im_expected_labels
         ), "Incorrect legend to data relation"
 
-        ### IMAGE TESTS/HELPER FUNCTIONS ###
+    def _image_shape_correction(
+        self, image, scale=False, shape=False
+    ):
+        """Fixes three dimensional numpy array inputs to be comprable
+         to matplotlib axes objects.
+
+        Parameters
+        ----------
+        im_expected: Numpy Array
+            Array containing the expected image data.
+        scale: Boolean
+            Set to True if the expected image needs to be scaled using
+            EarthPy's bytescale function to match the matplotlib data.
+        shape: boolean
+            Set to True if the expected image is the incorrect shape to be
+            compared to the matplotlib data.
+
+        Returns
+        ----------
+        image: Numpy Array
+            Modified array that should now be comparable to the data from
+            matplotlib.
+        """
+        if scale:
+            image = bytescale(image)
+        if shape:
+            image = image.transpose([1, 2, 0])
+        return image
 
     def assert_image(
-        self, im_expected, im_classified=False, m="Incorrect Image Displayed"
+        self, im_expected, im_classified=False, m="Incorrect Image Displayed",
+        scale=False
     ):
         """Asserts the first image in Axes ax matches array im_expected
 
         Parameters
         ----------
-        im_expected: array containing the expected image data
-        im_classified: boolean, set to True image has been classified.
-            Since classified images values can be reversed or shifted and still
-            produce the same image, setting this to True will allow those
-            changes.
-        m: string error message if assertion is not met
+        im_expected: Numpy Array
+            Array containing the expected image data.
+        im_classified: boolean
+            Set to True image has been classified. Since classified images
+            values can be reversed or shifted and still produce the same image,
+            setting this to True will allow those changes.
+        m: string
+            String error message if assertion is not met.
+        scale: Boolean
+            Set to True if the expected image needs to be scaled using
+            EarthPy's bytescale function to match the matplotlib data.
 
         Returns
         ----------
@@ -189,6 +223,10 @@ class RasterTester(PlotTester):
         # If image array has 3 dims (e.g. rgb image), remove alpha channel
         if len(im_data.shape) == 3:
             im_data = im_data[:, :, :3]
+        if im_expected.shape[0] == 3 or scale:
+            im_expected = self._image_shape_correction(
+                im_expected, scale=scale, shape=(im_expected.shape[0] == 3)
+            )
         assert im_data.shape == im_expected.shape, "Incorrect Image Size"
 
         # If image is a classified image, allow for shifted or reversed values
