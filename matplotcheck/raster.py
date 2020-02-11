@@ -26,10 +26,8 @@ def _image_shape_correction(
         matplotlib.
     """
     if scale:
-        min, max = image.min(), image.max()
-        range = max - min
-        scale = float(255)/range
-        fix = (image-min)*scale
+        scalar = float(255)/(image.max() - image.min())
+        fix = (image-image.min())*scalar
         image = (fix.clip(0,255)+.5).astype("uint8")
     if shape:
         image = image.transpose([1, 2, 0])
