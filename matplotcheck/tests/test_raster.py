@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import matplotlib
-from matplotcheck.raster import RasterTester
+from matplotcheck.raster import RasterTester, _image_shape_correction
 
 
 @pytest.fixture
@@ -19,6 +19,15 @@ def np_ar_rgb():
     """Create rgb numpy array for image plot testing"""
     return np.random.randint(0, 255, size=(100, 100, 3))
 
+@pytest.fixture
+def np_ar_rgb_shape():
+    """Create rgb numpy array for image plot testing"""
+    return np.random.randint(0, 255, size=(3, 100, 100))
+
+@pytest.fixture
+def np_ar_rgb_scale():
+    """Create rgb numpy array for image plot testing"""
+    return np.random.randint(3, 242, size=(100, 100, 3))
 
 @pytest.fixture
 def np_ar_discrete():
@@ -47,6 +56,24 @@ def raster_plt_rgb(np_ar_rgb):
     axis = plt.gca()
     return RasterTester(axis)
 
+@pytest.fixture
+def raster_plt_rgb_shape(np_ar_rgb_shape):
+    """Create 3-band raster RGB plot with wrong shape for testing"""
+    fig, ax = plt.subplots()
+    ax.imshow(np_ar_rgb_shape)
+
+    axis = plt.gca()
+    return RasterTester(axis)
+
+@pytest.fixture
+def raster_plt_rgb_scale(np_ar_rgb_scale):
+    """Create 3-band raster RGB plot with wrong scale for testing"""
+    fig, ax = plt.subplots()
+    scaled_im = _image_shape_correction(np_ar_rgb_scale, scale=True)
+    ax.imshow(scaled_im)
+
+    axis = plt.gca()
+    return RasterTester(axis)
 
 @pytest.fixture
 def raster_plt_blank():
@@ -317,3 +344,6 @@ def test_raster_assert_image_fullscreen_blank(raster_plt_blank):
     with pytest.raises(AssertionError, match="No image found on axes"):
         raster_plt_blank.assert_image_full_screen()
     plt.close()
+
+def test_raster_assert_image_scaled_image_fail(raster_plt_rgb_scale, np_ar_rgb_scale):
+    raster_plt_rgb_scale.assert_image(np_ar_rgb_scale)
