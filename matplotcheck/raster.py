@@ -163,7 +163,7 @@ class RasterTester(PlotTester):
         ), "Incorrect legend to data relation"
 
     def _image_shape_correction(
-        self, image, scale=False, shape=False
+        image, scale=False, shape=False
     ):
         """Fixes three dimensional numpy array inputs to be comprable
          to matplotlib axes objects.
@@ -224,7 +224,7 @@ class RasterTester(PlotTester):
         if len(im_data.shape) == 3:
             im_data = im_data[:, :, :3]
         if im_expected.shape[0] == 3 or scale:
-            im_expected = self._image_shape_correction(
+            im_expected = _image_shape_correction(
                 im_expected, scale=scale, shape=(im_expected.shape[0] == 3)
             )
         assert im_data.shape == im_expected.shape, "Incorrect Image Size"
