@@ -318,6 +318,7 @@ def test_raster_assert_image_fullscreen_blank(raster_plt_blank):
         raster_plt_blank.assert_image_full_screen()
     plt.close()
 
+
 def test_get_plot_images(raster_plt_rgb):
     """get_plot_image should get correct image from ax object"""
     ax_im = raster_plt_rgb.get_plot_image()
