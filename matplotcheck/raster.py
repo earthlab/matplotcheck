@@ -169,7 +169,7 @@ class RasterTester(PlotTester):
         Returns
         -------
         im_data: List
-        Numpy array of images stored on Axes object. 
+            Numpy array of images stored on Axes object.
         """
         im_data = []
         if self.ax.get_images():
