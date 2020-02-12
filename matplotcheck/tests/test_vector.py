@@ -1,4 +1,3 @@
-"""Tests for the vector module"""
 import pytest
 from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
