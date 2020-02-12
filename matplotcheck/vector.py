@@ -473,6 +473,7 @@ class VectorTester(PlotTester):
     ):
         """Asserts the polygon data in Axes ax is equal to polygons_expected to decimal place dec with error message m
 		If polygons_expected is am empty list or None, assertion is passed
+        
 		Parameters
 		----------
 		polygons_expected: List or GeoDataFrame
