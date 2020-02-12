@@ -471,10 +471,8 @@ class VectorTester(PlotTester):
     def assert_polygons(
         self, polygons_expected, dec=None, m="Incorrect Polygon Data"
     ):
-        """
-        Asserts the polygon data in Axes ax is equal to polygons_expected to decimal place dec with error message m
+        """Asserts the polygon data in Axes ax is equal to polygons_expected to decimal place dec with error message m
 		If polygons_expected is am empty list or None, assertion is passed
-
 		Parameters
 		----------
 		polygons_expected: List or GeoDataFrame
