@@ -1,9 +1,10 @@
 import numpy as np
 
 from .base import PlotTester
+from .vector import VectorTester
 
 
-class RasterTester(PlotTester):
+class RasterTester(VectorTester):
     """A PlotTester for spatial raster plots.
 
     Parameters
