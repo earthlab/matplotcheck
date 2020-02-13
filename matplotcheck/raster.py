@@ -164,7 +164,7 @@ class RasterTester(PlotTester):
         ### IMAGE TESTS/HELPER FUNCTIONS ###
 
     def get_plot_image(self):
-        """Returns images stored on the Axes object as a lsit of numpy arrays.
+        """Returns images stored on the Axes object as a list of numpy arrays.
 
         Returns
         -------
