@@ -472,18 +472,18 @@ class VectorTester(PlotTester):
         self, polygons_expected, dec=None, m="Incorrect Polygon Data"
     ):
         """Asserts the polygon data in Axes ax is equal to polygons_expected to decimal place dec with error message m
-		If polygons_expected is am empty list or None, assertion is passed
-        
-		Parameters
-		----------
-		polygons_expected: List or GeoDataFrame
-            List of polygons expected to be founds on Axes ax or a GeoDataFrame
-            containing the expected polygons.
-		dec: int (Optional)
-            Int stating the desired decimal precision. If None, polygons must
-            be exact.
-		m: string (default = "Incorrect Polygon Data")
-            String error message if assertion is not met.
+		If polygons_expected is am empty list or None, assertion is passed.
+
+        Parameters
+        ----------
+        polygons_expected : List or GeoDataFrame
+        List of polygons expected to be founds on Axes ax or a GeoDataFrame
+        containing the expected polygons.
+		dec : int (Optional)
+        Int stating the desired decimal precision. If None, polygons must
+        be exact.
+        m : string (default = "Incorrect Polygon Data")
+        String error message if assertion is not met.
 		"""
         if len(polygons_expected) != 0:
             if isinstance(polygons_expected, list):
