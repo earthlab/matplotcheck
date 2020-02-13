@@ -7,31 +7,6 @@ from matplotcheck.vector import VectorTester
 
 
 @pytest.fixture
-def basic_polygon():
-    """
-    A square polygon spanning (2, 2) to (4.25, 4.25) in x and y directions.
-    Borrowed from rasterio/tests/conftest.py.
-    Returns
-    -------
-    dict: GeoJSON-style geometry object.
-        Coordinates are in grid coordinates (Affine.identity()).
-    """
-    return Polygon([(2, 2), (2, 4.25), (4.25, 4.25), (4.25, 2), (2, 2)])
-
-
-@pytest.fixture
-def basic_polygon_gdf(basic_polygon):
-    """
-    A GeoDataFrame containing the basic polygon geometry.
-    Returns
-    -------
-    GeoDataFrame containing the basic_polygon polygon.
-    """
-    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs={"init": "epsg:4326"})
-    return gdf
-
-
-@pytest.fixture
 def poly_geo_plot(basic_polygon_gdf):
     """Create a polygon vector tester object."""
     _, ax = plt.subplots()
