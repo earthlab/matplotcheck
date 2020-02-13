@@ -2,6 +2,7 @@
 import pytest
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import Polygon
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotcheck.base import PlotTester
