@@ -164,6 +164,24 @@ class RasterTester(VectorTester):
 
         ### IMAGE TESTS/HELPER FUNCTIONS ###
 
+    def get_plot_image(self):
+        """Returns images stored on the Axes object as a list of numpy arrays.
+
+        Returns
+        -------
+        im_data: List
+            Numpy array of images stored on Axes object.
+        """
+        im_data = []
+        if self.ax.get_images():
+            im_data = self.ax.get_images()[0].get_array()
+        assert list(im_data), "No Image Displayed"
+
+        # If image array has 3 dims (e.g. rgb image), remove alpha channel
+        if len(im_data.shape) == 3:
+            im_data = im_data[:, :, :3]
+        return im_data
+
     def assert_image(
         self, im_expected, im_classified=False, m="Incorrect Image Displayed"
     ):
@@ -171,12 +189,14 @@ class RasterTester(VectorTester):
 
         Parameters
         ----------
-        im_expected: array containing the expected image data
-        im_classified: boolean, set to True image has been classified.
-            Since classified images values can be reversed or shifted and still
-            produce the same image, setting this to True will allow those
-            changes.
-        m: string error message if assertion is not met
+        im_expected: Numpy Array
+            Array containing the expected image data.
+        im_classified: boolean
+            Set to True image has been classified. Since classified images
+            values can be reversed or shifted and still produce the same image,
+            setting this to True will allow those changes.
+        m: string
+            String error message if assertion is not met.
 
         Returns
         ----------
