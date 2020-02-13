@@ -2,6 +2,7 @@
 import pytest
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import Polygon
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotcheck.base import PlotTester
@@ -39,6 +40,31 @@ def pd_gdf():
         {"A": np.arange(100)}, geometry=gpd.points_from_xy(df.lon, df.lat)
     )
 
+    return gdf
+
+
+@pytest.fixture
+def basic_polygon():
+    """
+    A square polygon spanning (2, 2) to (4.25, 4.25) in x and y directions.
+    Borrowed from rasterio/tests/conftest.py.
+    Returns
+    -------
+    dict: GeoJSON-style geometry object.
+        Coordinates are in grid coordinates (Affine.identity()).
+    """
+    return Polygon([(2, 2), (2, 4.25), (4.25, 4.25), (4.25, 2), (2, 2)])
+
+
+@pytest.fixture
+def basic_polygon_gdf(basic_polygon):
+    """
+    A GeoDataFrame containing the basic polygon geometry.
+    Returns
+    -------
+    GeoDataFrame containing the basic_polygon polygon.
+    """
+    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs={"init": "epsg:4326"})
     return gdf
 
 

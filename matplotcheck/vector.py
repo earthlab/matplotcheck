@@ -109,7 +109,7 @@ class VectorTester(PlotTester):
             )
 
     def get_points_by_attributes(self):
-        """Returns a sorted list of lists where each list contains tuples of xycoords for points of 
+        """Returns a sorted list of lists where each list contains tuples of xycoords for points of
         the same attributes: color, marker, and markersize
 
         Returns
@@ -290,7 +290,7 @@ class VectorTester(PlotTester):
         return (ls[0], onoffseq)
 
     def get_lines(self):
-        """Returns a dataframe with all lines on ax 
+        """Returns a dataframe with all lines on ax
 
         Returns
         -------
@@ -475,15 +475,29 @@ class VectorTester(PlotTester):
         self, polygons_expected, dec=None, m="Incorrect Polygon Data"
     ):
         """Asserts the polygon data in Axes ax is equal to polygons_expected to decimal place dec with error message m
-        If polygons_expected is am empty list or None, assertion is passed
+		If polygons_expected is am empty list or None, assertion is passed.
 
         Parameters
         ----------
-        polygons_expected: list of polygons expected to be founds on Axes ax
-        dec: int stating the desired decimal precision. If None, polygons must be exact
-        m: string error message if assertion is not met
-        """
-        if polygons_expected:
+        polygons_expected : List or GeoDataFrame
+        List of polygons expected to be founds on Axes ax or a GeoDataFrame
+        containing the expected polygons.
+		dec : int (Optional)
+        Int stating the desired decimal precision. If None, polygons must
+        be exact.
+        m : string (default = "Incorrect Polygon Data")
+        String error message if assertion is not met.
+		"""
+        if len(polygons_expected) != 0:
+            if isinstance(polygons_expected, list):
+                if len(polygons_expected[0]) == 0:
+                    raise ValueError(
+                        "Empty list or GeoDataFrame passed into assert_polygons."
+                    )
+            if isinstance(polygons_expected, gpd.geodataframe.GeoDataFrame):
+                polygons_expected = self._convert_multipolygons(
+                    polygons_expected["geometry"]
+                )
             polygons = self.get_polygons()
             if dec:
                 assert len(polygons_expected) == len(polygons), m
@@ -497,3 +511,7 @@ class VectorTester(PlotTester):
                     )
             else:
                 np.testing.assert_equal(polygons, sorted(polygons_expected), m)
+        else:
+            raise ValueError(
+                "Empty list or GeoDataFrame passed into assert_polygons."
+            )
