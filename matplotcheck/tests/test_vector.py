@@ -1,6 +1,5 @@
 """Tests for the vector module"""
 import pytest
-from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
 import geopandas as gpd
 from matplotcheck.vector import VectorTester

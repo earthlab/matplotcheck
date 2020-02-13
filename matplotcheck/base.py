@@ -15,6 +15,7 @@ import math
 from scipy import stats
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import Polygon
 import numbers
 
 
