@@ -41,10 +41,10 @@ def run_test(
         pass : bool : passing status of test function
         description : str : test function name that was run
         message : str : custom message returned based on passing status
-        traceback : AssertionError : returned from test function when pass is False
+        traceback : AssertionError : returned from test function when pass is
+        False
     """
     results = {"points": 0, "pass": False}
-    score = 0
     try:
         fname = func.__name__
         results["description"] = fname
@@ -72,7 +72,8 @@ def output_results(results):
         pass : bool : passing status of test function
         description : str : test function name that was run
         message : str : custom message returned based on passing status
-        traceback : AssertionError : returned from test function when pass is False
+        traceback : AssertionError : returned from test function when pass is
+        False
 
     Returns
     -------
