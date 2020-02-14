@@ -70,9 +70,9 @@ def raster_plt_class(np_ar_discrete):
     # Create legend
     colors = [im.cmap(im.norm(val)) for val in values]
     patches = [
-        mpatches.Patch(color=colors[i], label="Level {lev}".format(
-            lev=values[i]
-        ))
+        mpatches.Patch(
+            color=colors[i], label="Level {lev}".format(lev=values[i])
+        )
         for i in range(values.shape[0])
     ]
     plt.legend(handles=patches)

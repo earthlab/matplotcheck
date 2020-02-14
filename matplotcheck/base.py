@@ -248,7 +248,7 @@ class PlotTester(object):
             title = axtitle
         else:
             raise ValueError(
-                'title_type must be one of the following '
+                "title_type must be one of the following "
                 + '["figure", "axes", "either"]'
             )
 
@@ -367,9 +367,7 @@ class PlotTester(object):
         if not self.ax.axison:
             flag = True
         # Case 2: Check if both axis visibilities set to false
-        elif (
-            not self.ax.xaxis._visible and not self.ax.yaxis._visible
-        ):
+        elif not self.ax.xaxis._visible and not self.ax.yaxis._visible:
             flag = True
         # Case 3: Check if both axis ticks are set to empty lists
         elif (
@@ -756,8 +754,8 @@ class PlotTester(object):
                 leg_extent2 = (
                     legends[j].get_window_extent(RendererBase()).get_points()
                 )
-                assert (
-                    not self.legends_overlap(leg_extent1, leg_extent2)
+                assert not self.legends_overlap(
+                    leg_extent1, leg_extent2
                 ), message
 
     """ BASIC PLOT DATA FUNCTIONS """
@@ -1134,15 +1132,14 @@ class PlotTester(object):
                     slope_exp, intercept_exp = 1, 0
                 else:
                     raise ValueError(
-                        'each string in line_types must be from the following '
+                        "each string in line_types must be from the following "
                         + '["regression","onetoone"]'
                     )
 
                 self.assert_line(
                     slope_exp,
                     intercept_exp,
-                    message_no_line="{0} line is not displayed properly".format
-                    (
+                    message_no_line="{0} line is not displayed properly".format(
                         line_type
                     ),
                     message_data="{0} line does not cover dataset".format(

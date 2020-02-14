@@ -44,8 +44,8 @@ def test_options(pt_line_plt):
     provided."""
 
     with pytest.raises(
-            ValueError,
-            match="Plot_type to test must be either: scatter, bar or line",
+        ValueError,
+        match="Plot_type to test must be either: scatter, bar or line",
     ):
         pt_line_plt.assert_plot_type("foo")
     plt.close()
@@ -69,8 +69,7 @@ def test_assert_string_contains_fails(pt_line_plt):
     test_string = "this is a test string"
     string_expected = ["this", "is", "not", "a", "test"]
     with pytest.raises(
-            AssertionError,
-            match="String does not contain expected string: not"
+        AssertionError, match="String does not contain expected string: not"
     ):
         pt_line_plt.assert_string_contains(test_string, string_expected)
     plt.close()
@@ -91,7 +90,7 @@ def test_assert_string_contains_or_fails(pt_line_plt):
     test_string = "this is a test string"
     string_expected = ["this", "is", ["not", "jambalaya"], "a", "test"]
     with pytest.raises(
-            AssertionError, match="String does not contain at least one of: "
+        AssertionError, match="String does not contain at least one of: "
     ):
         pt_line_plt.assert_string_contains(test_string, string_expected)
     plt.close()
@@ -112,8 +111,7 @@ def test_assert_string_contains_handles_short_list_fails(pt_line_plt):
     test_string = "this is a test string"
     string_expected = [["this"], ["is"], ["not"]]
     with pytest.raises(
-            AssertionError,
-            match="String does not contain expected string: not"
+        AssertionError, match="String does not contain expected string: not"
     ):
         pt_line_plt.assert_string_contains(test_string, string_expected)
     plt.close()

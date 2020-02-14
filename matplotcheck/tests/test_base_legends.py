@@ -21,8 +21,8 @@ def test_assert_legend_titles_not_case_sensitive(pt_multi_line_plt):
 def test_assert_legend_titles_bad_text(pt_multi_line_plt):
     """Check that assert_legend_titles fails with wrong text"""
     with pytest.raises(
-            AssertionError,
-            match="Legend title does not contain expected string: foo",
+        AssertionError,
+        match="Legend title does not contain expected string: foo",
     ):
         pt_multi_line_plt.assert_legend_titles(["foo"])
     plt.close()
@@ -32,8 +32,8 @@ def test_assert_legend_titles_wrong_num(pt_multi_line_plt):
     """Check assert_legend_titles fails when expected number of titles
     is not equal to # of legends"""
     with pytest.raises(
-            AssertionError,
-            match="I was expecting 1 legend titles but instead found 2",
+        AssertionError,
+        match="I was expecting 1 legend titles but instead found 2",
     ):
         pt_multi_line_plt.assert_legend_titles(["legend", "legend2"])
     plt.close()
@@ -55,7 +55,7 @@ def test_assert_legend_labels_bad_text(pt_multi_line_plt):
     """Check that assert_legend_labels raises expected error when given
     wrong text"""
     with pytest.raises(
-            AssertionError, match="Legend does not have expected labels"
+        AssertionError, match="Legend does not have expected labels"
     ):
         pt_multi_line_plt.assert_legend_labels(["a", "c"])
     plt.close()
@@ -65,7 +65,7 @@ def test_assert_legend_labels_wrong_num(pt_multi_line_plt):
     """Check that assert_legend_labels raises expected error given wrong
     number of labels"""
     with pytest.raises(
-            AssertionError, match="I was expecting 3 legend entries"
+        AssertionError, match="I was expecting 3 legend entries"
     ):
         pt_multi_line_plt.assert_legend_labels(["a", "b", "c"])
     plt.close()
