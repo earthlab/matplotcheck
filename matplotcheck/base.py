@@ -1139,9 +1139,8 @@ class PlotTester(object):
                 self.assert_line(
                     slope_exp,
                     intercept_exp,
-                    message_no_line="{0} line is not displayed properly".format(
-                        line_type
-                    ),
+                    message_no_line="{0} line is not "
+                    + "displayed properly".format(line_type),
                     message_data="{0} line does not cover dataset".format(
                         line_type
                     ),
