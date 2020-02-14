@@ -8,12 +8,16 @@ def convert_axes(plt, which_axes="current"):
 
     Parameters
     ---------
-    plt: Matplotlib plot to be tested
-    which_axes: string from the following list ['current', 'last', 'first', 'all'] stating which axes we are saving for testing
+    plt: matplotlib plot
+        Matplotlib plot to be tested.
+    which_axes: string
+        String from the following list ['current', 'last', 'first', 'all']
+        stating which axes we are saving for testing.
 
     Returns
     -------
-    ax: Matplotlib axes or list of axes as express by which_axes
+    ax: Matplotlib axes or list
+        Matplotlib axes or list of axes as express by which_axes
     """
     fig = plt.gcf()
     if which_axes == "current":
@@ -26,12 +30,13 @@ def convert_axes(plt, which_axes="current"):
         ax = fig.axes
     else:
         raise ValueError(
-            'which_axes must be one of the following strings ["current", "last", "first", "all"]'
+            'which_axes must be one of the following strings '
+            + '["current", "last", "first", "all"]'
         )
     return ax
 
 
-### JUPYTER NOTEBOOK TEST HELPER FUNCTIONS! ###
+# JUPYTER NOTEBOOK TEST HELPER FUNCTIONS!
 
 
 def error_test(n, n_exp):
@@ -39,8 +44,10 @@ def error_test(n, n_exp):
 
     Parameters
     ----------
-    n: int of number of cells that that did not produce an error
-    n_exp: int of number of cell that are checked if producing an error
+    n: int
+        Number of cells that that did not produce an error.
+    n_exp: int
+        Number of cell that are checked if producing an error.
 
     Returns
     -------
@@ -61,22 +68,29 @@ def remove_comments(input_string):
     Parameters
     ----------
     input_string: string
+        String to be modified.
 
     Returns
     -------
-    string where all parts commented out by a '#' are removed from input_string
+    string
+        Sting where all parts commented out by a '#' are removed from
+        input_string.
     """
     split_lines = input_string.split("\n")
     return "".join([line.split("#")[0] for line in split_lines])
 
 
 def import_test(var_dict, n):
-    """Tests no import statements are found after the first cell in a Jupyter Notebook
+    """
+    Tests no import statements are found after the first cell in a Jupyter
+    Notebook
 
     Parameters
     ----------
-    vars_dict: dictionary produced by 'locals()' in notebook
-    n: number of cells to be tested for import statement in Jupyter Notebook
+    vars_dict: dictionary
+        Dictionary produced by 'locals()' in notebook.
+    n: int
+        number of cells to be tested for import statement in Jupyter Notebook
 
     Returns
     -------
