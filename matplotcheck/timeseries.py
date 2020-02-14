@@ -170,15 +170,11 @@ class TimeSeriesTester(PlotTester):
             assert ~np.isin(
                 nodata, xy["x"]
             ), "Values of {0} have been found in data. Be sure to remove no "
-            + "data values".format(
-                nodata
-            )
+            +"data values".format(nodata)
             assert ~np.isin(
                 nodata, xy["y"]
             ), "Values of {0} have been found in data. Be sure to remove no "
-            + "data values".format(
-                nodata
-            )
+            +"data values".format(nodata)
 
     def assert_xdata_date(
         self, x_exp, m="X-axis is not in appropriate date format"

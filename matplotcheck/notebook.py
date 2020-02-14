@@ -30,7 +30,7 @@ def convert_axes(plt, which_axes="current"):
         ax = fig.axes
     else:
         raise ValueError(
-            'which_axes must be one of the following strings '
+            "which_axes must be one of the following strings "
             + '["current", "last", "first", "all"]'
         )
     return ax
