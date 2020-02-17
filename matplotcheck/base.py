@@ -367,9 +367,13 @@ class PlotTester(object):
         if not self.ax.axison:
             flag = True
         # Case 2: Check if both axis visibilities set to false
+<<<<<<< HEAD
         elif (
             not self.ax.xaxis._visible and not self.ax.yaxis._visible
         ):
+=======
+        elif not self.ax.xaxis._visible and not self.ax.yaxis._visible:
+>>>>>>> 20a080bfff979ec78bb987b179a86ba9a1cde60b
             flag = True
         # Case 3: Check if both axis ticks are set to empty lists
         elif (
@@ -756,8 +760,13 @@ class PlotTester(object):
                 leg_extent2 = (
                     legends[j].get_window_extent(RendererBase()).get_points()
                 )
+<<<<<<< HEAD
                 assert (
                     not self.legends_overlap(leg_extent1, leg_extent2)
+=======
+                assert not self.legends_overlap(
+                    leg_extent1, leg_extent2
+>>>>>>> 20a080bfff979ec78bb987b179a86ba9a1cde60b
                 ), message
 
     """ BASIC PLOT DATA FUNCTIONS """
@@ -1141,10 +1150,15 @@ class PlotTester(object):
                 self.assert_line(
                     slope_exp,
                     intercept_exp,
+<<<<<<< HEAD
                     message_no_line="{0} line is not displayed properly".format
                     (
                         line_type
                     ),
+=======
+                    message_no_line="{0} line is not "
+                    + "displayed properly".format(line_type),
+>>>>>>> 20a080bfff979ec78bb987b179a86ba9a1cde60b
                     message_data="{0} line does not cover dataset".format(
                         line_type
                     ),
