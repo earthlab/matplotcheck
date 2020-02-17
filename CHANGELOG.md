@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [Unreleased]
+
+## [0.1.2]
 * Created a vignette covering the testing of histograms (@ryla5068, #149)
 * Created `get_plot_image()` function for the RasterTester object (@nkorinek, #192)
 * Allowed `assert_polygons()` to accept GeoDataFrames and added tests (@nkorinek, #175)
+* raster test inherits from vector to allow for multi layer plot testing (@lwasser, #75)
 
 ## [0.1.1]
 * Added test for bin heights of histograms (@ryla5068, #124)
