@@ -71,7 +71,8 @@ def basic_polygon_gdf(basic_polygon):
 @pytest.fixture
 def pd_xlabels():
     """Create a DataFrame which uses the column labels as x-data."""
-    df = pd.DataFrame({"B": bp.random.randint(0, 100, size=100)})
+    df = pd.DataFrame({"B": np.random.randint(0, 100, size=100)})
+    return df
 
 
 @pytest.fixture

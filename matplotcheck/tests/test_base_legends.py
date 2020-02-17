@@ -2,7 +2,6 @@
 import pytest
 import matplotlib.pyplot as plt
 
-
 """ LEGEND TESTS """
 
 
@@ -53,7 +52,8 @@ def test_assert_legend_not_case_sensitive(pt_multi_line_plt):
 
 
 def test_assert_legend_labels_bad_text(pt_multi_line_plt):
-    """Check that assert_legend_labels raises expected error when given wrong text"""
+    """Check that assert_legend_labels raises expected error when given
+    wrong text"""
     with pytest.raises(
         AssertionError, match="Legend does not have expected labels"
     ):
@@ -62,7 +62,8 @@ def test_assert_legend_labels_bad_text(pt_multi_line_plt):
 
 
 def test_assert_legend_labels_wrong_num(pt_multi_line_plt):
-    """Check that assert_legend_labels raises expected error given wrong number of labels"""
+    """Check that assert_legend_labels raises expected error given wrong
+    number of labels"""
     with pytest.raises(
         AssertionError, match="I was expecting 3 legend entries"
     ):
@@ -91,9 +92,10 @@ def test_assert_no_legend_overlap_single(pt_multi_line_plt):
 
 
 def test_assert_no_legend_overlap_double(pt_multi_line_plt):
-    """Checks that assert_no_legend_overlap passes when two legends don't overlap"""
+    """Checks that assert_no_legend_overlap passes when two legends don't
+    overlap"""
     leg_1 = plt.legend(loc=[0.8, 0.8])
-    leg_2 = plt.legend(loc=[0.1, 0.1])
+    plt.legend(loc=[0.1, 0.1])
     pt_multi_line_plt.ax.add_artist(leg_1)
     pt_multi_line_plt.assert_no_legend_overlap()
     plt.close()
@@ -102,7 +104,7 @@ def test_assert_no_legend_overlap_double(pt_multi_line_plt):
 def test_assert_no_legend_overlap_fail(pt_multi_line_plt):
     """Checks that assert_no_legend_overlap fails with overlapping legends"""
     leg_1 = plt.legend(loc=[0.12, 0.12])
-    leg_2 = plt.legend(loc=[0.1, 0.1])
+    plt.legend(loc=[0.1, 0.1])
     pt_multi_line_plt.ax.add_artist(leg_1)
     with pytest.raises(AssertionError, match="Legends overlap eachother"):
         pt_multi_line_plt.assert_no_legend_overlap()
