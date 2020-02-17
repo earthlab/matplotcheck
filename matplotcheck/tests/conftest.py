@@ -16,17 +16,6 @@ def pd_df():
 
 
 @pytest.fixture
-def pd_df_timeseries():
-    """Create a pandas dataframe for testing, with timeseries in one column"""
-    return pd.DataFrame(
-        {
-            "time": pd.date_range(start="1/1/2018", periods=100),
-            "A": np.random.randint(0, 100, size=100),
-        }
-    )
-
-
-@pytest.fixture
 def pd_gdf():
     """Create a geopandas GeoDataFrame for testing"""
     df = pd.DataFrame(
@@ -110,18 +99,6 @@ def pt_bar_plt(pd_df):
     ax.set_title("My Plot Title", fontsize=30)
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
-
-    axis = plt.gca()
-
-    return PlotTester(axis)
-
-
-@pytest.fixture
-def pt_time_line_plt(pd_df_timeseries):
-    """Create timeseries line plot for testing"""
-    fig, ax = plt.subplots()
-
-    pd_df_timeseries.plot("time", "A", kind="line", ax=ax)
 
     axis = plt.gca()
 

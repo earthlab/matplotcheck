@@ -16,7 +16,9 @@ from scipy import stats
 import pandas as pd
 import geopandas as gpd
 import numbers
-from datetime import datetime
+import datetime
+
+import pdb
 
 
 class InvalidPlotError(Exception):
@@ -777,6 +779,7 @@ class PlotTester(object):
             Pandas dataframe with columns "x" and "y" containing the x and y
             coords of each point on Axes `ax`
         """
+
         if points_only:
             xy_coords = [
                 val
@@ -812,21 +815,38 @@ class PlotTester(object):
 
         """
         matplotlib converts datetime data to days since epoch which is an
-        inconvinent (and issue-prone) datatype. Note that epoch (in this case)
-        is Jan 1 1970. Note that it can store fractions of days as well, so time
-        precision is preserved. Therefore, we convert this to a
-        datetime.timedelta object (using mdates.num2timedelta). Then we add it
-        to a datetime.datetime object that represents Jan 1 1970 (we get this
-        from datetime.utcfromtimestamp()). This gives us a final
-        datetime.datetime object that is more usable.
+        inconvinent (and issue-prone) datatype. Pandas converts datetime data to
+        its own own timestamp datatype.
+
+        To compare them, we'll need to convert matplotlib's days-since-epoch
+        data to the timestamp datatype.
+
+        To do this, we first need to convert it to the datetime.datetime
+        datatype. We do this by adding a datetime.timedelta object
+        (using mdates.num2timedelta) to a datetime.datetime object (using
+        datetime.utcfromtimestamp). The datetime.timedelta object repreents time
+        since Jan 1, 1970. The datetime.datetime object represents Jan 1, 1970.
+
+        Now that we have all our date in a datetime.datetime object, we can add
+        replace the old data in our dataframe. When we do this, pandas will
+        automatically convert it to the timestamp datatype.
+
+        Note that, in this case, the epoch is Jan 1 1970. Additionally, the
+        days-since-epoch number can be fractional, so time precision
+        and is preserved. Finally, matplotlib's documentation says that negative
+        numbers (and therefore dates before 1970) are unsupported. However...
+        """
+
         """
         if xtime:
+            pdb.set_trace()
             xy_data["x"] = np.array(
                 [
                     datetime.utcfromtimestamp(0) + mdates.num2timedelta(i)
                     for i in xy_data["x"]
                 ]
             )
+        """
 
         return xy_data
 
@@ -917,18 +937,6 @@ class PlotTester(object):
             xy_expected.sort_values(by=xcol),
         )
 
-        if xtime:
-            """
-            matplotcheck converts date/time datatypes to days since epoch.
-            pandas converts date/time datatypes into its own timestamp datatype.
-            To compare them, we convert them both to the datetime.datetime
-            datatype. For xy_data, this is handled in get_xydata(). For
-            xy_expected, we handle that conversion here.
-            """
-            xy_expected[xcol] = np.array(
-                [i.to_pydatetime() for i in xy_expected[xcol]]
-            )
-
         if tolerence > 0:
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
@@ -952,15 +960,10 @@ class PlotTester(object):
             small or large numbers. We catch this error and throw our own so
             that we can use our own message. We can't use this to compare
             datetime.datetime objects, so we use our own comparison."""
+
+            # Compare x-values
             if xtime:
-                if not all(
-                    [
-                        xy_data["x"][i] == xy_expected[xcol][i]
-                        for i in range(len(xy_expected[xcol]))
-                    ]
-                ):
-                    raise AssertionError(message)
-                elif len(xy_expected[xcol]) != len(xy_data["x"]):
+                if not self._compare_time(xy_data["x"], xy_expected[xcol]):
                     raise AssertionError(message)
             else:
                 try:
@@ -970,12 +973,61 @@ class PlotTester(object):
                 except AssertionError:
                     raise AssertionError(message)
 
+            # compare y-values
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                    xy_data["y"].values.tolist(),
+                    xy_expected[ycol].values.tolist(),
                 )
             except AssertionError:
                 raise AssertionError(message)
+
+    def _compare_time(self, time_1, time_2):
+        if len(time_1) != len(time_2):
+            raise ValueError("time_1 and time_2 not of same length")
+
+        t1_possible_conversions = []
+        t2_possible_conversions = []
+
+        if isinstance(time_1[0], numbers.Number):
+            t1_possible_conversions.append([n for n in time_1])
+            t1_possible_conversions.append([n + 719163 for n in time_1])
+        elif isinstance(time_1[0], pd.Timestamp):
+            to_num = [mdates.date2num(d.to_pydatetime()) for d in time_1]
+            t1_possible_conversions.append(to_num)
+        elif isinstance(time_1[0], datetime.datetime):
+            to_num = [mdates.date2num(d) for d in time_1]
+            t1_possible_conversions.append(to_num)
+        else:
+            raise ValueError(
+                "time_1 argument not a listlike with type number, pandas.Timestamp, or datetime.datetime"
+            )
+
+        if isinstance(time_2[0], numbers.Number):
+            t2_possible_conversions.append([n for n in time_2])
+            t2_possible_conversions.append([n + 719163 for n in time_2])
+        elif isinstance(time_2[0], pd.Timestamp):
+            to_num = [mdates.date2num(d.to_pydatetime()) for d in time_2]
+            t2_possible_conversions.append(to_num)
+        elif isinstance(time_2[0], datetime.datetime):
+            to_num = [mdates.date2num(d) for d in time_2]
+            t2_possible_conversions.append(to_num)
+        else:
+            raise ValueError(
+                "time_2 argument not a listlike with type number, pandas.Timestamp, or datetime.datetime"
+            )
+
+        times_equal = []
+        for t1_lst in t1_possible_conversions:
+            for t2_lst in t2_possible_conversions:
+                try:
+                    np.testing.assert_array_max_ulp(t1_lst, t2_lst)
+                except AssertionError:
+                    times_equal.append(False)
+                else:
+                    times_equal.append(True)
+
+        return any(times_equal)
 
     def assert_xlabel_ydata(
         self, xy_expected, xcol, ycol, message="Incorrect Data"
