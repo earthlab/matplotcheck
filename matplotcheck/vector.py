@@ -339,7 +339,7 @@ class VectorTester(PlotTester):
     def get_lines_by_attributes(self):
         """Returns a sorted list of lists where each list contains line
         segments of the same attributes:
-            color, linewidth, and linestyle
+        color, linewidth, and linestyle
 
         Returns
         ------
