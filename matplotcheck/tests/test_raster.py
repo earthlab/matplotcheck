@@ -1,6 +1,5 @@
 """Tests for the raster module"""
 import pytest
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -71,7 +70,9 @@ def raster_plt_class(np_ar_discrete):
     # Create legend
     colors = [im.cmap(im.norm(val)) for val in values]
     patches = [
-        mpatches.Patch(color=colors[i], label="Level {l}".format(l=values[i]))
+        mpatches.Patch(
+            color=colors[i], label="Level {lev}".format(lev=values[i])
+        )
         for i in range(values.shape[0])
     ]
     plt.legend(handles=patches)
@@ -85,7 +86,8 @@ def raster_plt_class(np_ar_discrete):
 
 
 def test_raster_get_colorbars_length(raster_plt):
-    """Check that get_colorbars correctly retrieves 1 colorbar from raster_plt1"""
+    """Check that get_colorbars correctly retrieves 1 colorbar from
+    raster_plt1"""
     # Should only be 1 object, and should be a colorbar object
     cb = raster_plt.get_colorbars()
     assert len(cb) == 1
@@ -156,7 +158,8 @@ def test_raster_assert_colorbar_range_blank(raster_plt_blank, np_ar):
 
 
 def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
-    """Checks that legend matches image, checking both the labels and color patches"""
+    """Checks that legend matches image, checking both the labels and color
+    patches"""
     values = np.sort(np.unique(np_ar_discrete))
     label_options = [[str(i)] for i in values]
 
@@ -184,7 +187,8 @@ def test_raster_assert_legend_accuracy_badlabel(
 def test_raster_assert_legend_accuracy_badvalues(
     raster_plt_class, np_ar_discrete
 ):
-    """Checks that legend matches image, should fail if you swap image values"""
+    """Checks that legend matches image, should fail if you swap image
+    values"""
     values = np.sort(np.unique(np_ar_discrete))
     label_options = [[str(i)] for i in values]
 
@@ -276,7 +280,8 @@ def test_raster_assert_image_class(raster_plt_class, np_ar_discrete):
 
 
 def test_raster_assert_image_class_baddata(raster_plt_class, np_ar_discrete):
-    """Check that assert_image with bad data fails for a discrete, classified image"""
+    """Check that assert_image with bad data fails for a discrete, classified
+    image"""
     bad_ar = np_ar_discrete + 1
     with pytest.raises(AssertionError, match="Arrays are not equal"):
         raster_plt_class.assert_image(bad_ar)
@@ -291,7 +296,7 @@ def test_raster_assert_image_fullscreen(raster_plt):
 
 def test_raster_assert_image_fullscreen_fail_xlims(raster_plt):
     """assert fullscreen should fail if we modify the x-axis limits"""
-    cur_xlim, cur_ylim = raster_plt.ax.get_xlim(), raster_plt.ax.get_ylim()
+    cur_xlim, _ = raster_plt.ax.get_xlim(), raster_plt.ax.get_ylim()
     raster_plt.ax.set_xlim([cur_xlim[0], cur_xlim[1] + 5])
     with pytest.raises(
         AssertionError, match="Image is stretched inaccurately"

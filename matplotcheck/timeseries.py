@@ -40,8 +40,10 @@ class TimeSeriesTester(PlotTester):
             'month': if tick should be shown every new month
             'week': if tick should be shown every new week
             'day': if tick should be shown every new day
-            None: if no tick format has been specified. This will automatically assert True
-        m: string error message if assertion is not met
+            None: if no tick format has been specified. This will automatically
+            assert True
+        m: string
+            string error message if assertion is not met
         """
         if loc_exp:
             if tick_size == "large":
@@ -60,7 +62,8 @@ class TimeSeriesTester(PlotTester):
                 )  # September 30, 2013
             else:
                 raise ValueError(
-                    "tick_size must be on of the following string ['large', 'small']"
+                    "tick_size must be on of the following string "
+                    + "['large', 'small']"
                 )
             if loc_exp == "decade" or loc_exp == "year":
                 accepted_responses = ["2013"]
@@ -70,7 +73,7 @@ class TimeSeriesTester(PlotTester):
                 accepted_responses = ["sep30", "september30"]
             else:
                 raise ValueError(
-                    """loc_exp must be one of the following strings ['decade', 
+                    """loc_exp must be one of the following strings ['decade',
                     'year', 'month', 'week', 'day', None]"""
                 )
             assert test_date in accepted_responses, m
@@ -107,7 +110,7 @@ class TimeSeriesTester(PlotTester):
                 ticks = self.ax.xaxis.get_minorticklocs()
             else:
                 raise ValueError(
-                    """"Tick_size must be one of the following strings 
+                    """"Tick_size must be one of the following strings
                     ['large', 'small']"""
                 )
 
@@ -123,7 +126,7 @@ class TimeSeriesTester(PlotTester):
                 inc = relativedelta(days=1)
             else:
                 raise ValueError(
-                    """"loc_exp must be one of the following strings ['decade', 
+                    """"loc_exp must be one of the following strings ['decade',
                     'year', 'month', 'week', 'day'] or None"""
                 )
 
@@ -162,18 +165,16 @@ class TimeSeriesTester(PlotTester):
         xtime: boolean
             does the x-axis contains datetime values?
         """
-        if nodata != None:
+        if nodata:
             xy = self.get_xy(xtime=False)
             assert ~np.isin(
                 nodata, xy["x"]
-            ), "Values of {0} have been found in data. Be sure to remove no data values".format(
-                nodata
-            )
+            ), "Values of {0} have been found in data. Be sure to remove no "
+            +"data values".format(nodata)
             assert ~np.isin(
                 nodata, xy["y"]
-            ), "Values of {0} have been found in data. Be sure to remove no data values".format(
-                nodata
-            )
+            ), "Values of {0} have been found in data. Be sure to remove no "
+            +"data values".format(nodata)
 
     def assert_xdata_date(
         self, x_exp, m="X-axis is not in appropriate date format"
