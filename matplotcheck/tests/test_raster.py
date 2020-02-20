@@ -296,7 +296,8 @@ def test_raster_assert_image_fullscreen(raster_plt):
 
 def test_raster_assert_image_fullscreen_fail_xlims(raster_plt):
     """assert fullscreen should fail if we modify the x-axis limits"""
-    cur_xlim, _ = raster_plt.ax.get_xlim(), raster_plt.ax.get_ylim()
+    cur_xlim = raster_plt.ax.get_xlim()
+    raster_plt.ax.get_ylim()
     raster_plt.ax.set_xlim([cur_xlim[0], cur_xlim[1] + 5])
     with pytest.raises(
         AssertionError, match="Image is stretched inaccurately"
