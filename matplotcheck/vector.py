@@ -243,7 +243,7 @@ class VectorTester(PlotTester):
         points.reset_index(inplace=True, drop=True)
         return points
 
-    def assert_points(self, points_expected, m="Incorrect Line Data"):
+    def assert_points(self, points_expected, m="Incorrect Point Data"):
         """yote"""
         if isinstance(points_expected, gpd.geodataframe.GeoDataFrame):
             xy_expected = pd.DataFrame(columns=['x', 'y'])
@@ -251,7 +251,12 @@ class VectorTester(PlotTester):
             xy_expected['y'] = points_expected.geometry.y
             xy_expected = xy_expected.sort_values(by="x")
             xy_expected.reset_index(inplace=True, drop=True)
-            pd.testing.assert_frame_equal(left=self.get_points(), right=xy_expected)
+            try:
+                pd.testing.assert_frame_equal(
+                    left=self.get_points(), right=xy_expected
+                )
+            except AssertionError:
+                raise AssertionError(m)
         else:
             raise ValueError(
                 "points_expected is not expected type: GeoDataFrame"
