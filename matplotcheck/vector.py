@@ -238,13 +238,30 @@ class VectorTester(PlotTester):
         )
 
     def get_points(self):
-        """yeet"""
+        """Returns a Pandas dataframe with all x, y values for points on axis.
+
+        Returns
+        -------
+        output: DataFrame with columns 'x' and 'y'. Each row represents one
+        points coordinates.
+        """
         points = self.get_xy(points_only=True).sort_values(by="x")
         points.reset_index(inplace=True, drop=True)
         return points
 
     def assert_points(self, points_expected, m="Incorrect Point Data"):
-        """yote"""
+        """
+        Asserts the point data in Axes ax is equal to points_expected data
+        with error message m.
+        If points_expected not a GeoDataFrame, test fails.
+
+        Parameters
+        ----------
+        points_expected : GeoDataFrame
+        GeoDataFrame with the expected points for the axis.
+        m : string (default = "Incorrect Point Data")
+        String error message if assertion is not met.
+        """
         if isinstance(points_expected, gpd.geodataframe.GeoDataFrame):
             xy_expected = pd.DataFrame(columns=['x', 'y'])
             xy_expected['x'] = points_expected.geometry.x
