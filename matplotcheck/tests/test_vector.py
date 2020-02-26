@@ -23,7 +23,7 @@ def poly_geo_plot(basic_polygon_gdf):
 @pytest.fixture
 def point_geo_plot(pd_gdf):
     """Create a point plot for testing"""
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     pd_gdf.plot(ax=ax)
     ax.set_title("My Plot Title", fontsize=30)
