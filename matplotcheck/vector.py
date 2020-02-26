@@ -237,6 +237,27 @@ class VectorTester(PlotTester):
             err_msg="Markersize not based on {0} values".format(sort_column),
         )
 
+    def get_points(self):
+        """yeet"""
+        points = self.get_xy(points_only=True).sort_values(by="x")
+        points.reset_index(inplace=True, drop=True)
+        return points
+
+    def assert_points(self, points_expected, m="Incorrect Line Data"):
+        """yote"""
+        if isinstance(points_expected, gpd.geodataframe.GeoDataFrame):
+            xy_expected = pd.DataFrame(columns=['x', 'y'])
+            xy_expected['x'] = points_expected.geometry.x
+            xy_expected['y'] = points_expected.geometry.y
+            xy_expected = xy_expected.sort_values(by="x")
+            xy_expected.reset_index(inplace=True, drop=True)
+            pd.testing.assert_frame_equal(left=self.get_points(), right=xy_expected)
+        else:
+            raise ValueError(
+                "points_expected is not expected type: GeoDataFrame"
+            )
+
+
         ### LINES ###
 
     def _convert_multilines(self, df, column_title):
