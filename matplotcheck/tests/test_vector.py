@@ -38,9 +38,12 @@ def point_geo_plot(pd_gdf):
 @pytest.fixture
 def bad_pd_gdf(pd_gdf):
     """Create a point geodataframe with slightly wrong values for testing"""
-    return gpd.GeoDataFrame(geometry=gpd.points_from_xy(
-                    pd_gdf.geometry.x + 1, pd_gdf.geometry.y + 1)
-                )
+    return gpd.GeoDataFrame(
+        geometry=gpd.points_from_xy(
+            pd_gdf.geometry.x + 1, pd_gdf.geometry.y + 1
+        )
+    )
+
 
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
     """Check that the polygon assert works with a list of polygons."""
@@ -129,11 +132,12 @@ def test_assert_point_fails_list(point_geo_plot, pd_gdf):
     with pytest.raises(ValueError, match="points_expected is not expected"):
         point_geo_plot.assert_points(points_expected=list_geo)
 
+
 def test_get_points(point_geo_plot, pd_gdf):
     """Tests that get_points returns correct values"""
     xy_values = point_geo_plot.get_points()
-    assert(list(sorted(xy_values.x)) == sorted(list(pd_gdf.geometry.x)))
-    assert(list(sorted(xy_values.y)) == sorted(list(pd_gdf.geometry.y)))
+    assert list(sorted(xy_values.x)) == sorted(list(pd_gdf.geometry.x))
+    assert list(sorted(xy_values.y)) == sorted(list(pd_gdf.geometry.y))
 
 
 def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):

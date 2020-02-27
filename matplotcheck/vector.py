@@ -263,9 +263,9 @@ class VectorTester(PlotTester):
         String error message if assertion is not met.
         """
         if isinstance(points_expected, gpd.geodataframe.GeoDataFrame):
-            xy_expected = pd.DataFrame(columns=['x', 'y'])
-            xy_expected['x'] = points_expected.geometry.x
-            xy_expected['y'] = points_expected.geometry.y
+            xy_expected = pd.DataFrame(columns=["x", "y"])
+            xy_expected["x"] = points_expected.geometry.x
+            xy_expected["y"] = points_expected.geometry.y
             xy_expected = xy_expected.sort_values(by="x")
             xy_expected.reset_index(inplace=True, drop=True)
             try:
@@ -278,7 +278,6 @@ class VectorTester(PlotTester):
             raise ValueError(
                 "points_expected is not expected type: GeoDataFrame"
             )
-
 
         ### LINES ###
 
