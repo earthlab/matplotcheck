@@ -398,7 +398,8 @@ def test_assert_bin_midpoints_fails_wrong_type(pt_hist):
 
 
 def test_assert_bin_midpoints_fails_wrong_length(pt_hist):
-    """Test that bin midpoints fails when not handed a list"""
+    """Test that bin midpoints fails when not handed a list with the wrong
+    length"""
     bins = [2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8]
     with pytest.raises(ValueError, match="Bin midpoints lists lengths do no "):
         pt_hist.assert_bin_midpoints(bins)
@@ -407,7 +408,7 @@ def test_assert_bin_midpoints_fails_wrong_length(pt_hist):
 
 
 def test_assert_bin_midpoints_fail_custom_message(pt_hist):
-    """Test that bin midpoints fail when incorrect"""
+    """Test that correct error message is thrown when bin midpoints fail"""
     bins = [2, 3, 4, 5, 6, 7]
     message = "Test Message"
     with pytest.raises(AssertionError, match="Test Message"):
@@ -417,7 +418,7 @@ def test_assert_bin_midpoints_fail_custom_message(pt_hist):
 
 
 def test_assert_bin_midpoints_overlap_pass(pt_hist_overlapping):
-    """Test that bin midpoints are correct"""
+    """Test that bin midpoints are correct with overlapping histograms"""
     bins = [2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5]
     pt_hist_overlapping.assert_bin_midpoints(bins)
 
@@ -425,7 +426,8 @@ def test_assert_bin_midpoints_overlap_pass(pt_hist_overlapping):
 
 
 def test_assert_bin_midpoints_overlap_fail(pt_hist_overlapping):
-    """Test that bin midpoints fail when incorrect"""
+    """Test that bin midpoints fail with overlapping histograms when
+    incorrect"""
     bins = [2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7]
     with pytest.raises(
         AssertionError, match="Did not find expected bin midpo"
@@ -436,7 +438,8 @@ def test_assert_bin_midpoints_overlap_fail(pt_hist_overlapping):
 
 
 def test_assert_bin_midpoints_overlap_length_fail(pt_hist_overlapping):
-    """Test that bin midpoints are correct"""
+    """Test that bin midpoints fail with overlapping histograms when
+    incorrect length"""
     bins = [2.5, 3.5, 4.5, 5.5, 6.5, 7.5]
     with pytest.raises(
         ValueError, match="Bin midpoints lists lengths do no matc"
