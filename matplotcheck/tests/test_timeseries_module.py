@@ -3,6 +3,8 @@ from matplotcheck.base import PlotTester
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from io import StringIO
+
 
 """Fixtures"""
 
@@ -31,6 +33,26 @@ def pd_df_timeseries_low():
 
 
 @pytest.fixture
+def pd_df_timeseries_csv():
+    """Create a pandas dataframe for testing, with timeseries in one column,
+    imported from a csv. For unknown reasons, this causes matplotlib to convert
+    dates differently."""
+
+    f = StringIO(
+        """date,A
+    19990430 04:00,0.10
+    19990430 07:00,0.10
+    19990430 08:00,0.20
+    19990430 09:00,0.10
+    19990430 10:00,0.10
+    19990501 01:00,0.00
+    """
+    )
+
+    return pd.read_csv(f, parse_dates=["date"])
+
+
+@pytest.fixture
 def pt_time_line_plt(pd_df_timeseries):
     """Create timeseries line plot for testing"""
     fig, ax = plt.subplots()
@@ -52,6 +74,15 @@ def pt_time_line_plt_low(pd_df_timeseries_low):
     axis = plt.gca()
 
     return PlotTester(axis)
+
+
+@pytest.fixture
+def pt_time_csv(pd_df_timeseries_csv):
+    fig, ax = plt.subplots()
+
+    ax.scatter(pd_df_timeseries_csv["date"], pd_df_timeseries_csv["A"])
+
+    return PlotTester(ax)
 
 
 """TIMESERIES TESTS"""
@@ -99,35 +130,23 @@ def test_assert_xydata_timeseries_low_fails(
     plt.close()
 
 
-def test_hw_stuff():
-    import os
-    import matplotcheck.notebook as nb
-    import matplotcheck.timeseries as mts
+def test_assert_xydata_conversion(pd_df_timeseries_csv, pt_time_csv):
+    """For unknown reasons, matplotlib sometimes converts dates to days since
+    year 1 (instead of days since 1970). This tests that assert_xydata correctly
+    passes."""
 
-    f = "/Users/marty/earth-analytics/data/colorado-flood/precipitation/805333-precip-daily-1948-2013.csv"
-    # f = os.path.join("data", "colorado-flood", "precipitation","805333-precip-daily-1948-2013.csv")
-    precip_hourly = pd.read_csv(
-        f, parse_dates=["DATE"], na_values=[999.99], index_col=["DATE"]
+    pt_time_csv.assert_xydata(
+        xy_expected=pd_df_timeseries_csv, xtime=True, xcol="date", ycol="A"
     )
 
-    # Create a new dataframe with resample and rid of Nan values
-    precip_daily = precip_hourly.resample(rule="D").sum()
-    precip_monthly = precip_hourly.resample(rule="M").sum()
-    fig, ax = plt.subplots(figsize=(10, 8))
-    ax.scatter(
-        precip_hourly.index.values, precip_hourly["HPCP"], color="purple"
-    )
 
-    ax.set(
-        xlabel="Date",
-        ylabel="Precipitation (Inches)",
-        title="HW Plot 1: Hourly Precipitation - Boulder\n 1948 - 2013",
-    )
-    plot_1_ts = nb.convert_axes(plt, which_axes="current")
-    mpc_plot_1_ts = mts.TimeSeriesTester(plot_1_ts)
-    mpc_plot_1_ts.assert_xydata(
-        xy_expected=precip_hourly.dropna().reset_index(),
-        xtime=True,
-        xcol="DATE",
-        ycol="HPCP",
-    )
+def test_assert_xydata_conversion_fails(pd_df_timeseries_csv, pt_time_csv):
+    """For unknown reasons, matplotlib sometimes converts dates to days since
+    year 1 (instead of days since 1970). This tests that assert_xydata correctly
+    fails."""
+
+    pd_df_timeseries_csv.iloc[0, 0] = pd.Timestamp("1999-04-29 04:00:00")
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt_time_csv.assert_xydata(
+            xy_expected=pd_df_timeseries_csv, xtime=True, xcol="date", ycol="A"
+        )

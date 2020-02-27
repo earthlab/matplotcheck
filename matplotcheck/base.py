@@ -18,8 +18,6 @@ import geopandas as gpd
 import numbers
 import datetime
 
-import pdb
-
 
 class InvalidPlotError(Exception):
     pass
@@ -813,41 +811,6 @@ class PlotTester(object):
         xy_data = xy_data[xy_data["x"] >= lims[0]]
         xy_data = xy_data[xy_data["x"] <= lims[1]].reset_index(drop=True)
 
-        """
-        matplotlib converts datetime data to days since epoch which is an
-        inconvinent (and issue-prone) datatype. Pandas converts datetime data to
-        its own own timestamp datatype.
-
-        To compare them, we'll need to convert matplotlib's days-since-epoch
-        data to the timestamp datatype.
-
-        To do this, we first need to convert it to the datetime.datetime
-        datatype. We do this by adding a datetime.timedelta object
-        (using mdates.num2timedelta) to a datetime.datetime object (using
-        datetime.utcfromtimestamp). The datetime.timedelta object repreents time
-        since Jan 1, 1970. The datetime.datetime object represents Jan 1, 1970.
-
-        Now that we have all our date in a datetime.datetime object, we can add
-        replace the old data in our dataframe. When we do this, pandas will
-        automatically convert it to the timestamp datatype.
-
-        Note that, in this case, the epoch is Jan 1 1970. Additionally, the
-        days-since-epoch number can be fractional, so time precision
-        and is preserved. Finally, matplotlib's documentation says that negative
-        numbers (and therefore dates before 1970) are unsupported. However...
-        """
-
-        """
-        if xtime:
-            pdb.set_trace()
-            xy_data["x"] = np.array(
-                [
-                    datetime.utcfromtimestamp(0) + mdates.num2timedelta(i)
-                    for i in xy_data["x"]
-                ]
-            )
-        """
-
         return xy_data
 
     def assert_xydata(
@@ -983,7 +946,58 @@ class PlotTester(object):
                 raise AssertionError(message)
 
     def _compare_time(self, time_1, time_2):
+        """Compares wether time_1 and time_2 contain the same datetime data.
+        Parameters
+        ----------
+        time_1 : listlike
+            Containing `pd.Timestamp` objects, `datetime.datetime` objects, or
+            numbers representing days since epoch.
+        time_2 : listlike
+            Containing `pd.Timestamp` objects, `datetime.datetime` objects, or
+            numbers representing days since epoch.
+
+        Returns
+        -------
+        times_equal : boolean
+            True if every element in time_1 represents the same date/time as the
+            corresponding element in time_2.
+
+        Notes
+        -----
+        Supported epochs are ``Jan 1, 0001 00:00:00`` and
+        ``Jan 1, 1970 00:00:00``.
+        """
+
+        """
+        matplotlib converts datetime data to days since epoch which is an
+        inconvinent (and issue-prone) datatype. Additionally, matplotlib chooses
+        from two possible epochs (Jan, 1 1970 or Jan 1, 0001) unpredictably and
+        for unknown reasons.
+
+        Note that matplotlib will can and does store negative numbers to
+        represent dates before epoch, despite matplotlib's documentation stating
+        otherwise. Also note that matplotlib will store times other than 00:00 as
+        fractions of days.
+
+        We can't predict which epoch matplotlib will choose to use. Sometimes,
+        it will use different epochs for the exact same data (i.e. one epoch
+        for the data converted when plotting, and another epoch when using the
+        matlotlib.dates methods).
+
+        Therefore, to compare pandas datetime data to matplotlib datetime data,
+        we convert the pandas data to days-since-epoch using both possible
+        epochs. If the matplotlib matches either of these conversions, we say
+        say that the datasets are equal.
+
+        Matplotlib's method for storing datetime data is very prone to floating
+        point error. The number it stores may represent hundreds of thousands of
+        days with a nominal precision of milliseconds. To avoid floating point
+        error, we use assert_array_max_ulp() for all our comparisons because it
+        accounts for possible floating point error. This is also why we convert
+        pandas' data to matplotlib's format and not the other way around.
+        """
         if len(time_1) != len(time_2):
+
             raise ValueError("time_1 and time_2 not of same length")
 
         t1_possible_conversions = []
@@ -1026,7 +1040,6 @@ class PlotTester(object):
                     times_equal.append(False)
                 else:
                     times_equal.append(True)
-
         return any(times_equal)
 
     def assert_xlabel_ydata(
