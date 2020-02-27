@@ -410,7 +410,6 @@ def test_assert_bin_midpoints_fails_wrong_length(pt_hist):
 def test_assert_bin_midpoints_fail_custom_message(pt_hist):
     """Test that correct error message is thrown when bin midpoints fail"""
     bins = [2, 3, 4, 5, 6, 7]
-    message = "Test Message"
     with pytest.raises(AssertionError, match="Test Message"):
         pt_hist.assert_bin_midpoints(bins, message="Test Message")
 
