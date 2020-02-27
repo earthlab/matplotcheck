@@ -46,12 +46,12 @@ def test_title_contains_axes(pt_line_plt):
     )
     plt.close()
 
+
 def test_title_contains_axes_spaces(pt_line_plt):
     """Check title_contains for axes title with spaces"""
-    pt_line_plt.assert_title_contains(
-        ["My Plot Title"], title_type="axes"
-    )
+    pt_line_plt.assert_title_contains(["My Plot Title"], title_type="axes")
     plt.close()
+
 
 def test_title_contains_axes_badtext(pt_line_plt):
     """Check title_contains fails when given bad text"""
@@ -124,6 +124,7 @@ def test_assert_caption_contains(pt_line_plt):
     """Test that caption contains passes given right text"""
     pt_line_plt.assert_caption_contains([["Figure"], ["Caption"]])
     plt.close()
+
 
 def test_assert_caption_contains_spaces(pt_line_plt):
     """Test that caption contains passes given right text with spaces"""

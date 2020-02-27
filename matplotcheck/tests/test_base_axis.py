@@ -91,6 +91,7 @@ def test_axis_label_contains_y(pt_line_plt):
     pt_line_plt.assert_axis_label_contains(axis="y", strings_expected=["y"])
     plt.close()
 
+
 def test_axis_label_contains_x_spaces(pt_line_plt):
     """Checks for assert_axis_label_contains for x axis with spaces"""
     pt_line_plt.assert_axis_label_contains(
@@ -105,7 +106,6 @@ def test_axis_label_contains_y(pt_line_plt):
         axis="y", strings_expected=["y label"]
     )
     plt.close()
-
 
 
 def test_axis_label_contains_invalid_axis(pt_line_plt):
