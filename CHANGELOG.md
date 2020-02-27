@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+* made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
 
 ## [0.1.2]
 * Created a vignette covering the testing of histograms (@ryla5068, #149)
