@@ -757,7 +757,7 @@ class PlotTester(object):
 
     """ BASIC PLOT DATA FUNCTIONS """
 
-    def get_xy(self, points_only=False, xtime=False):
+    def get_xy(self, points_only=False):
         """Returns a pandas dataframe with columns "x" and "y" holding the x
         and y coords on Axes `ax`
 
@@ -892,7 +892,7 @@ class PlotTester(object):
                 xy_expected, xcol=xcol, ycol=ycol, message=message
             )
             return
-        xy_data = self.get_xy(points_only=points_only, xtime=xtime)
+        xy_data = self.get_xy(points_only=points_only)
 
         # Make sure the data are sorted the same
         xy_data, xy_expected = (
@@ -1258,7 +1258,7 @@ class PlotTester(object):
             histogram, this is just the number of bins. If there are two
             overlapping or stacked histograms in the same `matplotlib.axis.Axis`
             object, then this returns the number of bins with unique edges. """
-        x_data = self.get_xy(xtime=False)["x"]
+        x_data = self.get_xy()["x"]
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
 
@@ -1302,7 +1302,7 @@ class PlotTester(object):
         Int :
             The number of bins in the histogram"""
 
-        bin_values = self.get_xy(xtime=False)["y"].tolist()
+        bin_values = self.get_xy()["y"].tolist()
 
         return bin_values
 

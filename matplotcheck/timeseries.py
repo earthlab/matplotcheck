@@ -70,7 +70,7 @@ class TimeSeriesTester(PlotTester):
                 accepted_responses = ["sep30", "september30"]
             else:
                 raise ValueError(
-                    """loc_exp must be one of the following strings ['decade', 
+                    """loc_exp must be one of the following strings ['decade',
                     'year', 'month', 'week', 'day', None]"""
                 )
             assert test_date in accepted_responses, m
@@ -107,7 +107,7 @@ class TimeSeriesTester(PlotTester):
                 ticks = self.ax.xaxis.get_minorticklocs()
             else:
                 raise ValueError(
-                    """"Tick_size must be one of the following strings 
+                    """"Tick_size must be one of the following strings
                     ['large', 'small']"""
                 )
 
@@ -123,7 +123,7 @@ class TimeSeriesTester(PlotTester):
                 inc = relativedelta(days=1)
             else:
                 raise ValueError(
-                    """"loc_exp must be one of the following strings ['decade', 
+                    """"loc_exp must be one of the following strings ['decade',
                     'year', 'month', 'week', 'day'] or None"""
                 )
 
@@ -163,7 +163,7 @@ class TimeSeriesTester(PlotTester):
             does the x-axis contains datetime values?
         """
         if nodata != None:
-            xy = self.get_xy(xtime=False)
+            xy = self.get_xy()
             assert ~np.isin(
                 nodata, xy["x"]
             ), "Values of {0} have been found in data. Be sure to remove no data values".format(
@@ -187,6 +187,6 @@ class TimeSeriesTester(PlotTester):
         ----------
         x_exp: expected x_axis values, must be in a datetime format
         """
-        x_data = [math.floor(d) for d in self.get_xy(xtime=False)["x"]]
+        x_data = [math.floor(d) for d in self.get_xy()["x"]]
         x_exp = [d.toordinal() for d in x_exp]  # convert to days elapsed
         assert np.array_equal(sorted(x_exp), sorted(x_data)), m
