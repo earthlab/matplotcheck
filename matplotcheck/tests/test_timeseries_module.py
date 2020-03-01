@@ -85,7 +85,7 @@ def pt_time_csv(pd_df_timeseries_csv):
     return PlotTester(ax)
 
 
-"""TIMESERIES TESTS"""
+"""TIMESERIES DATA TESTS"""
 
 
 def test_assert_xydata_timeseries(pt_time_line_plt, pd_df_timeseries):

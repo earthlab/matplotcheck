@@ -767,10 +767,7 @@ class PlotTester(object):
             Matplotlib Axes object to be tested
         points_only : boolean
             Set ``True`` to check only points, set ``False`` to check all data on plot.
-        xtime : boolean
-            Set equal to True if the x axis of the plot contains datetime
-            values. This function will return ``datetime.datetime`` objects.
-
+        
         Returns
         -------
         df : pandas.DataFrame
