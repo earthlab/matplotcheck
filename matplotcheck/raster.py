@@ -1,6 +1,4 @@
 import numpy as np
-
-from .base import PlotTester
 from .vector import VectorTester
 
 
@@ -95,9 +93,9 @@ class RasterTester(VectorTester):
         all_label_options: list of lists
             Each internal list represents a class and said list is a list of
             strings where at least one string is expected to be in the legend
-            label for this category. Internal lists must be in the same order as
-            bins in im_expected, e.g. first internal list has the expected label
-            options for class 0.
+            label for this category. Internal lists must be in the same order
+            as bins in im_expected, e.g. first internal list has the expected
+            label options for class 0.
 
         Returns
         ----------
@@ -107,13 +105,13 @@ class RasterTester(VectorTester):
         Notes
         ----------
         First compares all_label_options against the legend labels to find
-        which element of all_label_options matches that entry. E.g. if the first
-        legend entry has a match in the first list in all_label_options, then
-        that legend entry corresponds to the first class (value 0).
-        Then the plot image array is copied and the values are set to the legend
-        label that match the values (i.e. the element in all_label_options).
-        The same is done for the expected image array. Finally those two arrays
-        of strings are compared. Passes if they match.
+        which element of all_label_options matches that entry. E.g. if the
+        first legend entry has a match in the first list in all_label_options,
+        then that legend entry corresponds to the first class (value 0).
+        Then the plot image array is copied and the values are set to the
+        legend label that match the values (i.e. the element in
+        all_label_options). The same is done for the expected image array.
+        Finally those two arrays of strings are compared. Passes if they match.
         """
         # Retrieve image array
         im_data = []
@@ -162,7 +160,7 @@ class RasterTester(VectorTester):
             im_data_labels, im_expected_labels
         ), "Incorrect legend to data relation"
 
-        ### IMAGE TESTS/HELPER FUNCTIONS ###
+        # IMAGE TESTS/HELPER FUNCTIONS
 
     def get_plot_image(self):
         """Returns images stored on the Axes object as a list of numpy arrays.

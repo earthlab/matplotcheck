@@ -64,14 +64,15 @@ def basic_polygon_gdf(basic_polygon):
     -------
     GeoDataFrame containing the basic_polygon polygon.
     """
-    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs={"init": "epsg:4326"})
+    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs="epsg:4326")
     return gdf
 
 
 @pytest.fixture
 def pd_xlabels():
     """Create a DataFrame which uses the column labels as x-data."""
-    df = pd.DataFrame({"B": bp.random.randint(0, 100, size=100)})
+    df = pd.DataFrame({"B": np.random.randint(0, 100, size=100)})
+    return df
 
 
 @pytest.fixture
