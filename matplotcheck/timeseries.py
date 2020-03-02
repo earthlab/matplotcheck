@@ -22,8 +22,8 @@ class TimeSeriesTester(PlotTester):
 
     def assert_xticks_reformatted(
         self,
+        loc_exp,
         tick_size="large",
-        loc_exp=None,
         m="x ticks have not been reformatted properly",
     ):
         """Asserts that Axes ax xtick have been reformatted as denoted by
@@ -31,49 +31,52 @@ class TimeSeriesTester(PlotTester):
 
         Parameters
         ----------
-        tick_size: must be one of the following ['large','small']
-            'large': if testing large ticks
-            'small': if testing small ticks
         loc_exp: string ['decade','year', 'month', 'week', 'day']
             'decade': if tick should be shown every ten years
             'year': if tick should be shown every new year
             'month': if tick should be shown every new month
             'week': if tick should be shown every new week
             'day': if tick should be shown every new day
-            None: if no tick format has been specified. This will automatically assert True
+        tick_size: must be one of the following ['large','small']
+            'large': if testing large ticks
+            'small': if testing small ticks
         m: string error message if assertion is not met
+
+        Notes
+        -----
+        This function cannot tell the difference between 'decade' and 'year', or
+        between 'week' and 'day'.
         """
-        if loc_exp:
-            if tick_size == "large":
-                test_date = (
-                    self.ax.xaxis.get_major_formatter()
-                    .format_data(735141)
-                    .replace(" ", "")
-                    .lower()
-                )  # September 30, 2013
-            elif tick_size == "small":
-                test_date = (
-                    self.ax.xaxis.get_minor_formatter()
-                    .format_data(735141)
-                    .replace(" ", "")
-                    .lower()
-                )  # September 30, 2013
-            else:
-                raise ValueError(
-                    "tick_size must be on of the following string ['large', 'small']"
-                )
-            if loc_exp == "decade" or loc_exp == "year":
-                accepted_responses = ["2013"]
-            elif loc_exp == "month":
-                accepted_responses = ["sep", "september"]
-            elif loc_exp == "week" or loc_exp == "day":
-                accepted_responses = ["sep30", "september30"]
-            else:
-                raise ValueError(
-                    """loc_exp must be one of the following strings ['decade',
-                    'year', 'month', 'week', 'day', None]"""
-                )
-            assert test_date in accepted_responses, m
+        if tick_size == "large":
+            test_date = (
+                self.ax.xaxis.get_major_formatter()
+                .format_data(735141)
+                .replace(" ", "")
+                .lower()
+            )  # September 30, 2013
+        elif tick_size == "small":
+            test_date = (
+                self.ax.xaxis.get_minor_formatter()
+                .format_data(735141)
+                .replace(" ", "")
+                .lower()
+            )  # September 30, 2013
+        else:
+            raise ValueError(
+                "tick_size must be one of the following strings ['large', 'small']"
+            )
+
+        if loc_exp == "decade" or loc_exp == "year":
+            accepted_responses = ["13", "2013"]
+        elif loc_exp == "month":
+            accepted_responses = ["sep", "september"]
+        elif loc_exp == "week" or loc_exp == "day":
+            accepted_responses = ["sep30", "september30", "30"]
+        else:
+            raise ValueError(
+                "loc_exp must be one of the following strings ['decade','year', 'month', 'week', 'day']"
+            )
+        assert test_date in accepted_responses, m
 
     def assert_xticks_locs(
         self,
