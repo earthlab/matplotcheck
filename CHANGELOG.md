@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Created functions to test point geometries in VectorTester (@nkorinek, #176)
 
 ## [0.1.2]
+* Adding flake8 for format and other syntax issues! yay! (@lwasser, #195)
 * Created a vignette covering the testing of histograms (@ryla5068, #149)
 * Created `get_plot_image()` function for the RasterTester object (@nkorinek, #192)
 * Allowed `assert_polygons()` to accept GeoDataFrames and added tests (@nkorinek, #175)

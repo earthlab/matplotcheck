@@ -2,7 +2,6 @@
 import pytest
 import matplotlib.pyplot as plt
 
-
 """ AXIS TESTS """
 
 
@@ -52,7 +51,8 @@ def test_axis_off_one_visible(pt_line_plt):
 
 
 def test_axis_off_empty_ticks(pt_line_plt):
-    """Check assert_axis_off for case when axis tick labels set to empty lists"""
+    """Check assert_axis_off for case when axis tick labels set to empty
+    lists"""
     pt_line_plt.ax.xaxis.set_ticks([])
     pt_line_plt.ax.yaxis.set_ticks([])
     pt_line_plt.assert_axis_off()
@@ -93,7 +93,8 @@ def test_axis_label_contains_y(pt_line_plt):
 
 
 def test_axis_label_contains_invalid_axis(pt_line_plt):
-    """Check that assert_axis_label_contains fails when given unexpected axis"""
+    """Check that assert_axis_label_contains fails when given unexpected
+    axis"""
     # Fails when given an invalid axies
     with pytest.raises(ValueError, match="axis must be one of the following"):
         pt_line_plt.assert_axis_label_contains(
