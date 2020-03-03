@@ -55,7 +55,7 @@ percip = [
 fig, ax = plt.subplots()
 ax.bar(months, percip, color="blue")
 ax.set(
-    title="Average Monthly Percipitation in Boulder, CO",
+    title="Average Monthly Precipitation in Boulder, CO",
     xlabel="Month",
     ylabel="Percipitation (in)",
 )
@@ -86,7 +86,7 @@ plot_tester_1 = mpc.PlotTester(plot_1_hold)
 plot_tester_1.assert_plot_type("bar")
 
 # Test that the plot title contains specific words
-plot_tester_1.assert_title_contains(["average", "month", "percip", "boulder"])
+plot_tester_1.assert_title_contains(["average", "monthly precip", "boulder"])
 
 # Test that the axis labels contain specific words
 plot_tester_1.assert_axis_label_contains(axis="x", strings_expected=["month"])
