@@ -178,7 +178,8 @@ def test_assert_xydata_xlabel_text_fails(pd_df_monthly_data, pt_monthly_data):
 def test_assert_xydata_xlabel_numeric(
     pd_df_monthly_data_numeric, pt_monthly_data_numeric
 ):
-    """Tests the xlabels flag on xydata works with numeric expected x-labels."""
+    """Tests the xlabels flag on xydata works with numeric expected
+    x-labels."""
 
     pt_monthly_data_numeric.assert_xydata(
         pd_df_monthly_data_numeric, xcol="months", ycol="data", xlabels=True
