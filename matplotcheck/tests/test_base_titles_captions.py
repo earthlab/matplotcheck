@@ -22,7 +22,8 @@ def test_get_titles(pt_line_plt):
 
 
 def test_get_titles_suptitle(pt_line_plt):
-    """Check that the correct suptitle gets grabbed from a figure with 2 subplots"""
+    """Check that the correct suptitle gets grabbed from a figure with 2
+    subplots"""
     assert "My Figure Title" == pt_line_plt.get_titles()[0]
     plt.close()
 
@@ -82,7 +83,8 @@ def test_title_contains_figure(pt_line_plt):
 
 
 def test_title_contains_figure_nosuptitle(pt_bar_plt):
-    """Check title_contains tester for figure title fails when there is no suptitle"""
+    """Check title_contains tester for figure title fails when there is no
+    suptitle"""
     with pytest.raises(
         AssertionError, match="Expected title is not displayed"
     ):
@@ -101,7 +103,8 @@ def test_title_contains_both_axes_figure(pt_line_plt):
 
 
 def test_title_contains_both_axes_figure_badtext(pt_line_plt):
-    """Check title_contains tester for combined titles, should fail with bad text"""
+    """Check title_contains tester for combined titles, should fail with bad
+    text"""
     with pytest.raises(
         AssertionError, match="Title does not contain expected string: foo"
     ):
