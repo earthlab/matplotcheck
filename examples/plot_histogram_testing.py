@@ -196,3 +196,56 @@ except AssertionError as message:
 #   When using tolerances, the ``tolerance`` argument is taken as a relative
 #   tolerance. For more information, see the documentation for the
 #   ``base.assert_bin_heights()`` method.
+
+################################################################################
+# Testing the Histogram Midpoints
+# -------------------------------
+# So far, we have tested the histogram values as well as the number of bins
+# the histogram has. It may also be useful to test that the data bins cover
+# the range of values that they were expected to. In order to do this, we can
+# test the midpoints of each bin to ensure that the data covered by each
+# bin is as expected. This is tested very similarly to the bins values.
+# Simply provide ``assert_bin_midpoints()`` with a list of the expected
+# midpoints, and it will assert if they are accurate or not. In order to obtain
+# the midpoints in a PlotTester object, you can use ``get_bin_midpoints()``,
+# much like ``get_bin_values()``.
+#
+# For this example, we will create a plot tester object from a histogram plot,
+# the same way we did for the bin values example.
+
+fig, ax = plt.subplots()
+ax.hist(testing_data, bins=8, color="gold")
+
+midpoints_plot_hold = nb.convert_axes(plt, which_axes="current")
+plot_tester_expected_3 = mpc.PlotTester(midpoints_plot_hold)
+print(plot_tester_expected_3.get_bin_midpoints())
+
+################################################################################
+# We got the values from the plot tester object! As you can see, the values
+# that were collected are the midpoints for the values each histogram bin
+# covers. Now we can test that they are asserted indeed correct with an
+# assertion test.
+
+try:
+    plot_tester_expected_3.assert_bin_midpoints(
+        [-0.875, -0.625, -0.375, -0.125, 0.125, 0.375, 0.625, 0.875]
+    )
+except AssertionError as message:
+    print("AssertionError:", message)
+
+################################################################################
+# Here we can see that this will fail when given incorrect values.
+
+try:
+    plot_tester_expected_3.assert_bin_midpoints(
+        [-0.75, -0.5, -0.25, -0, 0.25, 0.5, 0.75, 1]
+    )
+except AssertionError as message:
+    print("AssertionError:", message)
+
+###############################################################################
+#
+# .. note::
+#   Keep in mind this test is for the midpoints of the range that each bin
+#   covers. So if a bin covers all data that's in between 0 and 1, than the
+#   value given for that bin will be .5, not 0 or 1.
