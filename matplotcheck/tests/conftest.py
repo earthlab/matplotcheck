@@ -64,7 +64,7 @@ def basic_polygon_gdf(basic_polygon):
     -------
     GeoDataFrame containing the basic_polygon polygon.
     """
-    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs={"init": "epsg:4326"})
+    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs="epsg:4326")
     return gdf
 
 
