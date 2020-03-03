@@ -1298,8 +1298,8 @@ class PlotTester(object):
             covered by each consecutive bin (i.e. the midpoint of the bars in
             the histogram).
         message : string
-            The error message to be displayed if the bin mid point values do not
-             match `bin_midpoints`
+            The error message to be displayed if the bin mid point values do
+            not match `bin_midpoints`
 
         Raises
         ------
