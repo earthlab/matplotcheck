@@ -55,7 +55,8 @@ def test_options(pt_line_plt):
 
 
 def test_assert_string_contains(pt_line_plt):
-    """Tests that assert_string_contains passes with correct expected strings."""
+    """Tests that assert_string_contains passes with correct expected
+    strings."""
     test_string = "this is a test string"
     string_expected = ["this", "is", "a", "test"]
     pt_line_plt.assert_string_contains(test_string, string_expected)
@@ -63,7 +64,8 @@ def test_assert_string_contains(pt_line_plt):
 
 
 def test_assert_string_contains_fails(pt_line_plt):
-    """Tests that assert_string_contains fails with incorrect expected strings."""
+    """Tests that assert_string_contains fails with incorrect expected
+    strings."""
     test_string = "this is a test string"
     string_expected = ["this", "is", "not", "a", "test"]
     with pytest.raises(
@@ -74,7 +76,8 @@ def test_assert_string_contains_fails(pt_line_plt):
 
 
 def test_assert_string_contains_or(pt_line_plt):
-    """Tests that assert_string_contains correctly passes when using OR logic."""
+    """Tests that assert_string_contains correctly passes when using OR
+    logic."""
     test_string = "this is a test string"
     string_expected = ["this", ["is", "not"], "a", "test"]
     pt_line_plt.assert_string_contains(test_string, string_expected)
@@ -82,7 +85,8 @@ def test_assert_string_contains_or(pt_line_plt):
 
 
 def test_assert_string_contains_or_fails(pt_line_plt):
-    """Tests that assert_string_contains correctly fails when using OR logic."""
+    """Tests that assert_string_contains correctly fails when using OR
+    logic."""
     test_string = "this is a test string"
     string_expected = ["this", "is", ["not", "jambalaya"], "a", "test"]
     with pytest.raises(
@@ -114,7 +118,8 @@ def test_assert_string_contains_handles_short_list_fails(pt_line_plt):
 
 
 def test_assert_string_contains_passes_with_none(pt_line_plt):
-    """Tests that assert_string_contains passes when strings_expected is None"""
+    """Tests that assert_string_contains passes when strings_expected is
+    None"""
     test_string = "this is a test string"
     string_expected = None
     pt_line_plt.assert_string_contains(test_string, string_expected)
@@ -122,7 +127,8 @@ def test_assert_string_contains_passes_with_none(pt_line_plt):
 
 
 def test_assert_string_contains_passes_with_empty(pt_line_plt):
-    """Tests that assert_string_contains passes when strings_expected is empty"""
+    """Tests that assert_string_contains passes when strings_expected is
+    empty"""
     test_string = "this is a test string"
     string_expected = []
     pt_line_plt.assert_string_contains(test_string, string_expected)
