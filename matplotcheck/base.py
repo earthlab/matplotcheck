@@ -109,25 +109,28 @@ class PlotTester(object):
             Similar to `message_default`, `message_or` is the error message to
             be displated if `string` does not contain at least one of
             the strings in an inner list in `strings_expected`. If `message`
-            contains ``'{0}'``, it will be replaced with the first failing inner
-            list in `strings_expected`.
+            contains ``'{0}'``, it will be replaced with the first failing
+            inner list in `strings_expected`.
 
         Raises
         -------
         AssertionError
             if `string` does not contain expected strings
         """
-        # Assertion passes if strings_expected == [] or strings_expected == None
+        # Assertion passes if strings_expected == [] or
+        # strings_expected == None
         if not strings_expected:
             return
 
         string = string.lower().replace(" ", "")
         for check in strings_expected:
             if isinstance(check, str):
-                if not check.lower() in string:
+                if not check.lower().replace(" ", "") in string:
                     raise AssertionError(message_default.format(check))
             elif isinstance(check, list):
-                if not any([c.lower() in string for c in check]):
+                if not any(
+                    [c.lower().replace(" ", "") in string for c in check]
+                ):
                     if len(check) == 1:
                         raise AssertionError(message_default.format(check[0]))
                     else:
@@ -149,8 +152,8 @@ class PlotTester(object):
             String specifying the expected plot type. Options:
             `scatter`, `bar`, `line`
         message : string
-            The error message to be displayed if Plot does not match `plot_type`. If
-            `message` contains ``'{0}'``, it will be replaced
+            The error message to be displayed if Plot does not match
+            `plot_type`. If `message` contains ``'{0}'``, it will be replaced
             with the epected plot type.
 
         Raises
@@ -219,18 +222,19 @@ class PlotTester(object):
             assertion.
             The combined title will be tested.
         message_default : string
-            The error message to be displayed if the axis label does not contain
-            a string in strings_expected. If `message` contains ``'{0}'``, it
-            will be replaced with the first expected string not found in the
-            label.
+            The error message to be displayed if the axis label does not
+            contain a string in strings_expected. If `message` contains
+            ``'{0}'``, it will be replaced with the first expected string not
+            found in the label.
         message_or : string
             Similar to `message_default`, `message_or` is the error message to
             be displated if the axis label does not contain at least one of
             the strings in an inner list in `strings_expected`. If `message`
-            contains ``'{0}'``, it will be replaced with the first failing inner
-            list in `strings_expected`.
+            contains ``'{0}'``, it will be replaced with the first failing
+            inner list in `strings_expected`.
         message_no_title : string
-            The error message to be displayed if the expected title is not displayed.
+            The error message to be displayed if the expected title is not
+            displayed.
 
         Raises
         -------
@@ -246,7 +250,8 @@ class PlotTester(object):
             title = axtitle
         else:
             raise ValueError(
-                'title_type must be one of the following ["figure", "axes", "either"]'
+                "title_type must be one of the following "
+                + '["figure", "axes", "either"]'
             )
 
         assert title, message_no_title
@@ -268,7 +273,8 @@ class PlotTester(object):
         Returns
         -------
         caption : string
-            the text that is found in bottom right, ``None`` if no text is found
+            the text that is found in bottom right, ``None`` if no text is
+            found
         """
         caption = None
         ax_position = self.ax.get_position()
@@ -308,16 +314,16 @@ class PlotTester(object):
             ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
             in the title for the assertion to pass. Case insensitive.
         message_default : string
-            The error message to be displayed if the axis label does not contain
-            a string in strings_expected. If `message` contains ``'{0}'``, it
-            will be replaced with the first expected string not found in the
-            label.
+            The error message to be displayed if the axis label does not
+            contain a string in strings_expected. If `message` contains
+            ``'{0}'``, it will be replaced with the first expected string
+            not found in the label.
         message_or : string
             Similar to `message_default`, `message_or` is the error message to
             be displated if the axis label does not contain at least one of
             the strings in an inner list in `strings_expected`. If `message`
-            contains ``'{0}'``, it will be replaced with the first failing inner
-            list in `strings_expected`.
+            contains ``'{0}'``, it will be replaced with the first failing
+            inner list in `strings_expected`.
         message_no_caption : string
             The error message to be displayed if no caption exists in the
             appropriate location.
@@ -360,12 +366,10 @@ class PlotTester(object):
         """
         flag = False
         # Case 1: check if axis have been turned off
-        if self.ax.axison == False:
+        if not self.ax.axison:
             flag = True
         # Case 2: Check if both axis visibilities set to false
-        elif (
-            self.ax.xaxis._visible == False and self.ax.yaxis._visible == False
-        ):
+        elif not self.ax.xaxis._visible and not self.ax.yaxis._visible:
             flag = True
         # Case 3: Check if both axis ticks are set to empty lists
         elif (
@@ -403,18 +407,18 @@ class PlotTester(object):
             ``'a'`` AND ``'b'`` AND (at least one of: ``'c'``, ``'d'``) must be
             in the title for the assertion to pass. Case insensitive.
         message_default : string
-            The error message to be displayed if the axis label does not contain
-            a string in strings_expected. If `message` contains ``'{1}'``, it
-            will be replaced with `axis`. If `message` contains ``'{0}'``, it
-            will be replaced with the first expected string not found in the
-            label.
+            The error message to be displayed if the axis label does not
+            contain a string in strings_expected. If `message` contains
+            ``'{1}'``, it will be replaced with `axis`. If `message` contains
+            ``'{0}'``, it will be replaced with the first expected string not
+            found in the label.
         message_or : string
             Similar to `message_default`, `message_or` is the error message to
             be displated if the axis label does not contain at least one of
             the strings in an inner list in `strings_expected`. If `message`
             contains ``'{1}'``, it will be replaced with `axis`. If `message`
-            contains ``'{0}'``, it will be replaced with the first failing inner
-            list in `strings_expected`.
+            contains ``'{0}'``, it will be replaced with the first failing
+            inner list in `strings_expected`.
         message_not_displayed : string
             The error message to be displayed if the expected axis label is not
             displayed. If `message_not_displayed` contains ``'{0}'``, it will
@@ -574,7 +578,8 @@ class PlotTester(object):
         self,
         titles_exp,
         message="Legend title does not contain expected string: {0}",
-        message_num_titles="I was expecting {0} legend titles but instead found {1}",
+        message_num_titles="I was expecting {0} legend titles but instead "
+        + "found {1}",
     ):
         """Asserts legend titles contain expected text in titles_exp list.
 
@@ -592,8 +597,8 @@ class PlotTester(object):
             The error message to be displayed if there exist a different number
             of legend titles than expected. If `message_num_titles` contains
             ``'{0}'`` it will be replaced with the number of titles found. If
-            `message_num_titles` contains ``'{1}'`` it will be replaced with the
-            expected number of titles.
+            `message_num_titles` contains ``'{1}'`` it will be replaced with
+            the expected number of titles.
 
         Raises
         -------
@@ -625,7 +630,8 @@ class PlotTester(object):
         labels_exp,
         message="Legend does not have expected labels",
         message_no_legend="Legend does not exist",
-        message_num_labels="I was expecting {0} legend entries, but found {1}. Are there extra labels in your legend?",
+        message_num_labels="I was expecting {0} legend entries, but found "
+        + "{1}. Are there extra labels in your legend?",
     ):
         """Asserts legends on ax have the correct entry labels
 
@@ -643,8 +649,8 @@ class PlotTester(object):
             The error message to be displayed if there exist a different number
             of legend labels than expected. If `message_num_labels` contains
             ``'{0}'`` it will be replaced with the number of labels found. If
-            `message_num_labels` contains ``'{1}'`` it will be replaced with the
-            expected number of labels.
+            `message_num_labels` contains ``'{1}'`` it will be replaced with
+            the expected number of labels.
 
 
         Raises
@@ -750,8 +756,8 @@ class PlotTester(object):
                 leg_extent2 = (
                     legends[j].get_window_extent(RendererBase()).get_points()
                 )
-                assert (
-                    self.legends_overlap(leg_extent1, leg_extent2) == False
+                assert not self.legends_overlap(
+                    leg_extent1, leg_extent2
                 ), message
 
     """ BASIC PLOT DATA FUNCTIONS """
@@ -765,9 +771,11 @@ class PlotTester(object):
         ax : matplotlib.axes.Axes
             Matplotlib Axes object to be tested
         points_only : boolean
-            Set ``True`` to check only points, set ``False`` to check all data on plot.
+            Set ``True`` to check only points, set ``False`` to check all data
+            on plot.
         xtime : boolean
-            Set equal to True if the x axis of the plot contains datetime values
+            Set equal to True if the x axis of the plot contains datetime
+            values
 
         Returns
         -------
@@ -872,12 +880,13 @@ class PlotTester(object):
             return
         elif not isinstance(xy_expected, pd.DataFrame):
             raise ValueError(
-                "xy_expected must be of type: pandas dataframe or Geopandas Dataframe"
+                "xy_expected must be of type: pandas dataframe or Geopandas "
+                + "Dataframe"
             )
 
         # If xy_expected is a GeoDataFrame, then we make is a normal DataFrame
-        # with the coordinates of the geometry in that GeoDataFrame as the x and
-        # y data
+        # with the coordinates of the geometry in that GeoDataFrame as the x
+        # and y data
         if isinstance(xy_expected, gpd.geodataframe.GeoDataFrame) and not xcol:
             xy_expected = pd.DataFrame(
                 data={
@@ -1018,7 +1027,7 @@ class PlotTester(object):
         except AssertionError:
             raise AssertionError(message)
 
-    ### LINE TESTS/HELPER FUNCTIONS ###
+    # LINE TESTS/HELPER FUNCTIONS
 
     def get_slope_yintercept(self, path_verts):
         """Returns the y-intercept of line based on the average slope of the
@@ -1125,13 +1134,14 @@ class PlotTester(object):
                     slope_exp, intercept_exp = 1, 0
                 else:
                     raise ValueError(
-                        'each string in line_types must be from the following ["regression","onetoone"]'
+                        "each string in line_types must be from the following "
+                        + '["regression","onetoone"]'
                     )
 
                 self.assert_line(
                     slope_exp,
                     intercept_exp,
-                    message_no_line="{0} line is not displayed properly".format(
+                    message_no_line="{0} line not displayed properly".format(
                         line_type
                     ),
                     message_data="{0} line does not cover dataset".format(
@@ -1139,7 +1149,7 @@ class PlotTester(object):
                     ),
                 )
 
-    ## HISTOGRAM FUNCTIONS ##
+    # HISTOGRAM FUNCTIONS
 
     def get_num_bins(self):
         """Gets the number of bins in histogram with a unique x-position.
@@ -1149,8 +1159,9 @@ class PlotTester(object):
         Int :
             Returns the number of bins with a unique x-position. For a normal
             histogram, this is just the number of bins. If there are two
-            overlapping or stacked histograms in the same `matplotlib.axis.Axis`
-            object, then this returns the number of bins with unique edges. """
+            overlapping or stacked histograms in the same
+            `matplotlib.axis.Axis` object, then this returns the number of bins
+            with unique edges. """
         x_data = self.get_xy(xtime=False)["x"]
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
@@ -1170,9 +1181,9 @@ class PlotTester(object):
             Number of bins expected.
         message : string
             The error message to be displayed if plot does not contain
-            `num_bins`. If `message` contains ``'{0}'`` it will be replaced with
-            expected number of bins. If `message` contains ``'{1}'``, it will
-            be replaced with the number of bins found.
+            `num_bins`. If `message` contains ``'{0}'`` it will be replaced
+            with expected number of bins. If `message` contains ``'{1}'``, it
+            will be replaced with the number of bins found.
 
         Raises
         -------
@@ -1210,8 +1221,8 @@ class PlotTester(object):
         Parameters
         ----------
         bin_values : list
-            A list of numbers representing the expected values of each consecutive
-            bin (i.e. the heights of the bars in the histogram).
+            A list of numbers representing the expected values of each
+            consecutive bin (i.e. the heights of the bars in the histogram).
         tolerence : float
             Measure of relative error allowed.
             For example: Given a tolerance ``tolerence=0.1``, an expected value
