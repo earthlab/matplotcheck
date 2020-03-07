@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-* Created functions to test point geometries in VectorTester (@nkorinek, #176)
+* Created functions to test point geometries in VectorTester (@nkorinek, #176) 
+* made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
 
 ## [0.1.2]
 * Adding flake8 for format and other syntax issues! yay! (@lwasser, #195)
