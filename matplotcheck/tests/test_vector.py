@@ -213,17 +213,20 @@ def test_assert_multiline_geo(poly_multiline_plot, multi_line_gdf):
     poly_multiline_plot.assert_lines(multi_line_gdf)
     plt.close()
 
+
 def test_assert_line_geo_fail(poly_line_plot, multi_line_gdf):
     """Test that lines fail correctly"""
     with pytest.raises(AssertionError, match="Incorrect Line Data"):
         poly_line_plot.assert_lines(multi_line_gdf)
         plt.close()
 
+
 def test_assert_multiline_geo_fail(poly_multiline_plot, two_line_gdf):
     """Test that multi lines fail correctly"""
     with pytest.raises(AssertionError, match="Incorrect Line Data"):
         poly_multiline_plot.assert_lines(two_line_gdf)
         plt.close()
+
 
 def test_assert_line_fails_list(poly_line_plot):
     """Test that assert_lines fails when passed a list"""
@@ -235,10 +238,12 @@ def test_assert_line_fails_list(poly_line_plot):
         poly_line_plot.assert_lines(linelist)
         plt.close()
 
+
 def test_assert_line_geo_passed_nothing(poly_line_plot):
     """Test that assertion passes when passed None"""
     poly_line_plot.assert_lines(None)
     plt.close()
+
 
 def test_get_lines_geometry(poly_line_plot):
     """Test that get_lines returns the proper values"""
