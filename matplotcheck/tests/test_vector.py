@@ -2,6 +2,7 @@
 import pytest
 import matplotlib.pyplot as plt
 import geopandas as gpd
+from shapely.geometry import LineString
 from matplotcheck.vector import VectorTester
 
 
@@ -43,6 +44,60 @@ def bad_pd_gdf(pd_gdf):
             pd_gdf.geometry.x + 1, pd_gdf.geometry.y + 1
         )
     )
+
+
+@pytest.fixture
+def two_line_gdf():
+    """ Create Line Objects For Testing """
+    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
+    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
+    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
+    return gdf
+
+
+@pytest.fixture
+def multi_line_gdf(two_line_gdf):
+    """ Create a multi-line GeoDataFrame.
+    This has one multi line and another regular line.
+    """
+    # Create a single and multi line object
+    multiline_feat = two_line_gdf.unary_union
+    linec = LineString([(2, 1), (3, 1), (4, 1), (5, 2)])
+    out_df = gpd.GeoDataFrame(
+        geometry=gpd.GeoSeries([multiline_feat, linec]), crs="epsg:4326",
+    )
+    out_df["attr"] = ["road", "stream"]
+    return out_df
+
+
+@pytest.fixture
+def poly_line_plot(two_line_gdf):
+    """Create a line vector tester object."""
+    _, ax = plt.subplots()
+
+    two_line_gdf.plot(ax=ax)
+    ax.set_title("My Plot Title", fontsize=30)
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
+@pytest.fixture
+def poly_multiline_plot(multi_line_gdf):
+    """Create a multiline vector tester object."""
+    _, ax = plt.subplots()
+
+    multi_line_gdf.plot(ax=ax, column="attr")
+    ax.set_title("My Plot Title", fontsize=30)
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
 
 
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
@@ -145,3 +200,56 @@ def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):
     message = "Test message"
     with pytest.raises(AssertionError, match="Test message"):
         point_geo_plot.assert_points(points_expected=bad_pd_gdf, m=message)
+
+
+def test_assert_line_geo(poly_line_plot, two_line_gdf):
+    """Test that lines are asserted correctly"""
+    poly_line_plot.assert_lines(two_line_gdf)
+    plt.close()
+
+
+def test_assert_multiline_geo(poly_multiline_plot, multi_line_gdf):
+    """Test that multi lines are asserted correctly"""
+    poly_multiline_plot.assert_lines(multi_line_gdf)
+    plt.close()
+
+def test_assert_line_geo_fail(poly_line_plot, multi_line_gdf):
+    """Test that lines fail correctly"""
+    with pytest.raises(AssertionError, match="Incorrect Line Data"):
+        poly_line_plot.assert_lines(multi_line_gdf)
+        plt.close()
+
+def test_assert_multiline_geo_fail(poly_multiline_plot, two_line_gdf):
+    """Test that multi lines fail correctly"""
+    with pytest.raises(AssertionError, match="Incorrect Line Data"):
+        poly_multiline_plot.assert_lines(two_line_gdf)
+        plt.close()
+
+def test_assert_line_fails_list(poly_line_plot):
+    """Test that assert_lines fails when passed a list"""
+    linelist = [
+        [(1, 1), (2, 2), (3, 2), (5, 3)],
+        [(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)],
+    ]
+    with pytest.raises(ValueError, match="lines_expected is not expected ty"):
+        poly_line_plot.assert_lines(linelist)
+        plt.close()
+
+def test_assert_line_geo_passed_nothing(poly_line_plot):
+    """Test that assertion passes when passed None"""
+    poly_line_plot.assert_lines(None)
+    plt.close()
+
+def test_get_lines_geometry(poly_line_plot):
+    """Test that get_lines returns the proper values"""
+    lines = [(LineString(i[0])) for i in poly_line_plot.get_lines().values]
+    geometries = gpd.GeoDataFrame(geometry=lines)
+    poly_line_plot.assert_lines(geometries)
+    plt.close()
+
+
+# Broken right now, not sure why
+# def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
+#     """Test that assert works for grouped line plots"""
+#     poly_multiline_plot.assert_lines_grouped_by_type(multi_line_gdf, "attr")
+#     plt.close()
