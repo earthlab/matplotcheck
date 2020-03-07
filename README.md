@@ -111,43 +111,6 @@ vt.assert_polygons(polygons_expected=polygons)
 Caveats: This repo likely misses edge cases of the many ways matplotlib plots can be created.
 Please feel free to submit bugs!
 
-
-## Active Contributors
-
-- Leah Wasser
-
-## Dev Setup (to be moved to contributing)
-
-setup the matplotcheck envt
-
-```
-conda env create -f environment.yml
-conda activate matplotcheck-dev
-```
-
-Then setup all of the development requirements.
-
-```
-pip install -e .
-pip install -r dev-requirements.txt
-pre-commit install
-```
-
-## Contributors
-
-We've welcome any and all contributions. Below are some of the
-contributors to MatPlotCheck.
-
-<a title="Ryan Solvik" href="https://www.github.com/ryla5068"><img width="60" height="60" alt="Kylen Solvik" class="pull-left" src="https://avatars.githubusercontent.com/u/43677611?size=120" /></a>
-<a title="Kylen Solvik" href="https://www.github.com/ksolvik"><img width="60" height="60" alt="Kylen Solvik" class="pull-left" src="https://avatars.githubusercontent.com/u/24379590?size=120" /></a>
-<a title="Kristen Curry" href="https://www.github.com/kdcurry"><img width="60" height="60" alt="Kristen Curry" class="pull-left" src="https://avatars.githubusercontent.com/u/4032126?size=120" /></a>
-
-## How to Contribute
-
-We welcome contributions to MatPlotCheck! Please be sure to check out our
-[contributing guidelines](https://MatPlotCheck.readthedocs.io/en/latest/contributing.html)
-for more information about submitting pull requests or changes to MatPlotCheck.
-
 ## License & Citation
 
 [BSD-3](https://github.com/earthlab/matplotcheck/blob/master/LICENSE)
