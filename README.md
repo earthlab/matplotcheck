@@ -111,6 +111,26 @@ vt.assert_polygons(polygons_expected=polygons)
 Caveats: This repo likely misses edge cases of the many ways matplotlib plots can be created.
 Please feel free to submit bugs!
 
+## Active Contributors
+
+<a title="Leah Wasser" href="https://www.github.com/lwasser"><img width="60" height="60" alt="Leah Wasser" class="pull-left" src="https://avatars2.githubusercontent.com/u/7649194?s=460&v=4" /></a>
+<a title="Nathan Korinek" href="https://www.github.com/nkorinek"><img width="60" height="60" alt="Nathan Korinek" class="pull-left" src="https://avatars3.githubusercontent.com/u/38253680?s=460&v=4" /></a>
+
+## Contributors
+
+We've welcome any and all contributions. Below are some of the
+contributors to MatPlotCheck.
+
+<a title="Ryan Larocque" href="https://www.github.com/ryla5068"><img width="60" height="60" alt="Ryan Larocque" class="pull-left" src="https://avatars.githubusercontent.com/u/43677611?size=120" /></a>
+<a title="Kylen Solvik" href="https://www.github.com/kysolvik"><img width="60" height="60" alt="Kylen Solvik" class="pull-left" src="https://avatars.githubusercontent.com/u/24379590?size=120" /></a>
+<a title="Kristen Curry" href="https://www.github.com/kdcurry"><img width="60" height="60" alt="Kristen Curry" class="pull-left" src="https://avatars.githubusercontent.com/u/4032126?size=120" /></a>
+
+## How to Contribute
+
+We welcome contributions to MatPlotCheck! Please be sure to check out our
+[contributing guidelines](https://MatPlotCheck.readthedocs.io/en/latest/contributing.html)
+for more information about submitting pull requests or changes to MatPlotCheck.
+
 ## License & Citation
 
 [BSD-3](https://github.com/earthlab/matplotcheck/blob/master/LICENSE)
