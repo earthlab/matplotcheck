@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
+* added contributors file and updated README to remove that information (@nkorinek, #121)
 
 ## [0.1.2]
 * Adding flake8 for format and other syntax issues! yay! (@lwasser, #195)
