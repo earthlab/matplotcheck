@@ -8,7 +8,6 @@ whether they are spatial or not.
 """
 
 import numpy as np
-import matplotlib.dates as mdates
 import matplotlib
 from matplotlib.backend_bases import RendererBase
 import math
@@ -762,7 +761,7 @@ class PlotTester(object):
 
     """ BASIC PLOT DATA FUNCTIONS """
 
-    def get_xy(self, points_only=False, xtime=False):
+    def get_xy(self, points_only=False):
         """Returns a pandas dataframe with columns "x" and "y" holding the x
         and y coords on Axes `ax`
 
@@ -773,9 +772,6 @@ class PlotTester(object):
         points_only : boolean
             Set ``True`` to check only points, set ``False`` to check all data
             on plot.
-        xtime : boolean
-            Set equal to True if the x axis of the plot contains datetime
-            values
 
         Returns
         -------
@@ -816,9 +812,6 @@ class PlotTester(object):
         xy_data = xy_data[xy_data["x"] >= lims[0]]
         xy_data = xy_data[xy_data["x"] <= lims[1]].reset_index(drop=True)
 
-        # change to datetime dtype if needed
-        if xtime:
-            xy_data["x"] = mdates.num2date(xy_data["x"])
         return xy_data
 
     def assert_xydata(
@@ -827,7 +820,6 @@ class PlotTester(object):
         xcol=None,
         ycol=None,
         points_only=False,
-        xtime=False,
         xlabels=False,
         tolerence=0,
         message="Incorrect data values",
@@ -851,11 +843,6 @@ class PlotTester(object):
         points_only : boolean,
             Set ``True`` to check only points, set ``False`` tp check all data
             on plot.
-        xtime : boolean
-            Set ``True`` if the a-axis contains datetime values. Matplotlib
-            converts datetime objects to seconds? This parameter will ensure
-            the provided x col values are converted if they are datetime
-            elements.
         xlabels : boolean
             Set ``True`` if using x axis labels rather than x data. Instead of
             comparing numbers in the x-column to expected, compares numbers or
@@ -865,7 +852,8 @@ class PlotTester(object):
             For example: Given a tolerance ``tolerence=0.1``, an expected value
             ``e``, and an actual value ``a``, this asserts
             ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+            with ``rtol=tolerence`` and ``atol=inf``.) If using tolerance for
+            datetime data, units for tolerance will be in days.
         message : string
             The error message to be displayed if the xy-data does not match
             `xy_expected`
@@ -901,7 +889,7 @@ class PlotTester(object):
                 xy_expected, xcol=xcol, ycol=ycol, message=message
             )
             return
-        xy_data = self.get_xy(points_only=points_only, xtime=xtime)
+        xy_data = self.get_xy(points_only=points_only)
 
         # Make sure the data are sorted the same
         xy_data, xy_expected = (
@@ -910,8 +898,6 @@ class PlotTester(object):
         )
 
         if tolerence > 0:
-            if xtime:
-                raise ValueError("tolerance must be 0 with datetime on x-axis")
             np.testing.assert_allclose(
                 xy_data["x"],
                 xy_expected[xcol],
@@ -929,17 +915,21 @@ class PlotTester(object):
             """We use `assert_array_max_ulp()` to compare the
             two datasets because it is able to account for small errors in
             floating point numbers, and it scales nicely between extremely
-            small or large numbers. We catch this error and throw our own so
-            that we can use our own message."""
+            small or large numbers. Because of the way that matplotlib stores
+            datetime data, this is essential for comparing high-precision
+            datetime data (i.e. millisecond or lower).
+
+            We catch this error and throw our own so that we can use our own
+            message."""
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol]), 5
                 )
             except AssertionError:
                 raise AssertionError(message)
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                    np.array(xy_data["y"]), np.array(xy_expected[ycol]), 5
                 )
             except AssertionError:
                 raise AssertionError(message)
@@ -1010,7 +1000,7 @@ class PlotTester(object):
         if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol]), 5
                 )
             except AssertionError:
                 raise AssertionError(message)
@@ -1022,7 +1012,7 @@ class PlotTester(object):
         # Testing y-data
         try:
             np.testing.assert_array_max_ulp(
-                np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                np.array(xy_data["y"]), np.array(xy_expected[ycol]), 5
             )
         except AssertionError:
             raise AssertionError(message)
@@ -1162,7 +1152,7 @@ class PlotTester(object):
             overlapping or stacked histograms in the same
             `matplotlib.axis.Axis` object, then this returns the number of bins
             with unique edges. """
-        x_data = self.get_xy(xtime=False)["x"]
+        x_data = self.get_xy()["x"]
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
 
@@ -1206,7 +1196,7 @@ class PlotTester(object):
         Int :
             The number of bins in the histogram"""
 
-        bin_values = self.get_xy(xtime=False)["y"].tolist()
+        bin_values = self.get_xy()["y"].tolist()
 
         return bin_values
 
