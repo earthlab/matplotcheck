@@ -216,7 +216,7 @@ class VectorTester(PlotTester):
         return df
 
     def assert_collection_sorted_by_markersize(self, df_expected, sort_column):
-        """Asserts a collection of points vary in size by column expresse din
+        """Asserts a collection of points vary in size by column expressed in
         sort_column
 
         Parameters
