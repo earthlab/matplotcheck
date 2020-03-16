@@ -252,7 +252,7 @@ class VectorTester(PlotTester):
         output: DataFrame with columns 'x' and 'y'. Each row represents one
         points coordinates.
         """
-        points = self.get_xy(points_only=True).sort_values(by="x")
+        points = self.get_xy(points_only=True).sort_values(by=["x", "y"])
         points.reset_index(inplace=True, drop=True)
         return points
 
@@ -274,23 +274,28 @@ class VectorTester(PlotTester):
             xy_expected = pd.DataFrame(columns=["x", "y"])
             xy_expected["x"] = points_expected.geometry.x
             xy_expected["y"] = points_expected.geometry.y
-            xy_expected = xy_expected.sort_values(by="x")
+            xy_expected = xy_expected.sort_values(by=["x", "y"])
             xy_expected.reset_index(inplace=True, drop=True)
             if len(points) != len(xy_expected):
-                points_zeros = (points['x'] == 0) & (points['y'] == 0)
+                points_zeros = (points["x"] == 0) & (points["y"] == 0)
                 if points_zeros.any():
-                    expected_zeros = (xy_expected['x'] == 0) & (xy_expected['y'] == 0)
+                    expected_zeros = (xy_expected["x"] == 0) & (
+                        xy_expected["y"] == 0
+                    )
                     keep = expected_zeros.sum()
-                    zeros_index_vals = points_zeros.index[points_zeros.tolist()]
+                    zeros_index_vals = points_zeros.index[
+                        points_zeros.tolist()
+                    ]
                     for i in range(keep):
-                         points_zeros.at[zeros_index_vals[i]] = False
-                    points = points[~points_zeros].reset_index(inplace=True, drop=True)
+                        points_zeros.at[zeros_index_vals[i]] = False
+                    points = points[~points_zeros].reset_index(drop=True)
                 else:
-                    raise AssertionError("points_expected's length does not match the stored data's length.")
+                    raise AssertionError(
+                        "points_expected's length does not match the stored"
+                        "data's length."
+                    )
             try:
-                pd.testing.assert_frame_equal(
-                    left=self.get_points(), right=xy_expected
-                )
+                pd.testing.assert_frame_equal(left=points, right=xy_expected)
             except AssertionError:
                 raise AssertionError(m)
         else:
