@@ -277,7 +277,10 @@ class VectorTester(PlotTester):
             xy_expected["y"] = points_expected.geometry.y
             xy_expected = xy_expected.sort_values(by=["x", "y"])
             xy_expected.reset_index(inplace=True, drop=True)
+            # Fix for failure if more than points were plotted in matplotlib
             if len(points) != len(xy_expected):
+                # Checks if there are extra 0, 0 coords in the DataFrame
+                # returned from self.get_points and removes them.
                 points_zeros = (points["x"] == 0) & (points["y"] == 0)
                 if points_zeros.any():
                     expected_zeros = (xy_expected["x"] == 0) & (
