@@ -100,6 +100,26 @@ def poly_multiline_plot(multi_line_gdf):
     return VectorTester(axis)
 
 
+@pytest.fixture
+def pt_geo_plot_bad_legend(pd_gdf):
+    """Create a geo plot for testing"""
+    fig, ax = plt.subplots()
+    size = 0
+    point_symb = {"Tree": "green", "Bush": "brown"}
+
+    for ctype, points in pd_gdf.groupby('attr'):
+        color = point_symb[ctype]
+        label = ctype
+        size += 100
+        points.plot(color=color, ax=ax, label=label, markersize=size)
+
+    plt.gca().add_artist(ax.legend(title="Legend", loc=(0, .1)))
+    ax.legend(title="Legend 2", loc=(.1, .1))
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
     """Check that the polygon assert works with a list of polygons."""
     x, y = basic_polygon.exterior.coords.xy
@@ -251,6 +271,33 @@ def test_get_lines_geometry(poly_line_plot):
     geometries = gpd.GeoDataFrame(geometry=lines)
     poly_line_plot.assert_lines(geometries)
     plt.close()
+
+
+def test_legend_no_overlay_pass(pt_geo_plot):
+    """Test that no_overlay passes when the legend doesn't overlay"""
+    pt_geo_plot.assert_legend_no_overlay_content()
+
+
+def test_legend_no_overlay_pass(pt_geo_plot):
+    """Test that no_overlay passes when the legend doesn't overlay"""
+    pt_geo_plot.assert_legend_no_overlay_content()
+
+
+def test_legend_no_overlay_fail(pt_geo_plot_bad_legend):
+    """Test that no_overlay fails when the legends do overlay"""
+    with pytest.raises(AssertionError, match="Legend overlays plot contents"):
+        pt_geo_plot_bad_legend.assert_legend_no_overlay_content()
+
+
+def test_legends_no_overlap_pass(pt_geo_plot):
+    """Test that legends pass if they don't overlay"""
+    pt_geo_plot.assert_no_legend_overlap()
+
+
+def test_legend_no_overlap_fail(pt_geo_plot_bad_legend):
+    """Test that legends fail if they overlap"""
+    with pytest.raises(AssertionError, match="Legends overlap eachother"):
+        pt_geo_plot_bad_legend.assert_no_legend_overlap()
 
 
 # Broken right now, not sure why

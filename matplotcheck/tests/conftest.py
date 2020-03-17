@@ -32,14 +32,14 @@ def pd_gdf():
     """Create a geopandas GeoDataFrame for testing"""
     df = pd.DataFrame(
         {
-            "lat": np.random.randint(-85, 85, size=100),
-            "lon": np.random.randint(-180, 180, size=100),
+            "lat": np.random.randint(-85, 85, size=5),
+            "lon": np.random.randint(-180, 180, size=5),
         }
     )
     gdf = gpd.GeoDataFrame(
-        {"A": np.arange(100)}, geometry=gpd.points_from_xy(df.lon, df.lat)
+        {"A": np.arange(5)}, geometry=gpd.points_from_xy(df.lon, df.lat)
     )
-
+    gdf["attr"] = ["Tree", "Tree", "Bush", "Bush", "Bush"]
     return gdf
 
 
@@ -159,11 +159,16 @@ def pt_time_line_plt(pd_df_timeseries):
 def pt_geo_plot(pd_gdf):
     """Create a geo plot for testing"""
     fig, ax = plt.subplots()
+    size = 0
+    point_symb = {"Tree": "green", "Bush": "brown"}
 
-    pd_gdf.plot(ax=ax)
-    ax.set_title("My Plot Title", fontsize=30)
-    ax.set_xlabel("x label")
-    ax.set_ylabel("y label")
+    for ctype, points in pd_gdf.groupby('attr'):
+        color = point_symb[ctype]
+        label = ctype
+        size += 100
+        points.plot(color=color, ax=ax, label=label, markersize=size)
+
+    ax.legend(title="Legend", loc=(1.1, .1))
 
     axis = plt.gca()
 
