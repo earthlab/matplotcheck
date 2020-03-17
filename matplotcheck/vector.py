@@ -196,27 +196,28 @@ class VectorTester(PlotTester):
         """
         df = pd.DataFrame(columns=("x", "y", "markersize"))
         for c in self.ax.collections:
-            offsets, markersizes = c.get_offsets(), c.get_sizes()
-            x_data, y_data = (
-                [offset[0] for offset in offsets],
-                [offset[1] for offset in offsets],
-            )
-            if len(markersizes) == 1:
-                markersize = [markersizes[0]] * len(offsets)
-                df2 = pd.DataFrame(
-                    {"x": x_data, "y": y_data, "markersize": markersize}
+            if isinstance(c, matplotlib.collections.PathCollection):
+                offsets, markersizes = c.get_offsets(), c.get_sizes()
+                x_data, y_data = (
+                    [offset[0] for offset in offsets],
+                    [offset[1] for offset in offsets],
                 )
-                df = df.append(df2)
-            elif len(markersizes) == len(offsets):
-                df2 = pd.DataFrame(
-                    {"x": x_data, "y": y_data, "markersize": markersizes}
-                )
-                df = df.append(df2)
+                if len(markersizes) == 1:
+                    markersize = [markersizes[0]] * len(offsets)
+                    df2 = pd.DataFrame(
+                        {"x": x_data, "y": y_data, "markersize": markersize}
+                    )
+                    df = df.append(df2)
+                elif len(markersizes) == len(offsets):
+                    df2 = pd.DataFrame(
+                        {"x": x_data, "y": y_data, "markersize": markersizes}
+                    )
+                    df = df.append(df2)
         df = df.sort_values(by="markersize").reset_index(drop=True)
         return df
 
     def assert_collection_sorted_by_markersize(self, df_expected, sort_column):
-        """Asserts a collection of points vary in size by column expresse din
+        """Asserts a collection of points vary in size by column expressed in
         sort_column
 
         Parameters
@@ -252,7 +253,7 @@ class VectorTester(PlotTester):
         output: DataFrame with columns 'x' and 'y'. Each row represents one
         points coordinates.
         """
-        points = self.get_xy(points_only=True).sort_values(by="x")
+        points = self.get_xy(points_only=True).sort_values(by=["x", "y"])
         points.reset_index(inplace=True, drop=True)
         return points
 
@@ -270,15 +271,35 @@ class VectorTester(PlotTester):
         String error message if assertion is not met.
         """
         if isinstance(points_expected, gpd.geodataframe.GeoDataFrame):
+            points = self.get_points()
             xy_expected = pd.DataFrame(columns=["x", "y"])
             xy_expected["x"] = points_expected.geometry.x
             xy_expected["y"] = points_expected.geometry.y
-            xy_expected = xy_expected.sort_values(by="x")
+            xy_expected = xy_expected.sort_values(by=["x", "y"])
             xy_expected.reset_index(inplace=True, drop=True)
+            # Fix for failure if more than points were plotted in matplotlib
+            if len(points) != len(xy_expected):
+                # Checks if there are extra 0, 0 coords in the DataFrame
+                # returned from self.get_points and removes them.
+                points_zeros = (points["x"] == 0) & (points["y"] == 0)
+                if points_zeros.any():
+                    expected_zeros = (xy_expected["x"] == 0) & (
+                        xy_expected["y"] == 0
+                    )
+                    keep = expected_zeros.sum()
+                    zeros_index_vals = points_zeros.index[
+                        points_zeros.tolist()
+                    ]
+                    for i in range(keep):
+                        points_zeros.at[zeros_index_vals[i]] = False
+                    points = points[~points_zeros].reset_index(drop=True)
+                else:
+                    raise AssertionError(
+                        "points_expected's length does not match the stored"
+                        "data's length."
+                    )
             try:
-                pd.testing.assert_frame_equal(
-                    left=self.get_points(), right=xy_expected
-                )
+                pd.testing.assert_frame_equal(left=points, right=xy_expected)
             except AssertionError:
                 raise AssertionError(m)
         else:
