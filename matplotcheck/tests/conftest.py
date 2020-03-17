@@ -162,13 +162,13 @@ def pt_geo_plot(pd_gdf):
     size = 0
     point_symb = {"Tree": "green", "Bush": "brown"}
 
-    for ctype, points in pd_gdf.groupby('attr'):
+    for ctype, points in pd_gdf.groupby("attr"):
         color = point_symb[ctype]
         label = ctype
         size += 100
         points.plot(color=color, ax=ax, label=label, markersize=size)
 
-    ax.legend(title="Legend", loc=(1.1, .1))
+    ax.legend(title="Legend", loc=(1.1, 0.1))
 
     axis = plt.gca()
 
