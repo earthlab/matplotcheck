@@ -127,6 +127,13 @@ vector_test = VectorTester(vector_test_plot_hold)
 # there are additional tests you can run to check vector legends, as shown
 # below.
 
+###############################################################################
+#
+# .. note::
+#   For these tests, you can know they passed if they don't raise an
+#   AssertionError. If they were to fail, they would throw an error stating
+#   what went wrong. 
+
 # Check legends in doesn't overlay the plot
 
 vector_test.assert_legend_no_overlay_content()
