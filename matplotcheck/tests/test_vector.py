@@ -103,7 +103,7 @@ def poly_multiline_plot(multi_line_gdf):
 @pytest.fixture
 def pt_geo_plot(pd_gdf):
     """Create a geo plot for testing"""
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     size = 0
     point_symb = {"Tree": "green", "Bush": "brown"}
 
@@ -123,7 +123,7 @@ def pt_geo_plot(pd_gdf):
 @pytest.fixture
 def pt_geo_plot_bad(pd_gdf):
     """Create a geo plot for testing"""
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     pd_gdf.plot(ax=ax, column="attr")
     axis = plt.gca()
 
