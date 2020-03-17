@@ -132,7 +132,7 @@ vector_test = VectorTester(vector_test_plot_hold)
 # .. note::
 #   For these tests, you can know they passed if they don't raise an
 #   AssertionError. If they were to fail, they would throw an error stating
-#   what went wrong. 
+#   what went wrong.
 
 # Check legends in doesn't overlay the plot
 
