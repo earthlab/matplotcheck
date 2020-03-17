@@ -196,22 +196,23 @@ class VectorTester(PlotTester):
         """
         df = pd.DataFrame(columns=("x", "y", "markersize"))
         for c in self.ax.collections:
-            offsets, markersizes = c.get_offsets(), c.get_sizes()
-            x_data, y_data = (
-                [offset[0] for offset in offsets],
-                [offset[1] for offset in offsets],
-            )
-            if len(markersizes) == 1:
-                markersize = [markersizes[0]] * len(offsets)
-                df2 = pd.DataFrame(
-                    {"x": x_data, "y": y_data, "markersize": markersize}
+            if isinstance(c, matplotlib.collections.PathCollection):
+                offsets, markersizes = c.get_offsets(), c.get_sizes()
+                x_data, y_data = (
+                    [offset[0] for offset in offsets],
+                    [offset[1] for offset in offsets],
                 )
-                df = df.append(df2)
-            elif len(markersizes) == len(offsets):
-                df2 = pd.DataFrame(
-                    {"x": x_data, "y": y_data, "markersize": markersizes}
-                )
-                df = df.append(df2)
+                if len(markersizes) == 1:
+                    markersize = [markersizes[0]] * len(offsets)
+                    df2 = pd.DataFrame(
+                        {"x": x_data, "y": y_data, "markersize": markersize}
+                    )
+                    df = df.append(df2)
+                elif len(markersizes) == len(offsets):
+                    df2 = pd.DataFrame(
+                        {"x": x_data, "y": y_data, "markersize": markersizes}
+                    )
+                    df = df.append(df2)
         df = df.sort_values(by="markersize").reset_index(drop=True)
         return df
 
