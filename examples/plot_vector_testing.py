@@ -91,10 +91,13 @@ for ctype, lines in multi_line_gdf.groupby('attr'):
 
 # Plotting point geodataframe
 
+size = 0
+
 for ctype, points in point_gdf.groupby('attr2'):
     color = point_symb[ctype]
     label = ctype
-    points.plot(color=color, ax=ax, label=label)
+    size += 100
+    points.plot(color=color, ax=ax, label=label, markersize=size)
 
 # Adding legend
 
@@ -136,7 +139,8 @@ vector_test.assert_no_legend_overlap()
 # Testing Point Values and Geometry
 # ---------------------------------
 # You can check that both the position of the points and there plot values are
-# accurate with the tests below.
+# accurate with the tests below. For points, you can also check that the
+# size of each point varies based on it's attributes.
 
 # Check points geometry
 
@@ -145,6 +149,10 @@ vector_test.assert_points(point_gdf)
 # Check points plotted by type
 
 vector_test.assert_points_grouped_by_type(point_gdf, "attr2")
+
+# Check points size varies based on a variable.
+
+vector_test.assert_collection_sorted_by_markersize(point_gdf, "attr2")
 
 ################################################################################
 # Testing Line Values and Geometry
