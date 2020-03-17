@@ -125,10 +125,12 @@ class PlotTester(object):
         string = string.lower().replace(" ", "")
         for check in strings_expected:
             if isinstance(check, str):
-                if not check.lower() in string:
+                if not check.lower().replace(" ", "") in string:
                     raise AssertionError(message_default.format(check))
             elif isinstance(check, list):
-                if not any([c.lower() in string for c in check]):
+                if not any(
+                    [c.lower().replace(" ", "") in string for c in check]
+                ):
                     if len(check) == 1:
                         raise AssertionError(message_default.format(check[0]))
                     else:
