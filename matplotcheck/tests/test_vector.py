@@ -352,6 +352,7 @@ def test_mixed_type_passes(mixed_type_geo_plot, pd_gdf):
     mixed_type_geo_plot.assert_points(pd_gdf)
     plt.close()
 
+
 def test_wrong_length_points_expected(pt_geo_plot, pd_gdf, bad_pd_gdf):
     """Tests that error is thrown for incorrect lenght of a gdf"""
     with pytest.raises(AssertionError, match="points_expected's length does "):
