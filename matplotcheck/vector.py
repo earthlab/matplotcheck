@@ -21,63 +21,6 @@ class VectorTester(PlotTester):
         """Initialize the vector tester"""
         super(VectorTester, self).__init__(ax)
 
-    def assert_legend_no_overlay_content(
-        self, m="Legend overlays plot contents"
-    ):
-        """Asserts that each legend does not overlay plot contents with error
-        message m
-
-        Parameters
-        ---------
-        m: string
-            error message if assertion is not met
-        """
-        plot_extent = self.ax.get_window_extent().get_points()
-        legends = self.get_legends()
-        for leg in legends:
-            leg_extent = leg.get_window_extent().get_points()
-            legend_left = leg_extent[1][0] < plot_extent[0][0]
-            legend_right = leg_extent[0][0] > plot_extent[1][0]
-            legend_below = leg_extent[1][1] < plot_extent[0][1]
-            assert legend_left or legend_right or legend_below, m
-
-    def _legends_overlap(self, b1, b2):
-        """Helper function for assert_no_legend_overlap
-        Boolean value if points of window extents for b1 and b2 overlap
-
-        Parameters
-        ----------
-        b1: bounding box of window extents
-        b2: bounding box of window extents
-
-        Returns
-        ------
-        boolean value that says if bounding boxes b1 and b2 overlap
-        """
-        x_overlap = (b1[0][0] <= b2[1][0] and b1[0][0] >= b2[0][0]) or (
-            b1[1][0] <= b2[1][0] and b1[1][0] >= b2[0][0]
-        )
-        y_overlap = (b1[0][1] <= b2[1][1] and b1[0][1] >= b2[0][1]) or (
-            b1[1][1] <= b2[1][1] and b1[1][1] >= b2[0][1]
-        )
-        return x_overlap and y_overlap
-
-    def assert_no_legend_overlap(self, m="Legends overlap eachother"):
-        """Asserts there are no two legends in Axes ax that overlap each other
-        with error message m
-
-        Parameters
-        ----------
-        m: string error message if assertion is not met
-        """
-        legends = self.get_legends()
-        n = len(legends)
-        for i in range(n - 1):
-            leg_extent1 = legends[i].get_window_extent().get_points()
-            for j in range(i + 1, n):
-                leg_extent2 = legends[j].get_window_extent().get_points()
-                assert not self._legends_overlap(leg_extent1, leg_extent2), m
-
     """ Check Data """
 
     def _convert_length(self, arr, n):
