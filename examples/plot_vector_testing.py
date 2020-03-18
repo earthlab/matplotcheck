@@ -120,27 +120,12 @@ vector_test = VectorTester(vector_test_plot_hold)
 #   plot has multiple geometry types, such as lines, polygons, and points,
 #   make sure to check each geometry type seperately!
 
-################################################################################
-# Testing Legend Attributes
-# -------------------------
-# In addition to the legend tests available in the base module for MatPlotCheck,
-# there are additional tests you can run to check vector legends, as shown
-# below.
-
 ###############################################################################
 #
 # .. note::
 #   For these tests, you can know they passed if they don't raise an
 #   AssertionError. If they were to fail, they would throw an error stating
 #   what went wrong.
-
-# Check legends in doesn't overlay the plot
-
-vector_test.assert_legend_no_overlay_content()
-
-# If there are multiple legends, check they don't overlap.
-
-vector_test.assert_no_legend_overlap()
 
 ################################################################################
 # Testing Point Values and Geometry
