@@ -285,37 +285,6 @@ def test_get_lines_geometry(poly_line_plot):
     plt.close()
 
 
-# def test_legend_no_overlay_pass(pt_geo_plot):
-#     """Test that no_overlay passes when the legend doesn't overlay"""
-#     pt_geo_plot.assert_legend_no_overlay_content()
-
-
-# Broken right now, not sure why
-# def test_legend_no_overlay_pass(pt_geo_plot):
-#     """Test that no_overlay passes when the legend doesn't overlay"""
-#     pt_geo_plot.assert_legend_no_overlay_content()
-
-
-# Broken right now, not sure why
-# def test_legend_no_overlay_fail(pt_geo_plot_bad_legend):
-#     """Test that no_overlay fails when the legends do overlay"""
-#     with pytest.raises(AssertionError, match="Legend overlays plot contents"):
-#         pt_geo_plot_bad_legend.assert_legend_no_overlay_content()
-
-
-# Broken right now, not sure why
-# def test_legends_no_overlap_pass(pt_geo_plot):
-#     """Test that legends pass if they don't overlay"""
-#     pt_geo_plot.assert_no_legend_overlap()
-
-
-# Broken right now, not sure why
-# def test_legend_no_overlap_fail(pt_geo_plot_bad_legend):
-#     """Test that legends fail if they overlap"""
-#     with pytest.raises(AssertionError, match="Legends overlap eachother"):
-#         pt_geo_plot_bad_legend.assert_no_legend_overlap()
-
-
 def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
     """Test that assert works for grouped line plots"""
     poly_multiline_plot.assert_lines_grouped_by_type(multi_line_gdf, "attr")
