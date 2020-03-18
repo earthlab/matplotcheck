@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 from shapely.geometry import LineString
 from matplotcheck.vector import VectorTester
+import matplotlib
+matplotlib.use('Agg')
 
 
 @pytest.fixture
@@ -314,10 +316,9 @@ def test_get_lines_geometry(poly_line_plot):
 #         pt_geo_plot_bad_legend.assert_no_legend_overlap()
 
 
-# Broken right now, not sure why
-# def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
-#     """Test that assert works for grouped line plots"""
-#     poly_multiline_plot.assert_lines_grouped_by_type(multi_line_gdf, "attr")
+def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
+    """Test that assert works for grouped line plots"""
+    poly_multiline_plot.assert_lines_grouped_by_type(multi_line_gdf, "attr")
 
 
 def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):
