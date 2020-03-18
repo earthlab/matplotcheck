@@ -455,7 +455,7 @@ class VectorTester(PlotTester):
             grouped_exp = sorted([sorted(l) for l in grouped_exp])
             plt.close(fig)
             np.testing.assert_equal(groups, grouped_exp, m)
-        elif not lines_expected:
+        elif lines_expected is None:
             pass
         else:
             raise ValueError(
