@@ -1,5 +1,5 @@
 """Tests for the autograder module"""
-import pytest
+
 import matplotcheck.autograde as ag
 
 
