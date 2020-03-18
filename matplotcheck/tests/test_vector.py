@@ -133,6 +133,19 @@ def point_geo_plot(pd_gdf):
     return VectorTester(axis)
 
 
+@pytest.fixture
+def mixed_type_geo_plot(pd_gdf, multi_line_gdf):
+    """Create a point plot for testing"""
+    _, ax = plt.subplots()
+
+    pd_gdf.plot(ax=ax)
+    multi_line_gdf.plot(ax=ax)
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
     """Check that the polygon assert works with a list of polygons."""
     x, y = basic_polygon.exterior.coords.xy
@@ -331,4 +344,16 @@ def test_assert_lines_grouped_by_type_fail(
         poly_multiline_plot_bad.assert_lines_grouped_by_type(
             multi_line_gdf, "attr"
         )
+        plt.close()
+
+
+def test_mixed_type_passes(mixed_type_geo_plot, pd_gdf):
+    """Tests that points passes with a mixed type plot"""
+    mixed_type_geo_plot.assert_points(pd_gdf)
+    plt.close()
+
+def test_wrong_length_points_expected(pt_geo_plot, pd_gdf, bad_pd_gdf):
+    """Tests that error is thrown for incorrect lenght of a gdf"""
+    with pytest.raises(AssertionError, match="points_expected's length does "):
+        pt_geo_plot.assert_points(bad_pd_gdf.append(pd_gdf), "attr")
         plt.close()
