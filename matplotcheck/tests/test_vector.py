@@ -10,36 +10,6 @@ matplotlib.use("Agg")
 
 
 @pytest.fixture
-def poly_geo_plot(basic_polygon_gdf):
-    """Create a polygon vector tester object."""
-    _, ax = plt.subplots()
-
-    basic_polygon_gdf.plot(ax=ax)
-    ax.set_title("My Plot Title", fontsize=30)
-    ax.set_xlabel("x label")
-    ax.set_ylabel("y label")
-
-    axis = plt.gca()
-
-    return VectorTester(axis)
-
-
-@pytest.fixture
-def point_geo_plot(pd_gdf):
-    """Create a point plot for testing"""
-    _, ax = plt.subplots()
-
-    pd_gdf.plot(ax=ax)
-    ax.set_title("My Plot Title", fontsize=30)
-    ax.set_xlabel("x label")
-    ax.set_ylabel("y label")
-
-    axis = plt.gca()
-
-    return VectorTester(axis)
-
-
-@pytest.fixture
 def bad_pd_gdf(pd_gdf):
     """Create a point geodataframe with slightly wrong values for testing"""
     return gpd.GeoDataFrame(
@@ -79,9 +49,6 @@ def poly_line_plot(two_line_gdf):
     _, ax = plt.subplots()
 
     two_line_gdf.plot(ax=ax)
-    ax.set_title("My Plot Title", fontsize=30)
-    ax.set_xlabel("x label")
-    ax.set_ylabel("y label")
 
     axis = plt.gca()
 
@@ -94,9 +61,18 @@ def poly_multiline_plot(multi_line_gdf):
     _, ax = plt.subplots()
 
     multi_line_gdf.plot(ax=ax, column="attr")
-    ax.set_title("My Plot Title", fontsize=30)
-    ax.set_xlabel("x label")
-    ax.set_ylabel("y label")
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
+@pytest.fixture
+def poly_multiline_plot_bad(multi_line_gdf):
+    """Create a multiline vector tester object."""
+    _, ax = plt.subplots()
+
+    multi_line_gdf.plot(ax=ax)
 
     axis = plt.gca()
 
@@ -127,7 +103,31 @@ def pt_geo_plot(pd_gdf):
 def pt_geo_plot_bad(pd_gdf):
     """Create a geo plot for testing"""
     _, ax = plt.subplots()
-    pd_gdf.plot(ax=ax, column="attr")
+    pd_gdf.plot(ax=ax)
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
+@pytest.fixture
+def poly_geo_plot(basic_polygon_gdf):
+    """Create a polygon vector tester object."""
+    _, ax = plt.subplots()
+
+    basic_polygon_gdf.plot(ax=ax)
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
+@pytest.fixture
+def point_geo_plot(pd_gdf):
+    """Create a point plot for testing"""
+    _, ax = plt.subplots()
+
+    pd_gdf.plot(ax=ax)
+
     axis = plt.gca()
 
     return VectorTester(axis)
@@ -197,6 +197,32 @@ def test_polygon_custom_fail_message(poly_geo_plot, basic_polygon):
         x, y = basic_polygon.exterior.coords.xy
         poly_list = [(x[0] + 0.5, x[1]) for x in list(zip(x, y))]
         poly_geo_plot.assert_polygons(poly_list, m="Test Message")
+        plt.close()
+
+
+def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):
+    """Test points sorted by size of attribute pass"""
+    pt_geo_plot.assert_collection_sorted_by_markersize(pd_gdf, "attr")
+    plt.close()
+
+
+def test_points_sorted_by_markersize_fail(pt_geo_plot_bad, pd_gdf):
+    """Test points sorted by size of attribute fails"""
+    with pytest.raises(AssertionError, match="Markersize not based on"):
+        pt_geo_plot_bad.assert_collection_sorted_by_markersize(pd_gdf, "attr")
+        plt.close()
+
+
+def test_points_grouped_by_type(pt_geo_plot, pd_gdf):
+    """Tests that points grouped by type passes"""
+    pt_geo_plot.assert_points_grouped_by_type(pd_gdf, "attr")
+    plt.close()
+
+
+def test_points_grouped_by_type_fail(pt_geo_plot_bad, pd_gdf):
+    """Tests that points grouped by type passes"""
+    with pytest.raises(AssertionError, match="Point attributes not accurate"):
+        pt_geo_plot_bad.assert_points_grouped_by_type(pd_gdf, "attr")
         plt.close()
 
 
@@ -297,14 +323,12 @@ def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
     plt.close()
 
 
-def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):
-    """Test points sorted by size of attribute pass"""
-    pt_geo_plot.assert_collection_sorted_by_markersize(pd_gdf, "attr")
-    plt.close()
-
-
-def test_points_sorted_by_markersize_fail(pt_geo_plot_bad, pd_gdf):
-    """Test points sorted by size of attribute"""
-    with pytest.raises(AssertionError, match="Markersize not based on"):
-        pt_geo_plot_bad.assert_collection_sorted_by_markersize(pd_gdf, "attr")
+def test_assert_lines_grouped_by_type_fail(
+    poly_multiline_plot_bad, multi_line_gdf
+):
+    """Test that assert fails for incorrectly grouped line plots"""
+    with pytest.raises(AssertionError, match="Line attributes not accurate "):
+        poly_multiline_plot_bad.assert_lines_grouped_by_type(
+            multi_line_gdf, "attr"
+        )
         plt.close()
