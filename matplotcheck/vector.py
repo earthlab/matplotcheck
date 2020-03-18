@@ -103,7 +103,7 @@ class VectorTester(PlotTester):
         return sorted([sorted(p) for p in points_grouped])
 
     def assert_points_grouped_by_type(
-        self, data_exp, sort_column, m="Point attribtues not accurate by type"
+        self, data_exp, sort_column, m="Point attributes not accurate by type"
     ):
         """Asserts that the points on Axes ax display attributes based on their
         type with error message m
