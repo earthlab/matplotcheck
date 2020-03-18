@@ -2,7 +2,7 @@
 import pytest
 import matplotlib.pyplot as plt
 import geopandas as gpd
-from shapely.geometry import LineString
+from shapely.geometry import LineString, Polygon
 from matplotcheck.vector import VectorTester
 import matplotlib
 
@@ -41,6 +41,24 @@ def multi_line_gdf(two_line_gdf):
     )
     out_df["attr"] = ["road", "stream"]
     return out_df
+
+
+@pytest.fixture
+def multi_polygon_gdf(basic_polygon):
+    """
+    A GeoDataFrame containing the basic polygon geometry.
+    Returns
+    -------
+    GeoDataFrame containing the basic_polygon polygon.
+    """
+    poly_a = Polygon([(3, 5), (2, 3.25), (5.25, 6), (2.25, 2), (2, 2)])
+    gdf = gpd.GeoDataFrame(
+        [1, 2], geometry=[poly_a, basic_polygon], crs="epsg:4326",
+    )
+    multi_gdf = gpd.GeoDataFrame(
+        geometry=gpd.GeoSeries(gdf.unary_union), crs="epsg:4326"
+    )
+    return multi_gdf
 
 
 @pytest.fixture
@@ -103,7 +121,9 @@ def pt_geo_plot(pd_gdf):
 def pt_geo_plot_bad(pd_gdf):
     """Create a geo plot for testing"""
     _, ax = plt.subplots()
+
     pd_gdf.plot(ax=ax)
+
     axis = plt.gca()
 
     return VectorTester(axis)
@@ -115,6 +135,18 @@ def poly_geo_plot(basic_polygon_gdf):
     _, ax = plt.subplots()
 
     basic_polygon_gdf.plot(ax=ax)
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
+@pytest.fixture
+def multi_poly_geo_plot(multi_polygon_gdf):
+    """Create a mutlipolygon vector tester object."""
+    _, ax = plt.subplots()
+
+    multi_polygon_gdf.plot(ax=ax)
 
     axis = plt.gca()
 
@@ -211,6 +243,12 @@ def test_polygon_custom_fail_message(poly_geo_plot, basic_polygon):
         poly_list = [(x[0] + 0.5, x[1]) for x in list(zip(x, y))]
         poly_geo_plot.assert_polygons(poly_list, m="Test Message")
         plt.close()
+
+
+def test_multi_polygon_pass(multi_poly_geo_plot, multi_polygon_gdf):
+    """Check a multipolygon passes"""
+    multi_poly_geo_plot.assert_polygons(multi_polygon_gdf)
+    plt.close()
 
 
 def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):
@@ -374,4 +412,18 @@ def test_assert_lines_grouped_by_type_fails_non_gdf(
 def test_mixed_type_passes(mixed_type_geo_plot, pd_gdf):
     """Tests that points passes with a mixed type plot"""
     mixed_type_geo_plot.assert_points(pd_gdf)
+    plt.close()
+
+
+def test_get_lines_by_collection(poly_multiline_plot):
+    """Test that get_lines_by_collection returns the correct values"""
+    lines_list = [
+        [
+            [(1, 1), (2, 2), (3, 2), (5, 3)],
+            [(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)],
+            [(2, 1), (3, 1), (4, 1), (5, 2)],
+        ]
+    ]
+    sorted_lines_list = sorted([sorted(l) for l in lines_list])
+    assert sorted_lines_list == poly_multiline_plot.get_lines_by_collection()
     plt.close()
