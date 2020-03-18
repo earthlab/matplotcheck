@@ -5,7 +5,8 @@ import geopandas as gpd
 from shapely.geometry import LineString
 from matplotcheck.vector import VectorTester
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 
 
 @pytest.fixture
@@ -202,12 +203,14 @@ def test_polygon_custom_fail_message(poly_geo_plot, basic_polygon):
 def test_point_geometry_pass(point_geo_plot, pd_gdf):
     """Check that the point geometry test recognizes correct points."""
     point_geo_plot.assert_points(points_expected=pd_gdf)
+    plt.close()
 
 
 def test_point_geometry_fail(point_geo_plot, bad_pd_gdf):
     """Check that the point geometry test recognizes incorrect points."""
     with pytest.raises(AssertionError, match="Incorrect Point Data"):
         point_geo_plot.assert_points(points_expected=bad_pd_gdf)
+        plt.close()
 
 
 def test_assert_point_fails_list(point_geo_plot, pd_gdf):
@@ -218,6 +221,7 @@ def test_assert_point_fails_list(point_geo_plot, pd_gdf):
     list_geo = [list(pd_gdf.geometry.x), list(pd_gdf.geometry.y)]
     with pytest.raises(ValueError, match="points_expected is not expected"):
         point_geo_plot.assert_points(points_expected=list_geo)
+        plt.close()
 
 
 def test_get_points(point_geo_plot, pd_gdf):
@@ -225,6 +229,7 @@ def test_get_points(point_geo_plot, pd_gdf):
     xy_values = point_geo_plot.get_points()
     assert list(sorted(xy_values.x)) == sorted(list(pd_gdf.geometry.x))
     assert list(sorted(xy_values.y)) == sorted(list(pd_gdf.geometry.y))
+    plt.close()
 
 
 def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):
@@ -232,6 +237,7 @@ def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):
     message = "Test message"
     with pytest.raises(AssertionError, match="Test message"):
         point_geo_plot.assert_points(points_expected=bad_pd_gdf, m=message)
+        plt.close()
 
 
 def test_assert_line_geo(poly_line_plot, two_line_gdf):
@@ -288,14 +294,17 @@ def test_get_lines_geometry(poly_line_plot):
 def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
     """Test that assert works for grouped line plots"""
     poly_multiline_plot.assert_lines_grouped_by_type(multi_line_gdf, "attr")
+    plt.close()
 
 
 def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):
     """Test points sorted by size of attribute pass"""
     pt_geo_plot.assert_collection_sorted_by_markersize(pd_gdf, "attr")
+    plt.close()
 
 
 def test_points_sorted_by_markersize_fail(pt_geo_plot_bad, pd_gdf):
     """Test points sorted by size of attribute"""
     with pytest.raises(AssertionError, match="Markersize not based on"):
         pt_geo_plot_bad.assert_collection_sorted_by_markersize(pd_gdf, "attr")
+        plt.close()
