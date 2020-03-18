@@ -279,6 +279,13 @@ def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):
         plt.close()
 
 
+def test_wrong_length_points_expected(pt_geo_plot, pd_gdf, bad_pd_gdf):
+    """Tests that error is thrown for incorrect lenght of a gdf"""
+    with pytest.raises(AssertionError, match="points_expected's length does "):
+        pt_geo_plot.assert_points(bad_pd_gdf.append(pd_gdf), "attr")
+        plt.close()
+
+
 def test_assert_line_geo(poly_line_plot, two_line_gdf):
     """Test that lines are asserted correctly"""
     poly_line_plot.assert_lines(two_line_gdf)
@@ -347,14 +354,24 @@ def test_assert_lines_grouped_by_type_fail(
         plt.close()
 
 
+def test_assert_lines_grouped_by_type_passes_with_none(poly_multiline_plot):
+    """Test that assert passes if nothing is passed into it"""
+    poly_multiline_plot.assert_lines_grouped_by_type(None, None)
+    plt.close()
+
+
+def test_assert_lines_grouped_by_type_fails_non_gdf(
+    poly_multiline_plot, multi_line_gdf
+):
+    """Test that assert fails if a list is passed into it"""
+    with pytest.raises(ValueError, match="lines_expected is not of expected "):
+        poly_multiline_plot.assert_lines_grouped_by_type(
+            multi_line_gdf.to_numpy(), "attr"
+        )
+        plt.close()
+
+
 def test_mixed_type_passes(mixed_type_geo_plot, pd_gdf):
     """Tests that points passes with a mixed type plot"""
     mixed_type_geo_plot.assert_points(pd_gdf)
     plt.close()
-
-
-def test_wrong_length_points_expected(pt_geo_plot, pd_gdf, bad_pd_gdf):
-    """Tests that error is thrown for incorrect lenght of a gdf"""
-    with pytest.raises(AssertionError, match="points_expected's length does "):
-        pt_geo_plot.assert_points(bad_pd_gdf.append(pd_gdf), "attr")
-        plt.close()
