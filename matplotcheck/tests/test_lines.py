@@ -10,15 +10,6 @@ matplotlib.use("Agg")
 
 
 @pytest.fixture
-def two_line_gdf():
-    """ Create Line Objects For Testing """
-    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
-    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
-    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
-    return gdf
-
-
-@pytest.fixture
 def multi_line_gdf(two_line_gdf):
     """ Create a multi-line GeoDataFrame.
     This has one multi line and another regular line.
