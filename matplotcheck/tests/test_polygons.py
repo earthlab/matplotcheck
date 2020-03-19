@@ -34,9 +34,7 @@ def poly_line_plot(two_line_gdf):
 
     two_line_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -46,9 +44,7 @@ def poly_multiline_plot(multi_line_gdf):
 
     multi_line_gdf.plot(ax=ax, column="attr")
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -58,9 +54,7 @@ def poly_multiline_plot_bad(multi_line_gdf):
 
     multi_line_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -70,9 +64,7 @@ def poly_geo_plot(basic_polygon_gdf):
 
     basic_polygon_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -82,9 +74,7 @@ def multi_poly_geo_plot(multi_polygon_gdf):
 
     multi_polygon_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):

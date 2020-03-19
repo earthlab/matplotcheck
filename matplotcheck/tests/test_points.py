@@ -45,9 +45,7 @@ def pt_geo_plot(pd_gdf):
 
     ax.legend(title="Legend", loc=(1.1, 0.1))
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -57,9 +55,7 @@ def pt_geo_plot_bad(pd_gdf):
 
     pd_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -79,9 +75,7 @@ def pt_geo_plot_edge(edge_gdf, two_line_gdf):
 
     ax.legend(title="Legend", loc=(1.1, 0.1))
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):

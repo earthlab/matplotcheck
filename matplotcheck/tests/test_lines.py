@@ -32,9 +32,7 @@ def mixed_type_geo_plot(pd_gdf, multi_line_gdf):
     pd_gdf.plot(ax=ax)
     multi_line_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -44,9 +42,7 @@ def poly_line_plot(two_line_gdf):
 
     two_line_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -56,9 +52,7 @@ def poly_multiline_plot(multi_line_gdf):
 
     multi_line_gdf.plot(ax=ax, column="attr")
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 @pytest.fixture
@@ -68,9 +62,7 @@ def poly_multiline_plot_bad(multi_line_gdf):
 
     multi_line_gdf.plot(ax=ax)
 
-    axis = plt.gca()
-
-    return VectorTester(axis)
+    return VectorTester(ax)
 
 
 def test_assert_line_geo(poly_line_plot, two_line_gdf):

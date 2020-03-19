@@ -69,6 +69,15 @@ def basic_polygon_gdf(basic_polygon):
 
 
 @pytest.fixture
+def two_line_gdf():
+    """ Create Line Objects For Testing """
+    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
+    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
+    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
+    return gdf
+
+
+@pytest.fixture
 def pd_xlabels():
     """Create a DataFrame which uses the column labels as x-data."""
     df = pd.DataFrame({"B": np.random.randint(0, 100, size=100)})
@@ -85,9 +94,7 @@ def pt_scatter_plt(pd_df):
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -110,9 +117,7 @@ def pt_line_plt(pd_df):
         ax_position.ymax - 0.25, ax_position.ymin - 0.075, "Figure Caption"
     )
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -123,9 +128,7 @@ def pt_multi_line_plt(pd_df):
     ax.set_ylim((0, 140))
     ax.legend(loc="center left", title="Legend", bbox_to_anchor=(1, 0.5))
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -138,9 +141,7 @@ def pt_bar_plt(pd_df):
     ax.set_xlabel("x label")
     ax.set_ylabel("y label")
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -150,9 +151,7 @@ def pt_time_line_plt(pd_df_timeseries):
 
     pd_df_timeseries.plot("time", "A", kind="line", ax=ax)
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -170,15 +169,4 @@ def pt_geo_plot(pd_gdf):
 
     ax.legend(title="Legend", loc=(1.1, 0.1))
 
-    axis = plt.gca()
-
-    return PlotTester(axis)
-
-
-@pytest.fixture
-def two_line_gdf():
-    """ Create Line Objects For Testing """
-    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
-    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
-    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
-    return gdf
+    return PlotTester(ax)
