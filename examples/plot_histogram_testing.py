@@ -28,7 +28,7 @@ plot_1_hold = nb.convert_axes(plt, which_axes="current")
 ################################################################################
 # Testing the Histogram
 # ---------------------
-# Now you can make a PlotTester object and test the histogram. We'll test both
+# Now you can make a PlotTester object and test the histogram. You'll test both
 # the number of bins and the values of those bins.
 
 ###############################################################################
@@ -47,7 +47,7 @@ plot_tester_1.assert_num_bins(5)
 expected_bin_values = [341, 68, 40, 28, 23]
 plot_tester_1.assert_bin_values(expected_bin_values)
 ################################################################################
-# And we can also run some tests that will fail.
+# And you can also run some tests that will fail.
 #
 try:
     plot_tester_1.assert_num_bins(6)
@@ -200,9 +200,9 @@ except AssertionError as message:
 ################################################################################
 # Testing the Histogram Midpoints
 # -------------------------------
-# So far, we have tested the histogram values as well as the number of bins
+# So far, you have tested the histogram values as well as the number of bins
 # the histogram has. It may also be useful to test that the data bins cover
-# the range of values that they were expected to. In order to do this, we can
+# the range of values that they were expected to. In order to do this, you can
 # test the midpoints of each bin to ensure that the data covered by each
 # bin is as expected. This is tested very similarly to the bins values.
 # Simply provide ``assert_bin_midpoints()`` with a list of the expected
@@ -210,20 +210,25 @@ except AssertionError as message:
 # the midpoints in a PlotTester object, you can use ``get_bin_midpoints()``,
 # much like ``get_bin_values()``.
 #
-# For this example, we will create a plot tester object from a histogram plot,
-# the same way we did for the bin values example.
+# For this example, you will create a plot tester object from a histogram plot,
+# the same way you did for the bin values example.
 
 fig, ax = plt.subplots()
 ax.hist(testing_data, bins=8, color="gold")
 
-midpoints_plot_hold = nb.convert_axes(plt, which_axes="current")
-plot_tester_expected_3 = mpc.PlotTester(midpoints_plot_hold)
+# If you were running this in a notebook, the commented out  line below would
+# store the matplotlib object. However, in this example, you can just grab the
+# axes object directly.
+
+# midpoints_plot_hold = nb.convert_axes(plt, which_axes="current")
+
+plot_tester_expected_3 = mpc.PlotTester(ax)
 print(plot_tester_expected_3.get_bin_midpoints())
 
 ################################################################################
-# We got the values from the plot tester object! As you can see, the values
+# You got the values from the plot tester object! As you can see, the values
 # that were collected are the midpoints for the values each histogram bin
-# covers. Now we can test that they are asserted indeed correct with an
+# covers. Now you can test that they are asserted indeed correct with an
 # assertion test.
 
 try:
@@ -234,7 +239,7 @@ except AssertionError as message:
     print("AssertionError:", message)
 
 ################################################################################
-# Here we can see that this will fail when given incorrect values.
+# Here you can see that this will fail when given incorrect values.
 
 try:
     plot_tester_expected_3.assert_bin_midpoints(
