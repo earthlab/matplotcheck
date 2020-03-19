@@ -85,27 +85,27 @@ def poly_multiline_plot_bad(multi_line_gdf):
 def test_assert_line_geo(poly_line_plot, two_line_gdf):
     """Test that lines are asserted correctly"""
     poly_line_plot.assert_lines(two_line_gdf)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_assert_multiline_geo(poly_multiline_plot, multi_line_gdf):
     """Test that multi lines are asserted correctly"""
     poly_multiline_plot.assert_lines(multi_line_gdf)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_assert_line_geo_fail(poly_line_plot, multi_line_gdf):
     """Test that lines fail correctly"""
     with pytest.raises(AssertionError, match="Incorrect Line Data"):
         poly_line_plot.assert_lines(multi_line_gdf)
-        plt.close('all')
+        plt.close("all")
 
 
 def test_assert_multiline_geo_fail(poly_multiline_plot, two_line_gdf):
     """Test that multi lines fail correctly"""
     with pytest.raises(AssertionError, match="Incorrect Line Data"):
         poly_multiline_plot.assert_lines(two_line_gdf)
-        plt.close('all')
+        plt.close("all")
 
 
 def test_assert_line_fails_list(poly_line_plot):
@@ -116,13 +116,13 @@ def test_assert_line_fails_list(poly_line_plot):
     ]
     with pytest.raises(ValueError, match="lines_expected is not expected ty"):
         poly_line_plot.assert_lines(linelist)
-        plt.close('all')
+        plt.close("all")
 
 
 def test_assert_line_geo_passed_nothing(poly_line_plot):
     """Test that assertion passes when passed None"""
     poly_line_plot.assert_lines(None)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_get_lines_geometry(poly_line_plot):
@@ -130,13 +130,13 @@ def test_get_lines_geometry(poly_line_plot):
     lines = [(LineString(i[0])) for i in poly_line_plot.get_lines().values]
     geometries = gpd.GeoDataFrame(geometry=lines)
     poly_line_plot.assert_lines(geometries)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_assert_lines_grouped_by_type(poly_multiline_plot, multi_line_gdf):
     """Test that assert works for grouped line plots"""
     poly_multiline_plot.assert_lines_grouped_by_type(multi_line_gdf, "attr")
-    plt.close('all')
+    plt.close("all")
 
 
 def test_assert_lines_grouped_by_type_fail(
@@ -147,13 +147,13 @@ def test_assert_lines_grouped_by_type_fail(
         poly_multiline_plot_bad.assert_lines_grouped_by_type(
             multi_line_gdf, "attr"
         )
-        plt.close('all')
+        plt.close("all")
 
 
 def test_assert_lines_grouped_by_type_passes_with_none(poly_multiline_plot):
     """Test that assert passes if nothing is passed into it"""
     poly_multiline_plot.assert_lines_grouped_by_type(None, None)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_assert_lines_grouped_by_type_fails_non_gdf(
@@ -164,13 +164,13 @@ def test_assert_lines_grouped_by_type_fails_non_gdf(
         poly_multiline_plot.assert_lines_grouped_by_type(
             multi_line_gdf.to_numpy(), "attr"
         )
-        plt.close('all')
+        plt.close("all")
 
 
 def test_mixed_type_passes(mixed_type_geo_plot, pd_gdf):
     """Tests that points passes with a mixed type plot"""
     mixed_type_geo_plot.assert_points(pd_gdf)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_get_lines_by_collection(poly_multiline_plot):
@@ -184,4 +184,4 @@ def test_get_lines_by_collection(poly_multiline_plot):
     ]
     sorted_lines_list = sorted([sorted(l) for l in lines_list])
     assert sorted_lines_list == poly_multiline_plot.get_lines_by_collection()
-    plt.close('all')
+    plt.close("all")

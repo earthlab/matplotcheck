@@ -65,40 +65,40 @@ def point_geo_plot(pd_gdf):
 def test_points_sorted_by_markersize_pass(pt_geo_plot, pd_gdf):
     """Test points sorted by size of attribute pass"""
     pt_geo_plot.assert_collection_sorted_by_markersize(pd_gdf, "attr")
-    plt.close('all')
+    plt.close("all")
 
 
 def test_points_sorted_by_markersize_fail(pt_geo_plot_bad, pd_gdf):
     """Test points sorted by size of attribute fails"""
     with pytest.raises(AssertionError, match="Markersize not based on"):
         pt_geo_plot_bad.assert_collection_sorted_by_markersize(pd_gdf, "attr")
-        plt.close('all')
+        plt.close("all")
 
 
 def test_points_grouped_by_type(pt_geo_plot, pd_gdf):
     """Tests that points grouped by type passes"""
     pt_geo_plot.assert_points_grouped_by_type(pd_gdf, "attr")
-    plt.close('all')
+    plt.close("all")
 
 
 def test_points_grouped_by_type_fail(pt_geo_plot_bad, pd_gdf):
     """Tests that points grouped by type passes"""
     with pytest.raises(AssertionError, match="Point attributes not accurate"):
         pt_geo_plot_bad.assert_points_grouped_by_type(pd_gdf, "attr")
-        plt.close('all')
+        plt.close("all")
 
 
 def test_point_geometry_pass(point_geo_plot, pd_gdf):
     """Check that the point geometry test recognizes correct points."""
     point_geo_plot.assert_points(points_expected=pd_gdf)
-    plt.close('all')
+    plt.close("all")
 
 
 def test_point_geometry_fail(point_geo_plot, bad_pd_gdf):
     """Check that the point geometry test recognizes incorrect points."""
     with pytest.raises(AssertionError, match="Incorrect Point Data"):
         point_geo_plot.assert_points(points_expected=bad_pd_gdf)
-        plt.close('all')
+        plt.close("all")
 
 
 def test_assert_point_fails_list(point_geo_plot, pd_gdf):
@@ -109,7 +109,7 @@ def test_assert_point_fails_list(point_geo_plot, pd_gdf):
     list_geo = [list(pd_gdf.geometry.x), list(pd_gdf.geometry.y)]
     with pytest.raises(ValueError, match="points_expected is not expected"):
         point_geo_plot.assert_points(points_expected=list_geo)
-        plt.close('all')
+        plt.close("all")
 
 
 def test_get_points(point_geo_plot, pd_gdf):
@@ -117,7 +117,7 @@ def test_get_points(point_geo_plot, pd_gdf):
     xy_values = point_geo_plot.get_points()
     assert list(sorted(xy_values.x)) == sorted(list(pd_gdf.geometry.x))
     assert list(sorted(xy_values.y)) == sorted(list(pd_gdf.geometry.y))
-    plt.close('all')
+    plt.close("all")
 
 
 def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):
@@ -125,11 +125,11 @@ def test_assert_points_custom_message(point_geo_plot, bad_pd_gdf):
     message = "Test message"
     with pytest.raises(AssertionError, match="Test message"):
         point_geo_plot.assert_points(points_expected=bad_pd_gdf, m=message)
-        plt.close('all')
+        plt.close("all")
 
 
 def test_wrong_length_points_expected(pt_geo_plot, pd_gdf, bad_pd_gdf):
     """Tests that error is thrown for incorrect lenght of a gdf"""
     with pytest.raises(AssertionError, match="points_expected's length does "):
         pt_geo_plot.assert_points(bad_pd_gdf.append(pd_gdf), "attr")
-        plt.close('all')
+        plt.close("all")
