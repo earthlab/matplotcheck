@@ -64,32 +64,22 @@ line_symb = {"road": "black", "stream": "blue"}
 point_symb = {"Tree": "green", "Bush": "brown"}
 
 ################################################################################
-# Plotting the Geometry Objects and Storing the VectorTester Object
+# Create Your Spatial Plot
 # -----------------------------------------------------------------
-# Now you can plot the geometry objects you've made. In order to plot them with
-# a legend, you will have to loop through the geometry objects that have
-# attributes and plot by attribute for each case.
-#
-# Once you've created the Matplotlib plot, you can collect the data! You
-# can store the axes with the MatPlotCheck notebook function convert_axes,
-# which will allow you to create the VectorTester object in a later cell.
+# Above you created several GeoPandas GeoDataFrame objects that you want 
+# to plot. To plot these data according to attribute value, you can group
+# the geometry by attributes and plot within a loop. Once you've created 
+# your plot, you are ready to test it using MatPlotCheck. 
 
-# Collecting Vector Tester objects
-
+# Plot your data
 fig, ax = plt.subplots()
-
-# Plotting polygon geodataframe
-
 polygon_gdf.plot(ax=ax, color="purple")
 
-# Plotting line geodataframe
-
+# Plot your data by attributes using groupby
 for ctype, lines in multi_line_gdf.groupby('attr'):
     color = line_symb[ctype]
     label = ctype
     lines.plot(color=color, ax=ax, label=label)
-
-# Plotting point geodataframe
 
 size = 0
 
@@ -99,65 +89,61 @@ for ctype, points in point_gdf.groupby('attr2'):
     size += 100
     points.plot(color=color, ax=ax, label=label, markersize=size)
 
-# Adding legend
-
+# Add a legend
 ax.legend(title="Legend", loc=(1.1, .1))
 
-vector_test_plot_hold = nb.convert_axes(plt, which_axes="current")
+# DELETE THIS: vector_test_plot_hold = nb.convert_axes(plt, which_axes="current")
 
 ################################################################################
-# Creating the VectorTester Object
+# Create A VectorTester Object
 # --------------------------------
-# Once you've stored the axes, you'll need to create the VectorTester object
-# itself using the stored axes.
+# Once you've created your plot, you can create a MatPlotCheck VectorTester object
+# that can be used to test elements in the plot.
 
-vector_test = VectorTester(vector_test_plot_hold)
+vector_test = VectorTester(ax)
 
 ###############################################################################
 #
 # .. note::
 #   Each geometry type must be tested seperately in VectorTester. So, if your
 #   plot has multiple geometry types, such as lines, polygons, and points,
-#   make sure to check each geometry type seperately!
+#   make sure to check each geometry type seperately.
 
 ###############################################################################
 #
 # .. note::
-#   For these tests, you can know they passed if they don't raise an
-#   AssertionError. If they were to fail, they would throw an error stating
-#   what went wrong.
+#   If a test fails, matplotcheck will return an error. If the test passes, 
+#   no message is returned.
 
 ################################################################################
-# Testing Point Values and Geometry
-# ---------------------------------
-# You can check that both the position of the points and there plot values are
-# accurate with the tests below. For points, you can also check that the
-# size of each point varies based on it's attributes.
+# Testing Point Attribute Values and Geometry
+# -------------------------------------------
+# You can check that both the position of the points on the plot and the associated 
+# point attribute values are
+# accurate using assert_points(), assert_points_grouped_by_type() and 
+# assert_collection_sorted_by_markersize. If the plot uses point markers that are 
+# sized by attribute value, you can check that the
+# size of each marker correctly relates to an attribute value.
 
-# Check points geometry
-
+# Check point geometry location (x, y location)
 vector_test.assert_points(point_gdf)
 
-# Check points plotted by type
-
+# Check points are grouped plotted by type
 vector_test.assert_points_grouped_by_type(point_gdf, "attr2")
 
-# Check points size varies based on a variable.
-
+# Check points size is relative to a numeric attribute value
 vector_test.assert_collection_sorted_by_markersize(point_gdf, "attr2")
 
 ################################################################################
-# Testing Line Values and Geometry
-# --------------------------------
-# Similarly to points, you can check the position and plot values of line
-# geometries are accurate with the tests below.
+# Test Line Attribute Values and Coordinate Information (x, y)
+# ------------------------------------------------------------
+# You can also test the position and plot values of line
+# geometries.
 
-# Check lines geometry
-
+# Check line geometry
 vector_test.assert_lines(multi_line_gdf)
 
 # Check lines plotted by type
-
 vector_test.assert_lines_grouped_by_type(multi_line_gdf, "attr")
 
 ################################################################################
@@ -168,5 +154,4 @@ vector_test.assert_lines_grouped_by_type(multi_line_gdf, "attr")
 # check that polygons are plotted correctly!
 
 # Check Polygons
-
 vector_test.assert_polygons(polygon_gdf)
