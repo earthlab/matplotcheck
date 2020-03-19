@@ -1,5 +1,5 @@
 """
-Testing Vectors with MatPlotCheck
+Testing Vector Plots Created Using Geopandas with MatPlotCheck
 =================================
 
 These are some examples of using the basic functionality of MatPlotCheck
