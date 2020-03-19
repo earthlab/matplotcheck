@@ -55,7 +55,7 @@ def pt_hist():
     df_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
     bins = [2, 3, 4, 5, 6, 7, 8]
 
-    f, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     ax.hist(df_a["A"], bins=bins, alpha=0.5, color="seagreen")
 
@@ -70,7 +70,7 @@ def pt_hist_overlapping():
     )
     bins = [2, 3, 4, 5, 6, 7, 8]
 
-    f, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     ax.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
     ax.hist(dataframe_b["B"], bins=bins, alpha=0.5, color="coral")
