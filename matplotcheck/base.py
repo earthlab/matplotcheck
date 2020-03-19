@@ -1211,7 +1211,7 @@ class PlotTester(object):
         return bin_values
 
     def get_bin_midpoints(self):
-        """Returns the middle value of each bin in a histogram
+        """Returns the mid point value of each bin in a histogram
 
         Returns
         -------
