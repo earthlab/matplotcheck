@@ -178,6 +178,31 @@ def mixed_type_geo_plot(pd_gdf, multi_line_gdf):
     return VectorTester(axis)
 
 
+@pytest.fixture
+def point_geo_plot(pd_gdf):
+    """Create a point plot for testing"""
+    _, ax = plt.subplots()
+
+    pd_gdf.plot(ax=ax)
+    ax.set_title("My Plot Title", fontsize=30)
+    ax.set_xlabel("x label")
+    ax.set_ylabel("y label")
+
+    axis = plt.gca()
+
+    return VectorTester(axis)
+
+
+@pytest.fixture
+def bad_pd_gdf(pd_gdf):
+    """Create a point geodataframe with slightly wrong values for testing"""
+    return gpd.GeoDataFrame(
+        geometry=gpd.points_from_xy(
+            pd_gdf.geometry.x + 1, pd_gdf.geometry.y + 1
+        )
+    )
+
+
 def test_list_of_polygons_check(poly_geo_plot, basic_polygon):
     """Check that the polygon assert works with a list of polygons."""
     x, y = basic_polygon.exterior.coords.xy
