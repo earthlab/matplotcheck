@@ -145,7 +145,7 @@ def test_assert_points_custom_message(pt_geo_plot, bad_pd_gdf):
 
 
 def test_wrong_length_points_expected(pt_geo_plot, pd_gdf, bad_pd_gdf):
-    """Tests that error is thrown for incorrect lenght of a gdf"""
+    """Tests that error is thrown for incorrect length of a gdf"""
     with pytest.raises(AssertionError, match="points_expected's length does "):
         pt_geo_plot.assert_points(bad_pd_gdf.append(pd_gdf), "attr")
         plt.close("all")
