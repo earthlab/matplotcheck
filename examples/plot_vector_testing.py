@@ -96,7 +96,7 @@ ax.legend(title="Legend", loc=(1.1, .1));
 # plot_1_hold = nb.convert_axes(plt, which_axes="current")
 
 ################################################################################
-# Create A VectorTester Object
+# Create A MatPlotCheck VectorTester Object
 # --------------------------------
 # Once you've created your plot, you can create a MatPlotCheck VectorTester object
 # that can be used to test elements in the plot.
