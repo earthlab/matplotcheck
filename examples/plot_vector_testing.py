@@ -12,14 +12,12 @@ plots created using Geopandas.
 # -----
 # To begin, import the libraries that you need.
 
-
-import matplotlib.pyplot as plt
-import geopandas as gpd
-import pandas as pd
-from matplotcheck.vector import VectorTester
-import matplotcheck.notebook as nb
-from shapely.geometry import Polygon, LineString
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from shapely.geometry import Polygon, LineString
+import geopandas as gpd
+from matplotcheck.vector import VectorTester
 
 # Create geometry objects
 
