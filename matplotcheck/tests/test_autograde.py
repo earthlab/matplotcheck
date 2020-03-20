@@ -31,7 +31,7 @@ def test_autograde_runs_assert_fail(pt_scatter_plt):
 
 
 def test_autograde_runs_assert_pass_custom_message(pt_scatter_plt):
-    """Test that a custom message gets passed into a passed test"""
+    """Test that when a custom message is provided, it is correctly returned to the user."""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
