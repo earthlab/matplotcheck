@@ -17,7 +17,7 @@ def test_autograde_runs_assert_pass(pt_scatter_plt):
 
 
 def test_autograde_runs_assert_fail(pt_scatter_plt):
-    """Test that a normal test is run with autograder and fails"""
+    """Test that a when a test fails, an assertion error is returned"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
