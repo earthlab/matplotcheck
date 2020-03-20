@@ -1,8 +1,8 @@
 """Tests for the vector module"""
 import numpy as np
 import matplotlib
-import pytest
 import matplotlib.pyplot as plt
+import pytest
 import geopandas as gpd
 
 from matplotcheck.vector import VectorTester
