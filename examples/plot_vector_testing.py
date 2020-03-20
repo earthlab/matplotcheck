@@ -113,7 +113,7 @@ vector_test = VectorTester(ax)
 ###############################################################################
 #
 # .. note::
-#   If a test fails, matplotcheck will return an error. If the test passes,
+#   Most tests are created as assert statements. Thus, if a test fails, matplotcheck will return an error. If the test passes,
 #   no message is returned.
 
 ################################################################################
