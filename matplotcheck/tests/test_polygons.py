@@ -1,10 +1,11 @@
 """Tests for the vector module"""
+import matplotlib
 import pytest
 import matplotlib.pyplot as plt
 import geopandas as gpd
 from shapely.geometry import Polygon
+
 from matplotcheck.vector import VectorTester
-import matplotlib
 
 matplotlib.use("Agg")
 
@@ -25,36 +26,6 @@ def multi_polygon_gdf(basic_polygon):
         geometry=gpd.GeoSeries(gdf.unary_union), crs="epsg:4326"
     )
     return multi_gdf
-
-
-@pytest.fixture
-def poly_line_plot(two_line_gdf):
-    """Create a line vector tester object."""
-    _, ax = plt.subplots()
-
-    two_line_gdf.plot(ax=ax)
-
-    return VectorTester(ax)
-
-
-@pytest.fixture
-def poly_multiline_plot(multi_line_gdf):
-    """Create a multiline vector tester object."""
-    _, ax = plt.subplots()
-
-    multi_line_gdf.plot(ax=ax, column="attr")
-
-    return VectorTester(ax)
-
-
-@pytest.fixture
-def poly_multiline_plot_bad(multi_line_gdf):
-    """Create a multiline vector tester object."""
-    _, ax = plt.subplots()
-
-    multi_line_gdf.plot(ax=ax)
-
-    return VectorTester(ax)
 
 
 @pytest.fixture
