@@ -11,7 +11,7 @@ def test_autograde_runs_assert_pass(pt_scatter_plt):
         strings_expected=["Plot"],
     )
     assert result["description"] == "assert_title_contains"
-    assert result["pass"] == True
+    assert result["pass"]
     assert result["message"] == "default correct"
     assert result["points"] == 2
 
@@ -24,7 +24,7 @@ def test_autograde_runs_assert_fail(pt_scatter_plt):
         strings_expected=["NotAWord"],
     )
     assert result["description"] == "assert_title_contains"
-    assert result["pass"] == False
+    assert not result["pass"]
     assert result["message"] == "default error"
     assert result["points"] == 0
     assert isinstance(result["traceback"], AssertionError)
