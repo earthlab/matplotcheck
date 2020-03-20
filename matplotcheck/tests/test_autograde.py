@@ -53,7 +53,7 @@ def test_autograde_runs_assert_fail_custom_message(pt_scatter_plt):
 
 
 def test_output_results_pass(pt_scatter_plt, capsys):
-    """Test that the output returns the correct points and output"""
+    """Test that the correct number of points are returned when a test passes"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
