@@ -14,7 +14,6 @@ to test histogram plots in Python.
 
 import matplotlib.pyplot as plt
 import matplotcheck.base as mpc
-import matplotcheck.notebook as nb
 import numpy as np
 
 
@@ -23,12 +22,16 @@ data = np.exp(np.arange(0, 5, 0.01))
 fig, ax = plt.subplots()
 ax.hist(data, bins=5, color="gold")
 
-plot_1_hold = nb.convert_axes(plt, which_axes="current")
+# If you were running this in a notebook, the commented out  line below would
+# store the matplotlib object. However, in this example, you can just grab the
+# axes object directly.
+
+# plot_1_hold = nb.convert_axes(plt, which_axes="current")
 
 ################################################################################
 # Testing the Histogram
 # ---------------------
-# Now you can make a PlotTester object and test the histogram. You'll test both
+# Now you can make a ``PlotTester`` object and test the histogram. You'll test both
 # the number of bins and the values of those bins.
 
 ###############################################################################
@@ -40,7 +43,7 @@ plot_1_hold = nb.convert_axes(plt, which_axes="current")
 #   the value of the first bin in the above histogram is 341. Note that the
 #   height of the first bar is also 341.
 
-plot_tester_1 = mpc.PlotTester(plot_1_hold)
+plot_tester_1 = mpc.PlotTester(ax)
 
 plot_tester_1.assert_num_bins(5)
 
@@ -85,8 +88,7 @@ expected_data = np.sin(np.arange(0, 2 * np.pi, np.pi / 50))
 fig, ax = plt.subplots()
 ax.hist(expected_data, bins=8, color="gold")
 
-expected_plot_hold = nb.convert_axes(plt, which_axes="current")
-plot_tester_expected = mpc.PlotTester(expected_plot_hold)
+plot_tester_expected = mpc.PlotTester(ax)
 print(plot_tester_expected.get_bin_values())
 
 ################################################################################
@@ -101,10 +103,9 @@ print(plot_tester_expected.get_bin_values())
 testing_data = np.sin(np.arange(2 * np.pi, 4 * np.pi, np.pi / 50))
 fig, ax = plt.subplots()
 ax.hist(testing_data, bins=8, color="orange")
-testing_plot_hold = nb.convert_axes(plt, which_axes="current")
 
 # Testing the histogram against the expected bin values
-plot_tester_testing = mpc.PlotTester(testing_plot_hold)
+plot_tester_testing = mpc.PlotTester(ax)
 plot_tester_testing.assert_bin_values(
     [23.0, 10.0, 8.0, 9.0, 9.0, 8.0, 10.0, 23.0]
 )
@@ -132,8 +133,7 @@ plot_tester_testing.assert_bin_values(
 # the ``assert_bin_values()`` method.
 #
 # You will start by making two histograms with slightly different data and
-# storing the plots with ``nb.convert_axes()``. The gold plot will serve as the
-# expected plot, and the orange plot will serve as the testing plot.
+# converting the plots to ``PlotTester`` objects.
 
 expected_data = 0.1 * np.power(np.arange(0, 10, 0.1), 2)
 bins = np.arange(0, 10, 1)
@@ -141,7 +141,7 @@ bins = np.arange(0, 10, 1)
 fig1, ax2 = plt.subplots()
 ax2.hist(expected_data, color="gold", bins=bins)
 
-expected_plot_2_hold = nb.convert_axes(plt, which_axes="current")
+plot_tester_expected_2 = mpc.PlotTester(ax2)
 
 ################################################################################
 
@@ -150,17 +150,15 @@ test_data = 0.1995 * np.power(np.arange(0, 10, 0.1), 1.7)
 fig2, ax2 = plt.subplots()
 ax2.hist(test_data, color="orange", bins=bins)
 
-testing_plot_2_hold = nb.convert_axes(plt, which_axes="current")
+plot_tester_testing_2 = mpc.PlotTester(ax2)
 
 ################################################################################
-# Now you will create a `PlotTester` object for each plot. This allows you to
-# extract the expected bin values from the expected plot and allows you to
-# test the testing plot.
+# With the ``PlotTester`` objects you created from the axes, you can now
+# extract the expected bin values from the expected plot and test the testing
+# plot.
 
-plot_tester_expected_2 = mpc.PlotTester(expected_plot_2_hold)
 bins_expected_2 = plot_tester_expected_2.get_bin_values()
 
-plot_tester_testing_2 = mpc.PlotTester(testing_plot_2_hold)
 
 ################################################################################
 # You'll notice that the test (orange) plot differs somewhat from the
@@ -215,12 +213,6 @@ except AssertionError as message:
 
 fig, ax = plt.subplots()
 ax.hist(testing_data, bins=8, color="gold")
-
-# If you were running this in a notebook, the commented out  line below would
-# store the matplotlib object. However, in this example, you can just grab the
-# axes object directly.
-
-# midpoints_plot_hold = nb.convert_axes(plt, which_axes="current")
 
 plot_tester_expected_3 = mpc.PlotTester(ax)
 print(plot_tester_expected_3.get_bin_midpoints())
