@@ -42,7 +42,7 @@ def test_autograde_runs_assert_pass_custom_message(pt_scatter_plt):
 
 
 def test_autograde_runs_assert_fail_custom_message(pt_scatter_plt):
-    """Test that a custom message gets passed into a failed test"""
+    """Test that a custom message for a failed test gets returned"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
