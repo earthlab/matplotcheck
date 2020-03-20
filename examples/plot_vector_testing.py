@@ -117,7 +117,7 @@ vector_test = VectorTester(ax)
 #   no message is returned.
 
 ################################################################################
-# Testing Point Attribute Values and Geometry
+# Test Point Attribute Values and Geometry xy Locations
 # -------------------------------------------
 # You can check that both the position of the points on the plot and the associated
 # point attribute values are
