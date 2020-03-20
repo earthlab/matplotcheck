@@ -112,17 +112,18 @@ plot_tester_testing.assert_bin_values(
 )
 
 ###############################################################################
-#
 # Above, ``assert_bin_values()`` did not raise an ``AssertionError``. This
 # means that the test passed and the student submitted plot has the correct
 # histogram bins.
 #
+
 ###############################################################################
 #
 # .. note::
 #   In this example, you created the expected histogram (the homework answer)
 #   and the student submitted histogram in the same file.
 #
+
 ###############################################################################
 # Testing with Tolerances
 # -----------------------
