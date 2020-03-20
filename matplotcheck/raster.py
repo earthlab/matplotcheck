@@ -151,12 +151,16 @@ class RasterTester(VectorTester):
         correction = np.min(im_data)
 
         for val in np.unique(im_data):
-            im_class_dict[val-correction] = legend_dict[im_cmap(im.norm(val))]
+            im_class_dict[val - correction] = legend_dict[
+                im_cmap(im.norm(val))
+            ]
         im_data_labels = [
-            [im_class_dict[val-correction] for val in row] for row in im_data.data
+            [im_class_dict[val - correction] for val in row]
+            for row in im_data.data
         ]
         im_expected_labels = [
-            [all_label_options[val-correction][0] for val in row] for row in im_expected
+            [all_label_options[val - correction][0] for val in row]
+            for row in im_expected
         ]
 
         # Check that expected and actual labels match up
