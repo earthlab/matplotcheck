@@ -89,6 +89,12 @@ for ctype, points in point_gdf.groupby('attr2'):
 # Add a legend
 ax.legend(title="Legend", loc=(1.1, .1));
 
+# If you were running this in a notebook, the commented out  line below would
+# store the matplotlib object. However, in this example, you can just grab the
+# axes object directly.
+
+# plot_1_hold = nb.convert_axes(plt, which_axes="current")
+
 ################################################################################
 # Create A VectorTester Object
 # --------------------------------
