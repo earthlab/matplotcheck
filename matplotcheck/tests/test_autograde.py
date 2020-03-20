@@ -67,7 +67,7 @@ def test_output_results_pass(pt_scatter_plt, capsys):
 
 
 def test_output_results_fail(pt_scatter_plt, capsys):
-    """Test that the output returns the correct points and output"""
+    """Test that the correct points are returned when a test fails"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
