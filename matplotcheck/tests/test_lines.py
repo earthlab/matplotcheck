@@ -1,7 +1,7 @@
 """Tests for the vector module"""
 import matplotlib
-import pytest
 import matplotlib.pyplot as plt
+import pytest
 import geopandas as gpd
 from shapely.geometry import LineString
 
