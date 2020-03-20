@@ -1,17 +1,17 @@
 """
 Testing Vector Plots Created Using Geopandas with MatPlotCheck
-=================================
+==============================================================
 
-These are some examples of using the basic functionality of MatPlotCheck
-to test vector plots in Python.
+This vignette will show you how to use Matplotcheck to test spatial vector data
+plots created using Geopandas.
 
 """
 
 ################################################################################
 # Setup
 # -----
-# You will start by importing the required packages and geometry objects
-# to plot and test.
+# To begin, import the libraries that you need.
+
 
 import matplotlib.pyplot as plt
 import geopandas as gpd
@@ -23,7 +23,7 @@ import numpy as np
 
 # Create geometry objects
 
-# Polygon GDF
+# Create a polygon GeoDataFrame
 coords = [(2, 4), (2, 4.25), (4.25, 4.25), (4.25, 2), (2, 2)]
 coords_b = [(i[0]+5, i[1]+7) for i in coords]
 polygon_a = Polygon(coords)
@@ -32,19 +32,18 @@ polygon_gdf = gpd.GeoDataFrame(
     [1, 2], geometry=[polygon_a, polygon_b], crs="epsg:4326")
 
 
-# Line GDF
+# Create a line GeoDataFrame
 linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
 lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
 line_gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
 
-# MultiLine GDF
-
+# Create a multiline GeoDataFrame
 linec = LineString([(2, 1), (3, 1), (4, 1), (5, 2)])
 multi_line_gdf = gpd.GeoDataFrame(geometry=gpd.GeoSeries(
     [line_gdf.unary_union, linec]), crs="epsg:4326")
 multi_line_gdf["attr"] = ["road", "stream"]
 
-# Point GDF
+# Create a point GeoDataFrame
 
 points = pd.DataFrame(
     {
@@ -58,7 +57,7 @@ point_gdf = gpd.GeoDataFrame(
 )
 point_gdf["attr2"] = ["Tree", "Tree", "Bush", "Bush", "Bush"]
 
-# Symbology for the legend
+# Create symbology dictionary to use in the legend
 
 line_symb = {"road": "black", "stream": "blue"}
 point_symb = {"Tree": "green", "Bush": "brown"}
@@ -66,10 +65,10 @@ point_symb = {"Tree": "green", "Bush": "brown"}
 ################################################################################
 # Create Your Spatial Plot
 # -----------------------------------------------------------------
-# Above you created several GeoPandas GeoDataFrame objects that you want 
+# Above you created several GeoPandas GeoDataFrame objects that you want
 # to plot. To plot these data according to attribute value, you can group
-# the geometry by attributes and plot within a loop. Once you've created 
-# your plot, you are ready to test it using MatPlotCheck. 
+# the geometry by attributes and plot within a loop. Once you've created
+# your plot, you are ready to test it using MatPlotCheck.
 
 # Plot your data
 fig, ax = plt.subplots()
@@ -90,9 +89,7 @@ for ctype, points in point_gdf.groupby('attr2'):
     points.plot(color=color, ax=ax, label=label, markersize=size)
 
 # Add a legend
-ax.legend(title="Legend", loc=(1.1, .1))
-
-# DELETE THIS: vector_test_plot_hold = nb.convert_axes(plt, which_axes="current")
+ax.legend(title="Legend", loc=(1.1, .1));
 
 ################################################################################
 # Create A VectorTester Object
@@ -112,16 +109,16 @@ vector_test = VectorTester(ax)
 ###############################################################################
 #
 # .. note::
-#   If a test fails, matplotcheck will return an error. If the test passes, 
+#   If a test fails, matplotcheck will return an error. If the test passes,
 #   no message is returned.
 
 ################################################################################
 # Testing Point Attribute Values and Geometry
 # -------------------------------------------
-# You can check that both the position of the points on the plot and the associated 
+# You can check that both the position of the points on the plot and the associated
 # point attribute values are
-# accurate using assert_points(), assert_points_grouped_by_type() and 
-# assert_collection_sorted_by_markersize. If the plot uses point markers that are 
+# accurate using assert_points(), assert_points_grouped_by_type() and
+# assert_collection_sorted_by_markersize. If the plot uses point markers that are
 # sized by attribute value, you can check that the
 # size of each marker correctly relates to an attribute value.
 
