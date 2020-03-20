@@ -108,7 +108,7 @@ vector_test = VectorTester(ax)
 # .. note::
 #   Each geometry type must be tested seperately in VectorTester. So, if your
 #   plot has multiple geometry types, such as lines, polygons, and points,
-#   make sure to check each geometry type seperately.
+#   make sure to check each geometry type separately.
 
 ###############################################################################
 #
