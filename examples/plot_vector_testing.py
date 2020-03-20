@@ -121,7 +121,7 @@ vector_test = VectorTester(ax)
 # -------------------------------------------
 # You can check that both the position of the points on the plot and the associated
 # point attribute values are
-# accurate using assert_points(), assert_points_grouped_by_type() and
+# accurate using ``assert_points()``, ``assert_points_grouped_by_type()`` and
 # ``assert_collection_sorted_by_markersize``. If the plot uses point markers that are
 # sized by attribute value, you can check that the
 # size of each marker correctly relates to an attribute value.
