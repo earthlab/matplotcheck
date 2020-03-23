@@ -53,12 +53,12 @@ points = pd.DataFrame(
 point_gdf = gpd.GeoDataFrame(
     {"A": np.arange(5), "B": np.arange(5)}, geometry=gpd.points_from_xy(points.lon, points.lat), crs="epsg:4326"
 )
-point_gdf["attr2"] = ["Tree", "Tree", "Bush", "Bush", "Bush"]
+point_gdf["size"] = [100, 100, 300, 300, 500]
 
 # Create symbology dictionary to use in the legend
 
 line_symb = {"road": "black", "stream": "blue"}
-point_symb = {"Tree": "green", "Bush": "brown"}
+point_symb = {100: "purple", 300: "green", 500: "brown"}
 
 ################################################################################
 # Create Your Spatial Plot
@@ -78,13 +78,10 @@ for ctype, lines in multi_line_gdf.groupby('attr'):
     label = ctype
     lines.plot(color=color, ax=ax, label=label)
 
-size = 0
-
-for ctype, points in point_gdf.groupby('attr2'):
+for ctype, points in point_gdf.groupby('size'):
     color = point_symb[ctype]
     label = ctype
-    size += 100
-    points.plot(color=color, ax=ax, label=label, markersize=size)
+    points.plot(color=color, ax=ax, label=label, markersize=ctype)
 
 # Add a legend
 ax.legend(title="Legend", loc=(1.1, .1));
@@ -94,6 +91,17 @@ ax.legend(title="Legend", loc=(1.1, .1));
 # axes object directly.
 
 # plot_1_hold = nb.convert_axes(plt, which_axes="current")
+
+###############################################################################
+#
+# .. note::
+#   If you are testing a plot that is created in a Jupyter Notebook - for
+#   example a student assignment - and you want to get a copy of the student's
+#   figure created in a cell you can use the following approach:
+#   ``ax_object = nb.convert_axes(plt, which_axes="current")``
+#   then in the cell below where you write your tests, you can create a
+#   PlotTester object by calling:
+#   ``PlotTester(ax_object)``
 
 ################################################################################
 # Create A VectorTester Object
@@ -122,18 +130,26 @@ vector_test = VectorTester(ax)
 # You can check that both the position of the points on the plot and the associated
 # point attribute values are
 # accurate using assert_points(), assert_points_grouped_by_type() and
-# assert_collection_sorted_by_markersize. If the plot uses point markers that are
-# sized by attribute value, you can check that the
-# size of each marker correctly relates to an attribute value.
+# assert_collection_sorted_by_markersize().
+#
+# To check the geometry locations, you can call assert_points() and prove the
+# expected points data, which in this case is the point_gdf object.
+#
+# If the plot uses point markers that are sized by attribute value, you can
+# check that the size of each marker correctly relates to an attribute value by
+# providing the geometry, point_gdf here, and the attribute the size is based
+# off of, which is the 'size' column in this case.
+
+
 
 # Check point geometry location (x, y location)
 vector_test.assert_points(point_gdf)
 
 # Check points are grouped plotted by type
-vector_test.assert_points_grouped_by_type(point_gdf, "attr2")
+vector_test.assert_points_grouped_by_type(point_gdf, "size")
 
 # Check points size is relative to a numeric attribute value
-vector_test.assert_collection_sorted_by_markersize(point_gdf, "attr2")
+vector_test.assert_collection_sorted_by_markersize(point_gdf, "size")
 
 ################################################################################
 # Test Line Attribute Values and Coordinate Information (x, y)
