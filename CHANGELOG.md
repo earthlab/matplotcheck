@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+* Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
 * Created tests for the vector module (@nkorinek, #209)
 * Created functions to test point geometries in VectorTester (@nkorinek, #176)
 * made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
