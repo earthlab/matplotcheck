@@ -104,7 +104,7 @@ ax.legend(title="Legend", loc=(1.1, .1));
 #   ``PlotTester(ax_object)``
 
 ################################################################################
-# Create A VectorTester Object
+# Create A MatPlotCheck VectorTester Object
 # --------------------------------
 # Once you've created your plot, you can create a MatPlotCheck VectorTester object
 # that can be used to test elements in the plot.
@@ -116,16 +116,16 @@ vector_test = VectorTester(ax)
 # .. note::
 #   Each geometry type must be tested seperately in VectorTester. So, if your
 #   plot has multiple geometry types, such as lines, polygons, and points,
-#   make sure to check each geometry type seperately.
+#   make sure to check each geometry type separately.
 
 ###############################################################################
 #
 # .. note::
-#   If a test fails, matplotcheck will return an error. If the test passes,
+#   Most tests are created as assert statements. Thus, if a test fails, matplotcheck will return an error. If the test passes,
 #   no message is returned.
 
 ################################################################################
-# Testing Point Attribute Values and Geometry
+# Test Point Attribute Values and Geometry xy Locations
 # -------------------------------------------
 # You can check that both the position of the points on the plot and the associated
 # point attribute values are
