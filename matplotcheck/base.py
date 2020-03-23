@@ -90,7 +90,7 @@ class PlotTester(object):
 
         Parameters
         ----------
-        strings_expected : list
+        strings_expected : list or string
             Any string in `strings_expected` must be in the title for the
             assertion to pass. If there is a list of strings in
             `strings_expected`, at least one of the strings in that list must
@@ -123,22 +123,28 @@ class PlotTester(object):
             return
 
         string = string.lower().replace(" ", "")
-        for check in strings_expected:
-            if isinstance(check, str):
-                if not check.lower().replace(" ", "") in string:
-                    raise AssertionError(message_default.format(check))
-            elif isinstance(check, list):
-                if not any(
-                    [c.lower().replace(" ", "") in string for c in check]
-                ):
-                    if len(check) == 1:
-                        raise AssertionError(message_default.format(check[0]))
-                    else:
-                        raise AssertionError(message_or.format(check))
-            else:
-                raise ValueError(
-                    "str_lst must be a list of: lists or strings."
-                )
+
+        if isinstance(strings_expected, str):
+            if not strings_expected.lower().replace(" ", "") in string:
+                raise AssertionError(message_default.format(strings_expected))
+        elif isinstance(strings_expected, list):
+            for check in strings_expected:
+                if isinstance(check, str):
+                    if not check.lower().replace(" ", "") in string:
+                        raise AssertionError(message_default.format(check))
+                elif isinstance(check, list):
+                    if not any(
+                        [c.lower().replace(" ", "") in string for c in check]
+                    ):
+                        if len(check) == 1:
+                            raise AssertionError(message_default.format(check[0]))
+                        else:
+                            raise AssertionError(message_or.format(check))
+        else:
+            raise ValueError(
+                "strings_expected must be a string or a list of: lists "
+                "or strings."
+            )
 
     def assert_plot_type(
         self, plot_type=None, message="Plot is not of type {0}"
@@ -204,7 +210,7 @@ class PlotTester(object):
 
         Parameters
         ----------
-        strings_expected : list
+        strings_expected : list or string
             Any string in `strings_expected` must be in the title for the
             assertion to pass. If there is a list of strings in
             `strings_expected`, at least one of the strings in that list must
