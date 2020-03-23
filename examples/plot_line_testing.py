@@ -91,7 +91,7 @@ line_figure_tests.assert_lines_of_type(line_types=['regression', 'onetoone'])
 # extra step to get the slope and intercept data. In this example,
 # ``stats.linregress`` is used to calculate the slope and intercept data. Once
 # you have created that data, you can plug it into the ``assert_line()``
-# function to ensure your line in your plot has the correct values. 
+# function to ensure your line in your plot has the correct values.
 
 # Create the slope and intercept data for the line in the plot to check against
 slope_data, intercept_data, _, _, _ = stats.linregress(
