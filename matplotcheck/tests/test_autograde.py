@@ -17,7 +17,7 @@ def test_autograde_runs_assert_pass(pt_scatter_plt):
 
 
 def test_autograde_runs_assert_fail(pt_scatter_plt):
-    """Test that a normal test is run with autograder and fails"""
+    """Test that a when a test fails, an assertion error is returned"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
@@ -31,7 +31,7 @@ def test_autograde_runs_assert_fail(pt_scatter_plt):
 
 
 def test_autograde_runs_assert_pass_custom_message(pt_scatter_plt):
-    """Test that a custom message gets passed into a passed test"""
+    """Test that when a custom message is provided, it is correctly returned to the user."""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
@@ -42,7 +42,7 @@ def test_autograde_runs_assert_pass_custom_message(pt_scatter_plt):
 
 
 def test_autograde_runs_assert_fail_custom_message(pt_scatter_plt):
-    """Test that a custom message gets passed into a failed test"""
+    """Test that a custom message for a failed test gets returned"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
@@ -53,7 +53,7 @@ def test_autograde_runs_assert_fail_custom_message(pt_scatter_plt):
 
 
 def test_output_results_pass(pt_scatter_plt, capsys):
-    """Test that the output returns the correct points and output"""
+    """Test that the correct number of points are returned when a test passes"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
@@ -67,7 +67,7 @@ def test_output_results_pass(pt_scatter_plt, capsys):
 
 
 def test_output_results_fail(pt_scatter_plt, capsys):
-    """Test that the output returns the correct points and output"""
+    """Test that the correct points are returned when a test fails"""
     result = ag.run_test(
         pt_scatter_plt.assert_title_contains,
         points=2,
