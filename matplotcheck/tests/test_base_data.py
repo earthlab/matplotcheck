@@ -442,7 +442,7 @@ def test_assert_bin_midpoints_overlap_length_fail(pt_hist_overlapping):
     incorrect length"""
     bins = [2.5, 3.5, 4.5, 5.5, 6.5, 7.5]
     with pytest.raises(
-        ValueError, match="Bin midpoints lists lengths do no matc"
+        ValueError, match="Bin midpoints lists lengths do no match"
     ):
         pt_hist_overlapping.assert_bin_midpoints(bins)
 
