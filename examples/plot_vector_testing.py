@@ -62,7 +62,7 @@ point_symb = {100: "purple", 300: "green", 500: "brown"}
 
 ################################################################################
 # Create Your Spatial Plot
-# -----------------------------------------------------------------
+# ------------------------
 # Above you created several GeoPandas GeoDataFrame objects that you want
 # to plot. To plot these data according to attribute value, you can group
 # the geometry by attributes and plot within a loop. Once you've created
@@ -105,7 +105,7 @@ ax.legend(title="Legend", loc=(1.1, .1));
 
 ################################################################################
 # Create A MatPlotCheck VectorTester Object
-# --------------------------------
+# -----------------------------------------
 # Once you've created your plot, you can create a MatPlotCheck VectorTester object
 # that can be used to test elements in the plot.
 
@@ -126,7 +126,7 @@ vector_test = VectorTester(ax)
 
 ################################################################################
 # Test Point Attribute Values and Geometry xy Locations
-# -------------------------------------------
+# -----------------------------------------------------
 # You can check that both the position of the points on the plot and the associated
 # point attribute values are
 # accurate using assert_points(), assert_points_grouped_by_type() and
