@@ -52,11 +52,14 @@ def pt_monthly_data_numeric(pd_df_monthly_data_numeric):
 
 @pytest.fixture
 def pt_hist():
-    dataframe_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
+    df_a = pd.DataFrame({"A": np.exp(np.arange(1, 2, 0.01))})
     bins = [2, 3, 4, 5, 6, 7, 8]
-    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
-    axis = plt.gca()
-    return PlotTester(axis)
+
+    _, ax = plt.subplots()
+
+    ax.hist(df_a["A"], bins=bins, alpha=0.5, color="seagreen")
+
+    return PlotTester(ax)
 
 
 @pytest.fixture
@@ -67,10 +70,12 @@ def pt_hist_overlapping():
     )
     bins = [2, 3, 4, 5, 6, 7, 8]
 
-    plt.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
-    plt.hist(dataframe_b["B"], bins=bins, alpha=0.5, color="coral")
-    axis = plt.gca()
-    return PlotTester(axis)
+    _, ax = plt.subplots()
+
+    ax.hist(dataframe_a["A"], bins=bins, alpha=0.5, color="seagreen")
+    ax.hist(dataframe_b["B"], bins=bins, alpha=0.5, color="coral")
+
+    return PlotTester(ax)
 
 
 """DATACHECK TESTS"""
