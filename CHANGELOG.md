@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Added a vignette for the VectorTester module functions (@nkorinek, #208)
+* Created tests for the autograde module (@nkorinek, #105)
 * Created tests for the vector module (@nkorinek, #209)
 * Created functions to test point geometries in VectorTester (@nkorinek, #176)
 * made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
