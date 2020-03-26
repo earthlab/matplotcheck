@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Added a vignette for the VectorTester module functions (@nkorinek, #208)
+* Added functions to get and assert the midpoint values of bins in a histogram (@nkorinek, #184)
 * Created tests for the autograde module (@nkorinek, #105)
 * Created tests for the vector module (@nkorinek, #209)
 * Created functions to test point geometries in VectorTester (@nkorinek, #176)
