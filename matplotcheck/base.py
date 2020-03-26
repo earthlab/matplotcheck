@@ -922,15 +922,57 @@ class PlotTester(object):
             We catch this error and throw our own so that we can use our own
             message."""
             try:
+                # np.testing.assert_array_max_ulp(
+                #    np.array(xy_data["x"]), np.array(xy_expected[xcol]), 5
+                # )
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol]), 5
+                    xy_data["x"].to_numpy(dtype=np.float64),
+                    xy_expected[xcol].to_numpy(dtype=np.float64),
+                    5,
                 )
             except AssertionError:
                 raise AssertionError(message)
-            try:
-                np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol]), 5
+            except TypeError:
+                string = (
+                    "????\n\n"
+                    + "xy_data:\n"
+                    + str(xy_data)
+                    + "\n\nxy_expected:\n\n"
+                    + str(xy_expected)
                 )
+                string = (
+                    string
+                    + "\n\n"
+                    + str(
+                        xy_data["x"]
+                        .to_numpy(dtype=np.float64)
+                        .astype(np.float64)
+                        .dtype
+                    )
+                )
+                string = (
+                    string
+                    + "\n\n"
+                    + str(xy_expected["x"].to_numpy(dtype=np.float64).dtype)
+                )
+                string = (
+                    string
+                    + "\n\n"
+                    + str(type(xy_data["x"][0]))
+                    + "\t"
+                    + str(xy_expected["x"].dtype)
+                )
+                raise AssertionError(string)
+            try:
+                # np.testing.assert_array_max_ulp(
+                #    np.array(xy_data["y"], np.array(xy_expected[ycol]), 5
+                # )
+                np.testing.assert_array_max_ulp(
+                    xy_data["y"].to_numpy(dtype=np.float64),
+                    xy_expected[ycol].to_numpy(dtype=np.float64),
+                    5,
+                )
+
             except AssertionError:
                 raise AssertionError(message)
 
