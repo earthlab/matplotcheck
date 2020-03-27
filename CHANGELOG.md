@@ -6,7 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+* Added functions to get and assert the midpoint values of bins in a histogram (@nkorinek, #184)
+* Created tests for the autograde module (@nkorinek, #105)
+* Created tests for the vector module (@nkorinek, #209)
+* Created functions to test point geometries in VectorTester (@nkorinek, #176)
 * made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
+* added contributors file and updated README to remove that information (@nkorinek, #121)
 
 ## [0.1.2]
 * Adding flake8 for format and other syntax issues! yay! (@lwasser, #195)

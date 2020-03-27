@@ -1213,6 +1213,18 @@ class PlotTester(object):
 
         return bin_values
 
+    def get_bin_midpoints(self):
+        """Returns the mid point value of each bin in a histogram
+
+        Returns
+        -------
+        Int :
+            The number of bins in the histogram"""
+
+        bin_midpoints = self.get_xy()["x"].tolist()
+
+        return bin_midpoints
+
     def assert_bin_values(
         self,
         bin_values,
@@ -1275,3 +1287,44 @@ class PlotTester(object):
                 )
             except AssertionError:
                 raise AssertionError(message)
+
+    def assert_bin_midpoints(
+        self,
+        bin_midpoints,
+        message="Did not find expected bin midpoints in plot",
+    ):
+        """
+        Asserts that the middle values of histogram bins match `bin_midpoints`.
+
+        Parameters
+        ----------
+        bin_midpoints : list
+            A list of numbers representing the expected middles of bin values
+            covered by each consecutive bin (i.e. the midpoint of the bars in
+            the histogram).
+        message : string
+            The error message to be displayed if the bin mid point values do
+            not match `bin_midpoints`
+
+        Raises
+        ------
+        AssertionError
+            if the Values of histogram bins do not match `bin_midpoints`
+        """
+
+        plot_bin_midpoints = self.get_bin_midpoints()
+
+        if not isinstance(bin_midpoints, list):
+            raise ValueError(
+                "Need to submit a list for expected bin midpoints."
+            )
+
+        if len(plot_bin_midpoints) != len(bin_midpoints):
+            raise ValueError("Bin midpoints lists lengths do no match.")
+
+        try:
+            np.testing.assert_array_max_ulp(
+                np.array(plot_bin_midpoints), np.array(bin_midpoints)
+            )
+        except AssertionError:
+            raise AssertionError(message)
