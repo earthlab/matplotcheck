@@ -372,8 +372,8 @@ def test_assert_bin_values_incorrect(pt_hist_overlapping):
 
 
 def test_assert_bin_values_tol_rel(pt_hist_overlapping):
-    """Test that assert_bin_values correctly passes when using tolerance
-    flag."""
+    """Test that assert_bin_values correctly passes when using relative
+    tolerence."""
     bin_values = pt_hist_overlapping.get_bin_values()
     for i in range(len(bin_values)):
         bin_values[i] = bin_values[i] * 1.1
@@ -384,8 +384,8 @@ def test_assert_bin_values_tol_rel(pt_hist_overlapping):
 
 
 def test_assert_bin_values_tol_rel_fails(pt_hist_overlapping):
-    """Test that assert_bin_values correctly fails when using tolerance
-    flag."""
+    """Test that assert_bin_values correctly fails when using relative
+    tolerence."""
     bin_values = pt_hist_overlapping.get_bin_values()
     for i in range(len(bin_values)):
         bin_values[i] = bin_values[i] * 1.1
@@ -399,8 +399,8 @@ def test_assert_bin_values_tol_rel_fails(pt_hist_overlapping):
 
 
 def test_assert_bin_values_tol_abs(pt_hist_overlapping):
-    """Test that assert_bin_values correctly passes when using tolerance
-    flag."""
+    """Test that assert_bin_values correctly passes when using absolute
+    tolerence."""
     bin_values = pt_hist_overlapping.get_bin_values()
     for i in range(len(bin_values)):
         bin_values[i] = bin_values[i] + 1
@@ -411,8 +411,8 @@ def test_assert_bin_values_tol_abs(pt_hist_overlapping):
 
 
 def test_assert_bin_values_tol_abs_fails(pt_hist_overlapping):
-    """Test that assert_bin_values correctly fails when using tolerance
-    flag."""
+    """Test that assert_bin_values correctly fails when using absolute
+    tolerence."""
     bin_values = pt_hist_overlapping.get_bin_values()
     for i in range(len(bin_values)):
         bin_values[i] = bin_values[i] + 1
