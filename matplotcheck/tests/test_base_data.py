@@ -87,21 +87,42 @@ def test_assert_xydata_scatter(pt_scatter_plt, pd_df):
     plt.close()
 
 
-def test_assert_xydata_tolerance(pt_scatter_plt, pd_df):
+def test_assert_xydata_rel_tol(pt_scatter_plt, pd_df):
     """Checks that slightly altered data still passes with an appropriate
-    tolerance"""
+    relative tolerence"""
     for i in range(len(pd_df["A"])):
         pd_df["A"][i] = pd_df["A"][i] + (np.floor(pd_df["A"][i] * 0.25))
         pd_df["B"][i] = pd_df["B"][i] + (np.floor(pd_df["B"][i] * 0.25))
-    pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", tolerence=0.5)
+    pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", tol_rel=0.5)
     plt.close()
 
 
-def test_assert_xydata_tolerance_fail(pt_scatter_plt, pd_df):
-    """Checks that data altered beyond the tolerance throws an assertion."""
+def test_assert_xydata_rel_tol_fail(pt_scatter_plt, pd_df):
+    """Checks that data altered beyond the relative tolerence throws an
+    AssertionError."""
     pd_df["A"][1] = pd_df["A"][1] * 2
     with pytest.raises(AssertionError, match="Incorrect data values"):
-        pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", tolerence=0.1)
+        pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", tol_rel=0.1)
+    plt.close()
+
+
+def test_assert_xydata_abs_tol(pt_scatter_plt, pd_df):
+    """Checks that slightly altered data still passes with an appropriate
+    absolute tolerence"""
+    pd_df = pd_df.astype(np.float)
+    for i in range(len(pd_df["A"])):
+        pd_df["A"][i] = pd_df["A"][i] + np.random.choice([-0.1, 0.1])
+        pd_df["B"][i] = pd_df["B"][i] + np.random.choice([-0.1, 0.1])
+    pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", tol_abs=0.2)
+    plt.close()
+
+
+def test_assert_xydata_abs_tol_fail(pt_scatter_plt, pd_df):
+    """Checks that data altered beyond the absolute tolerence correctly
+    fails."""
+    pd_df["A"][1] = pd_df["A"][1] + 1
+    with pytest.raises(AssertionError, match="Incorrect data values"):
+        pt_scatter_plt.assert_xydata(pd_df, xcol="A", ycol="B", tol_abs=0.1)
     plt.close()
 
 
@@ -350,19 +371,19 @@ def test_assert_bin_values_incorrect(pt_hist_overlapping):
     plt.close()
 
 
-def test_assert_bin_values_tolerance(pt_hist_overlapping):
+def test_assert_bin_values_tol_rel(pt_hist_overlapping):
     """Test that assert_bin_values correctly passes when using tolerance
     flag."""
     bin_values = pt_hist_overlapping.get_bin_values()
     for i in range(len(bin_values)):
         bin_values[i] = bin_values[i] * 1.1
 
-    pt_hist_overlapping.assert_bin_values(bin_values, tolerance=0.11)
+    pt_hist_overlapping.assert_bin_values(bin_values, tol_rel=0.11)
 
     plt.close()
 
 
-def test_assert_bin_values_tolerance_fails(pt_hist_overlapping):
+def test_assert_bin_values_tol_rel_fails(pt_hist_overlapping):
     """Test that assert_bin_values correctly fails when using tolerance
     flag."""
     bin_values = pt_hist_overlapping.get_bin_values()
@@ -372,7 +393,34 @@ def test_assert_bin_values_tolerance_fails(pt_hist_overlapping):
     with pytest.raises(
         AssertionError, match="Did not find expected bin values in plot"
     ):
-        pt_hist_overlapping.assert_bin_values(bin_values, tolerance=0.09)
+        pt_hist_overlapping.assert_bin_values(bin_values, tol_rel=0.09)
+
+    plt.close()
+
+
+def test_assert_bin_values_tol_abs(pt_hist_overlapping):
+    """Test that assert_bin_values correctly passes when using tolerance
+    flag."""
+    bin_values = pt_hist_overlapping.get_bin_values()
+    for i in range(len(bin_values)):
+        bin_values[i] = bin_values[i] + 1
+
+    pt_hist_overlapping.assert_bin_values(bin_values, tol_abs=2)
+
+    plt.close()
+
+
+def test_assert_bin_values_tol_abs_fails(pt_hist_overlapping):
+    """Test that assert_bin_values correctly fails when using tolerance
+    flag."""
+    bin_values = pt_hist_overlapping.get_bin_values()
+    for i in range(len(bin_values)):
+        bin_values[i] = bin_values[i] + 1
+
+    with pytest.raises(
+        AssertionError, match="Did not find expected bin values in plot"
+    ):
+        pt_hist_overlapping.assert_bin_values(bin_values, tol_abs=0.5)
 
     plt.close()
 

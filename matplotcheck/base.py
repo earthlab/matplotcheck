@@ -829,11 +829,13 @@ class PlotTester(object):
         points_only=False,
         xtime=False,
         xlabels=False,
-        tolerence=0,
+        tol_rel=0,
+        tol_abs=0,
         message="Incorrect data values",
     ):
         """Asserts that the x and y data of Axes `ax` matches `xy_expected`
-        with error message `m`. If ``xy_expected = None``, assertion is passed.
+        with error message `message`. If ``xy_expected = None``,
+        assertion is passed.
 
         Parameters
         ----------
@@ -860,12 +862,15 @@ class PlotTester(object):
             Set ``True`` if using x axis labels rather than x data. Instead of
             comparing numbers in the x-column to expected, compares numbers or
             text in x labels to expected.
-        tolerence : float
-            Measure of relative error allowed.
-            For example: Given a tolerance ``tolerence=0.1``, an expected value
-            ``e``, and an actual value ``a``, this asserts
-            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+        tol_rel : float
+            A non-zero value of tol_rel allows a relative tolerance when
+            checking the data. For example, a relative tolerance of 0.1 would
+            check that the actual data is within 10% of the actual data.
+        tol_abs : float
+            A non-zero value of tol_abs allows an absolute tolerance when
+            checking the data. For example, an absolute tolerance of 1 checks
+            that the actual data does not differ from the expected data by more
+            than 1.
         message : string
             The error message to be displayed if the xy-data does not match
             `xy_expected`
@@ -874,7 +879,8 @@ class PlotTester(object):
         Raises
         -------
         AssertionError
-            with message `m` if legends overlap
+            with message `message`, if x and y data of Axes `ax` does not match
+            `xy_expected`
         """
         if xy_expected is None:
             return
@@ -909,19 +915,21 @@ class PlotTester(object):
             xy_expected.sort_values(by=xcol),
         )
 
-        if tolerence > 0:
+        if tol_rel > 0 or tol_abs > 0:
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
             np.testing.assert_allclose(
                 xy_data["x"],
                 xy_expected[xcol],
-                rtol=tolerence,
+                rtol=tol_rel,
+                atol=tol_abs,
                 err_msg=message,
             )
             np.testing.assert_allclose(
                 xy_data["y"],
                 xy_expected[ycol],
-                rtol=tolerence,
+                rtol=tol_rel,
+                atol=tol_abs,
                 err_msg=message,
             )
 
@@ -1225,7 +1233,8 @@ class PlotTester(object):
     def assert_bin_values(
         self,
         bin_values,
-        tolerance=0,
+        tol_rel=0,
+        tol_abs=0,
         message="Did not find expected bin values in plot",
     ):
         """Asserts that the values of histogram bins match `bin_values`.
@@ -1235,12 +1244,16 @@ class PlotTester(object):
         bin_values : list
             A list of numbers representing the expected values of each
             consecutive bin (i.e. the heights of the bars in the histogram).
-        tolerence : float
-            Measure of relative error allowed.
-            For example: Given a tolerance ``tolerence=0.1``, an expected value
-            ``e``, and an actual value ``a``, this asserts
-            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+        tol_rel : float
+            A non-zero value of tol_rel allows a relative tolerance when
+            checking the bin values. For example, a relative tolerance of 0.1
+            would check that the actual bin values are within 10% of the
+            expected bin values.
+        tol_abs : float
+            A non-zero value of tol_abs allows an absolute tolerance when
+            checking the bin values. For example, an absolute tolerance of 1
+            checks that the actual bin values do not differ from the expected
+            bin values by more than 1.
         message : string
             The error message to be displayed if the bin values do not match
             `bin_values`
@@ -1262,12 +1275,13 @@ class PlotTester(object):
         expected_bin_values = bin_values
         plot_bin_values = self.get_bin_values()
 
-        if tolerance > 0:
+        if tol_rel > 0 or tol_abs > 0:
             try:
                 np.testing.assert_allclose(
                     plot_bin_values,
                     expected_bin_values,
-                    rtol=tolerance,
+                    rtol=tol_rel,
+                    atol=tol_abs,
                     err_msg=message,
                 )
             except AssertionError:
