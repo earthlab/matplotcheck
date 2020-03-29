@@ -1084,33 +1084,36 @@ class PlotTester(object):
         AssertionError
             with message `m` or `m2` if no line exists that covers the dataset
         """
-        flag_exist, flag_length = False, False
-        xy = self.get_xy(points_only=True)
-        min_val, max_val = min(xy["x"]), max(xy["x"])
+        flag_exist = False
+        # flag_length = False
+        # xy = self.get_xy(points_only=True)
+        # min_val, max_val = min(xy["x"]), max(xy["x"])
 
         for l in self.ax.lines:
-            path_verts = self.ax.transData.inverted().transform(
-                l._transformed_path.get_fully_transformed_path().vertices
-            )
+            # Here we will get the verticies for the line and reformat them in
+            # the way that get_slope_yintercept() expects
+            data = l.get_data()
+            path_verts = np.column_stack((data[0], data[1]))
+
             slope, y_intercept = self.get_slope_yintercept(path_verts)
             if math.isclose(slope, slope_exp, abs_tol=1e-4) and math.isclose(
                 y_intercept, intercept_exp, abs_tol=1e-4
             ):
                 flag_exist = True
-                line_x_vals = [coord[0] for coord in path_verts]
-                if min(line_x_vals) <= min_val and max(line_x_vals) >= max_val:
-                    flag_length = True
-                    break
+                # line_x_vals = [coord[0] for coord in path_verts]
+            # if min(line_x_vals) <= min_val and max(line_x_vals) >= max_val:
+            #    flag_length = True
+            #    break
 
         assert flag_exist, message_no_line
-        assert flag_length, message_data
+        # assert flag_length, message_data
 
     def assert_lines_of_type(self, line_types):
         """Asserts each line of type in `line_types` exist on `ax`
 
         Parameters
         ----------
-        line_types : list of strings
+        line_types : string or list of strings
             Acceptable strings in line_types are as follows
             ``['regression', 'onetoone']``.
 
@@ -1123,31 +1126,38 @@ class PlotTester(object):
         -----
             If `line_types` is empty, assertion is passed.
         """
-        if line_types:
-            for line_type in line_types:
-                if line_type == "regression":
+        if isinstance(line_types, str):
+            line_types = [line_types]
+
+        for line_type in line_types:
+            if line_type == "regression":
+                try:
                     xy = self.get_xy(points_only=True)
                     slope_exp, intercept_exp, _, _, _ = stats.linregress(
                         xy.x, xy.y
                     )
-                elif line_type == "onetoone":
-                    slope_exp, intercept_exp = 1, 0
-                else:
-                    raise ValueError(
-                        "each string in line_types must be from the following "
-                        + '["regression","onetoone"]'
+                except ValueError:
+                    raise AssertionError(
+                        "regression line not displayed properly"
                     )
-
-                self.assert_line(
-                    slope_exp,
-                    intercept_exp,
-                    message_no_line="{0} line not displayed properly".format(
-                        line_type
-                    ),
-                    message_data="{0} line does not cover dataset".format(
-                        line_type
-                    ),
+            elif line_type == "onetoone":
+                slope_exp, intercept_exp = 1, 0
+            else:
+                raise ValueError(
+                    "each string in line_types must be from the following "
+                    + '["regression","onetoone"]'
                 )
+
+            self.assert_line(
+                slope_exp,
+                intercept_exp,
+                message_no_line="{0} line not displayed properly".format(
+                    line_type
+                ),
+                message_data="{0} line does not cover dataset".format(
+                    line_type
+                ),
+            )
 
     # HISTOGRAM FUNCTIONS
 
