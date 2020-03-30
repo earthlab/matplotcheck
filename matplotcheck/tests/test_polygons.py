@@ -18,13 +18,17 @@ def multi_polygon_gdf(basic_polygon):
     -------
     GeoDataFrame containing the basic_polygon polygon.
     """
-    poly_a = Polygon([(3, 5), (2, 3.25), (5.25, 6), (2.25, 2), (2, 2)])
+    poly_a = Polygon([(7, 9), (7, 11.25), (9.25, 11.25), (9.25, 9), (7, 9)])
+    poly_b = Polygon(
+        [(12, 14), (12, 16.25), (14.25, 16.25), (14.25, 14), (12, 14)]
+    )
     gdf = gpd.GeoDataFrame(
         [1, 2], geometry=[poly_a, basic_polygon], crs="epsg:4326",
     )
     multi_gdf = gpd.GeoDataFrame(
-        geometry=gpd.GeoSeries(gdf.unary_union), crs="epsg:4326"
+        [1, 2], geometry=[gdf.unary_union, poly_b], crs="epsg:4326",
     )
+    multi_gdf["attr"] = ["attr1", "attr2"]
     return multi_gdf
 
 
@@ -44,6 +48,16 @@ def multi_poly_geo_plot(multi_polygon_gdf):
     _, ax = plt.subplots()
 
     multi_polygon_gdf.plot(ax=ax)
+
+    return VectorTester(ax)
+
+
+@pytest.fixture
+def multi_poly_geo_plot_attributes(multi_polygon_gdf):
+    """Create a mutlipolygon vector tester object grouped by attributes."""
+    _, ax = plt.subplots()
+
+    multi_polygon_gdf.plot(ax=ax, column="attr")
 
     return VectorTester(ax)
 
@@ -118,4 +132,78 @@ def test_polygon_custom_fail_message(poly_geo_plot, basic_polygon):
 def test_multi_polygon_pass(multi_poly_geo_plot, multi_polygon_gdf):
     """Check a multipolygon passes"""
     multi_poly_geo_plot.assert_polygons(multi_polygon_gdf)
+    plt.close("all")
+
+
+def test_assert_polygons_grouped_pass(
+    multi_poly_geo_plot_attributes, multi_polygon_gdf
+):
+    """Check that assert_polys_grouped_by_type passes"""
+    multi_poly_geo_plot_attributes.assert_polys_grouped_by_type(
+        multi_polygon_gdf, "attr"
+    )
+    plt.close("all")
+
+
+def test_assert_polygons_grouped_fail(multi_poly_geo_plot, multi_polygon_gdf):
+    """Check that assert_polys_grouped_by_type fails bad gdf"""
+    with pytest.raises(
+        AssertionError, match="Polygon attributes not accurate"
+    ):
+        multi_poly_geo_plot.assert_polys_grouped_by_type(
+            multi_polygon_gdf, "attr"
+        )
+        plt.close("all")
+
+
+def test_assert_polygons_grouped_passes_nonetype(
+    multi_poly_geo_plot_attributes,
+):
+    """Check that assert_polys_grouped_by_type passes when polys_expected is
+    None"""
+    multi_poly_geo_plot_attributes.assert_polys_grouped_by_type(None, None)
+    plt.close("all")
+
+
+def test_assert_polygons_grouped_fails_list(multi_poly_geo_plot_attributes):
+    """Check that assert_polys_grouped_by_type fails when polys_expected is not
+    a gdf"""
+    with pytest.raises(ValueError, match="polys_expected is not of expected "):
+        multi_poly_geo_plot_attributes.assert_polys_grouped_by_type(
+            [1, 2, 3], "attr"
+        )
+        plt.close("all")
+
+
+def test_assert_polygons_grouped_passes_custom_message(
+    multi_poly_geo_plot, multi_polygon_gdf
+):
+    """Test that a custom fail message is raised if given"""
+    with pytest.raises(AssertionError, match="Test message"):
+        multi_poly_geo_plot.assert_polys_grouped_by_type(
+            multi_polygon_gdf, "attr", m="Test message"
+        )
+        plt.close("all")
+
+
+def test_get_polygons_by_attributes_correct(multi_poly_geo_plot_attributes):
+    """Test that get_polys_by_attributes returns correctly"""
+    polys_list = [
+        [
+            [(2.0, 2.0), (2.0, 4.25), (4.25, 4.25), (4.25, 2.0), (2.0, 2.0)],
+            [(7.0, 9.0), (7.0, 11.25), (9.25, 11.25), (9.25, 9.0), (7.0, 9.0)],
+        ],
+        [
+            [
+                (12.0, 14.0),
+                (12.0, 16.25),
+                (14.25, 16.25),
+                (14.25, 14.0),
+                (12.0, 14.0),
+            ]
+        ],
+    ]
+    assert (
+        polys_list == multi_poly_geo_plot_attributes.get_polys_by_attributes()
+    )
     plt.close("all")

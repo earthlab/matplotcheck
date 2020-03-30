@@ -551,3 +551,100 @@ class VectorTester(PlotTester):
             raise ValueError(
                 "Empty list or GeoDataFrame passed into assert_polygons."
             )
+
+    def get_polys_by_attributes(self):
+        """Returns a sorted list of polygons where each list contains
+            polygons paths of the same attributes:
+            color, linewidth, and linestyle
+
+            Returns
+            ------
+            sorted polygons where each list represents all polygons with the
+            same attributes
+            """
+        polys_dataframe = pd.DataFrame(
+            columns=["path", "color", "lwidth", "lstyle"]
+        )
+        for c in (
+            coll
+            for coll in self.ax.collections
+            if type(coll) == matplotlib.collections.PatchCollection
+        ):
+            paths = [
+                [tuple(coords) for coords in path.vertices]
+                for path in c.get_paths()
+            ]
+            colors, widths, styles = (
+                [tuple(color) for color in c.get_facecolors()],
+                c.get_linewidth(),
+                [self._convert_linestyle(ls) for ls in c.get_linestyle()],
+            )
+            n = len(paths)
+            colors, widths, styles = (
+                self._convert_length(colors, n),
+                self._convert_length(widths, n),
+                self._convert_length(styles, n),
+            )
+            polys_dataframe = polys_dataframe.append(
+                pd.DataFrame(
+                    {
+                        "path": paths,
+                        "color": colors,
+                        "lwidth": widths,
+                        "lstyle": styles,
+                    }
+                ),
+                ignore_index=True,
+            )
+
+        polys_grouped = [
+            [data["path"][i] for i in data.index]
+            for c, data in polys_dataframe.groupby(
+                ["color", "lwidth", "lstyle"], sort=False
+            )
+        ]
+        return sorted([sorted(p) for p in polys_grouped])
+
+    def assert_polys_grouped_by_type(
+        self,
+        polys_expected,
+        sort_column,
+        m="Polygon attributes not accurate by type",
+    ):
+        """Asserts that the polygons on Axes ax display like attributes based
+        on their type with error message m
+        attributes tested are: color, linewidth, linestyle
+
+        Parameters
+        ----------
+        polys_expected: Geopandas Dataframe with geometry column consisting of
+        MultiPolygon and Polygon objects
+        sort_column: string of column title in polys_expected that contains
+        types polys are expected to be grouped by
+        m: string error message if assertion is not met
+        """
+        if type(polys_expected) == gpd.geodataframe.GeoDataFrame:
+            groups = self.get_polys_by_attributes()
+            polys_expected = polys_expected[
+                ~polys_expected["geometry"].is_empty
+            ].reset_index(drop=True)
+            fig, ax_exp = plt.subplots()
+            for typ, data in polys_expected.groupby(sort_column):
+                data.plot(ax=ax_exp)
+            grouped_exp = [
+                [
+                    [tuple(coords) for coords in path.vertices]
+                    for path in c.get_paths()
+                ]
+                for c in ax_exp.collections
+                if type(c) == matplotlib.collections.PatchCollection
+            ]
+            grouped_exp = sorted([sorted(p) for p in grouped_exp])
+            plt.close(fig)
+            np.testing.assert_equal(groups, grouped_exp, m)
+        elif polys_expected is None:
+            pass
+        else:
+            raise ValueError(
+                "polys_expected is not of expected type: GeoDataFrame"
+            )
