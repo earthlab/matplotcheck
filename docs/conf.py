@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 
 project = "matplotcheck"
-copyright = "2019, Leah Wasser, Kristin Curry"
-author = "Leah Wasser, Kristin Curry"
+copyright = "2020, Leah Wasserr"
+author = "Leah Wasser"
 
 # The short X.Y version
 version = "0.1.2"
