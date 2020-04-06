@@ -140,7 +140,10 @@ class RasterTester(VectorTester):
         # Check that each legend entry label is in one of all_label_options
         assert len([val for val in legend_dict.values() if val]) == len(
             all_label_options
-        ), "Incorrect legend labels"
+        ), (
+            "Number of label options provided doesn't match the number of",
+            " labels found in the image.",
+        )
 
         # Create two copies of image array, one filled with the plot data class
         # labels (im_data_labels) and the other with the expected labels
@@ -166,7 +169,7 @@ class RasterTester(VectorTester):
         # Check that expected and actual labels match up
         assert np.array_equal(
             im_data_labels, im_expected_labels
-        ), "Incorrect legend to data relation"
+        ), "Provided legend labels don't match labels found."
 
         # IMAGE TESTS/HELPER FUNCTIONS
 
