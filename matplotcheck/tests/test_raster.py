@@ -163,9 +163,7 @@ def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
     values = np.sort(np.unique(np_ar_discrete))
     label_options = [[str(i)] for i in values]
 
-    raster_plt_class.assert_legend_accuracy_classified_image(
-        np_ar_discrete, label_options
-    )
+    raster_plt_class.assert_legend_labels(np_ar_discrete, label_options)
     plt.close()
 
 
@@ -177,8 +175,8 @@ def test_raster_assert_legend_accuracy_badlabel(
 
     # Should fail with bad label
     bad_label_options = [["foo"] * values.shape[0]]
-    with pytest.raises(AssertionError, match="Incorrect legend labels"):
-        raster_plt_class.assert_legend_accuracy_classified_image(
+    with pytest.raises(AssertionError, match="Number of label options provid"):
+        raster_plt_class.assert_legend_labels(
             np_ar_discrete, bad_label_options
         )
     plt.close()
@@ -198,11 +196,9 @@ def test_raster_assert_legend_accuracy_badvalues(
 
     # Should fail with bad image
     with pytest.raises(
-        AssertionError, match="Incorrect legend to data relation"
+        AssertionError, match="Provided legend labels don't match labels found"
     ):
-        raster_plt_class.assert_legend_accuracy_classified_image(
-            bad_image, label_options
-        )
+        raster_plt_class.assert_legend_labels(bad_image, label_options)
     plt.close()
 
 
@@ -213,9 +209,7 @@ def test_raster_assert_legend_accuracy_nolegend(raster_plt, np_ar_discrete):
 
     # Fails without legend
     with pytest.raises(AssertionError, match="No legend displayed"):
-        raster_plt.assert_legend_accuracy_classified_image(
-            np_ar_discrete, label_options
-        )
+        raster_plt.assert_legend_labels(np_ar_discrete, label_options)
     plt.close()
 
 
@@ -228,9 +222,7 @@ def test_raster_assert_legend_accuracy_noimage(
 
     # Fails when no image displayed
     with pytest.raises(AssertionError, match="No Image Displayed"):
-        raster_plt_blank.assert_legend_accuracy_classified_image(
-            np_ar_discrete, label_options
-        )
+        raster_plt_blank.assert_legend_labels(np_ar_discrete, label_options)
     plt.close()
 
 
