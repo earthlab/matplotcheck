@@ -80,9 +80,7 @@ class RasterTester(VectorTester):
                     return label_opts[0]
         return None
 
-    def assert_legend_labels(
-        self, im_expected, all_label_options
-    ):
+    def assert_legend_labels(self, im_expected, all_label_options):
         """Asserts legend correctly describes classified image on Axes ax,
         checking the legend labels and the values
 
@@ -114,18 +112,15 @@ class RasterTester(VectorTester):
         Finally those two arrays of strings are compared. Passes if they match.
         """
         # Retrieve image array
-        im_data, im_cmap = self.get_plot_image(return_cmap=True)
+        im_data = self.get_plot_image()
+        im = self.ax.get_images()[0]
+        im_cmap = im.get_cmap()
+
         assert list(im_data), "No Image Displayed"
 
         # Retrieve legend entries and find which element of all_label_options
         # matches that entry
         legend_dict = self.get_legend_labels(all_label_options)
-
-        # Check that each legend entry label is in one of all_label_options
-        assert len([val for val in legend_dict.values() if val]) == len(
-            all_label_options
-        ), "Number of label options provided doesn't match the number of"\
-           " labels found in the image."
 
         # Create two copies of image array, one filled with the plot data class
         # labels (im_data_labels) and the other with the expected labels
@@ -137,7 +132,7 @@ class RasterTester(VectorTester):
 
         for val in np.unique(im_data):
             im_class_dict[val - correction] = legend_dict[
-                im_cmap(im.norm(val))
+                im_cmap(self.ax.get_images()[0].norm(val))
             ]
         im_data_labels = [
             [im_class_dict[val - correction] for val in row]
@@ -186,39 +181,35 @@ class RasterTester(VectorTester):
                 label, all_label_options
             )
 
-        return(legend_dict)
+        # Check that each legend entry label is in one of all_label_options
+        assert len([val for val in legend_dict.values() if val]) == len(
+            all_label_options
+        ), (
+            "Number of label options provided doesn't match the number of"
+            " labels found in the image."
+        )
 
-    def get_plot_image(self, return_cmap=False):
+        return legend_dict
+
+    def get_plot_image(self):
         """Returns images stored on the Axes object as a list of numpy arrays.
-
-        Parameters
-        ----------
-        return_cmap: boolean
-            If true, returns a cmap from the plot image alongside the images
-            data
 
         Returns
         -------
         im_data: List
             Numpy array of images stored on Axes object.
-        im_cmap: List
-            Numpy array of cmaps stored on Axes object.
         """
         im_data = []
         if self.ax.get_images():
-            im = self.ax.get_images()[0]
-            im_data = im.get_array()
-            if return_cmap:
-                im_cmap = im.get_cmap()
+            im_data = self.ax.get_images()[0].get_array()
+
         assert list(im_data), "No Image Displayed"
 
         # If image array has 3 dims (e.g. rgb image), remove alpha channel
         if len(im_data.shape) == 3:
             im_data = im_data[:, :, :3]
-        if return_cmap:
-            return im_data, im_cmap
-        else:
-            return im_data
+
+        return im_data
 
     def assert_image(
         self, im_expected, im_classified=False, m="Incorrect Image Displayed"
