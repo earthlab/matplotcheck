@@ -54,6 +54,12 @@ def test_title_contains_axes_spaces(pt_line_plt):
     plt.close()
 
 
+def test_title_contains_axes_string(pt_line_plt):
+    """Check title_contains for axes title as a string, not a list"""
+    pt_line_plt.assert_title_contains("My Plot Title", title_type="axes")
+    plt.close()
+
+
 def test_title_contains_axes_badtext(pt_line_plt):
     """Check title_contains fails when given bad text"""
     with pytest.raises(
