@@ -19,6 +19,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotcheck.base as pt
 
+################################################################################
+# Create Example Data
+# -------------------
+# Before we can grade a plot we have to create example data. This data could be
+# maximum lidar height readings in an area over time, or some other data
+# in which you are looking for a trend over time.
+
 # Create the data for the line plot
 
 col1 = list(np.random.randint(25, size=15))
@@ -49,17 +56,6 @@ plt.show()
 # Convert axes object into a PlotTester object
 
 line_figure_tests = pt.PlotTester(ax)
-
-###############################################################################
-#
-# .. note::
-#   If you are testing a plot that is created in a Jupyter Notebook - for
-#   example a student assignment - and you want to get a copy of the student's
-#   figure created in a cell you can use the following approach:
-#   ``ax_object = nb.convert_axes(plt, which_axes="current")``
-#   then in the cell below where you write your tests, you can create a
-#   PlotTester object by calling:
-#   ``PlotTester(ax_object)``
 
 ################################################################################
 # Testing the Line Plot
@@ -99,3 +95,43 @@ slope_data, intercept_data, _, _, _ = stats.linregress(
 
 # Check line is correct
 line_figure_tests.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
+
+
+################################################################################
+# Access the Axes object in a Jupyter Notebook
+# --------------------------------------------
+# MatPlotCheck can be used to help grade Jupyter Notebooks as well. The main
+# difference is in how you would store the Axes from the plot you are grading.
+# Below is an example of how you could store the Axes of a plot you are hoping
+# to grade in a notebook.
+
+# First, import the Notebook module from MatPlotCheck
+import matplotcheck.notebook as nb
+
+# Plot the data
+fig, ax = plt.subplots()
+
+# Points and line of regression
+sns.regplot('Data1', 'Data2',
+            data=data,
+            color='purple',
+            ax=ax)
+
+# 1:1 line
+ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
+
+ax.set(xlabel='Data1',
+       ylabel='Data2',
+       title='Example Data Regression Plot',
+       xlim=(0, 25),
+       ylim=(0, 25));
+
+# HERE'S WHERE YOU STORE THE PLOT!
+# This line at the end of a cell you are expecting a plot in will store any
+# matplotlib plot made in that cell so you can test it at a later time.
+plot_test_hold = nb.convert_axes(plt, which_axes="current")
+
+# This can then be turned into a PlotTester object.
+line_figure_tests = pt.PlotTester(plot_test_hold)
+
+# Now you can run the tests as you did earlier!
