@@ -75,3 +75,42 @@ plot_tester_2.assert_xydata(line_2, xcol="Ax 2 X Vals", ycol="Ax 2 Y Vals")
 #   This returns a list that contains a PlotTester for each axes, which you can
 #   access by calling an index on the list,
 #   i.e. plot_tester_1 = testing_plot_2_hold[0]
+
+################################################################################
+# Access the Axes object in a Jupyter Notebook
+# --------------------------------------------
+# MatPlotCheck can be used to help grade Jupyter Notebooks as well. The main
+# difference is in how you would store the Axes from the plot you are grading.
+# Below is an example of how you could store the Axes of a plot you are hoping
+# to grade in a notebook.
+
+# First, import the Notebook module from MatPlotCheck
+import matplotcheck.notebook as nb
+
+# Plot the data
+fig, ax = plt.subplots()
+
+# Points and line of regression
+sns.regplot('Data1', 'Data2',
+            data=data,
+            color='purple',
+            ax=ax)
+
+# 1:1 line
+ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
+
+ax.set(xlabel='Data1',
+       ylabel='Data2',
+       title='Example Data Regression Plot',
+       xlim=(0, 25),
+       ylim=(0, 25));
+
+# HERE'S WHERE YOU STORE THE PLOT!
+# This line at the end of a cell you are expecting a plot in will store any
+# matplotlib plot made in that cell so you can test it at a later time.
+plot_test_hold = nb.convert_axes(plt, which_axes="current")
+
+# This can then be turned into a PlotTester object.
+line_figure_tests = pt.PlotTester(plot_test_hold)
+
+# Now you can run the tests as you did earlier!
