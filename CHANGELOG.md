@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-* Created tests for the vector module. (@nkorinek, #209)
+* Added a vignette for line functions (@nkorinek, #155)
+* Removed the `m2r` package from MatPlotCheck (@nkorinek, #247)
 * Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
 * Added functions to get and assert the midpoint values of bins in a histogram (@nkorinek, #184)
 * Created tests for the autograde module (@nkorinek, #105)

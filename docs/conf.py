@@ -40,7 +40,6 @@ release = "0.1.2"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "m2r",
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.napoleon",
@@ -65,9 +64,8 @@ templates_path = ["_templates"]
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-# "m2r" is needed to support markdown includes in sphinx
-source_suffix = [".rst", ".md"]
+# source_suffix = ['.rst']
+source_suffix = [".rst"]
 
 # The master toctree document.
 master_doc = "index"
