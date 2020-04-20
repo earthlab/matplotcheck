@@ -180,24 +180,6 @@ class RasterTester(VectorTester):
             im_data = im_data[:, :, :3]
         return im_data
 
-    def get_plot_image(self):
-        """Returns images stored on the Axes object as a list of numpy arrays.
-
-        Returns
-        -------
-        im_data: List
-            Numpy array of images stored on Axes object.
-        """
-        im_data = []
-        if self.ax.get_images():
-            im_data = self.ax.get_images()[0].get_array()
-        assert list(im_data), "No Image Displayed"
-
-        # If image array has 3 dims (e.g. rgb image), remove alpha channel
-        if len(im_data.shape) == 3:
-            im_data = im_data[:, :, :3]
-        return im_data
-
     def assert_image(
         self, im_expected, im_classified=False, m="Incorrect Image Displayed"
     ):

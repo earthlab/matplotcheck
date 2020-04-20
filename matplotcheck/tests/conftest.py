@@ -78,40 +78,6 @@ def two_line_gdf():
 
 
 @pytest.fixture
-def basic_polygon():
-    """
-    A square polygon spanning (2, 2) to (4.25, 4.25) in x and y directions.
-    Borrowed from rasterio/tests/conftest.py.
-    Returns
-    -------
-    dict: GeoJSON-style geometry object.
-        Coordinates are in grid coordinates (Affine.identity()).
-    """
-    return Polygon([(2, 2), (2, 4.25), (4.25, 4.25), (4.25, 2), (2, 2)])
-
-
-@pytest.fixture
-def basic_polygon_gdf(basic_polygon):
-    """
-    A GeoDataFrame containing the basic polygon geometry.
-    Returns
-    -------
-    GeoDataFrame containing the basic_polygon polygon.
-    """
-    gdf = gpd.GeoDataFrame(geometry=[basic_polygon], crs="epsg:4326")
-    return gdf
-
-
-@pytest.fixture
-def two_line_gdf():
-    """ Create Line Objects For Testing """
-    linea = LineString([(1, 1), (2, 2), (3, 2), (5, 3)])
-    lineb = LineString([(3, 4), (5, 7), (12, 2), (10, 5), (9, 7.5)])
-    gdf = gpd.GeoDataFrame([1, 2], geometry=[linea, lineb], crs="epsg:4326")
-    return gdf
-
-
-@pytest.fixture
 def pd_xlabels():
     """Create a DataFrame which uses the column labels as x-data."""
     df = pd.DataFrame({"B": np.random.randint(0, 100, size=100)})
