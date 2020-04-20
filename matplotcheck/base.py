@@ -933,13 +933,15 @@ class PlotTester(object):
             that we can use our own message."""
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    xy_data["x"].to_numpy(dtype=np.float64),
+                    xy_expected[xcol].to_numpy(dtype=np.float64),
                 )
             except AssertionError:
                 raise AssertionError(message)
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                    xy_data["y"].to_numpy(dtype=np.float64),
+                    xy_expected[ycol].to_numpy(dtype=np.float64),
                 )
             except AssertionError:
                 raise AssertionError(message)
