@@ -70,7 +70,7 @@ point_symb = {100: "purple", 300: "green", 500: "brown"}
 # Above you created several GeoPandas GeoDataFrame objects that you want
 # to plot. To plot these data according to attribute value, you can group
 # the geometry by attributes and plot within a loop. Once you have created your
-# plot, you will be ready to test it using Matplotcheck
+# plot, you will be ready to test it using Matplotcheck.
 
 # Plot your data
 fig, ax = plt.subplots()
@@ -128,8 +128,8 @@ vector_test = VectorTester(ax)
 #
 # If the plot uses point markers that are sized by attribute value, you can
 # check that the size of each marker correctly relates to an attribute value by
-# providing the geometry, point_gdf here, and the attribute the size is based
-# off of, which is the 'size' column in this case.
+# providing the geometry (in this example, point_gdf), and the attribute the
+# size is based off of, which is the 'size' column in this case.
 
 
 
@@ -169,9 +169,8 @@ vector_test.assert_polygons(polygon_gdf)
 # -----------------------------------------
 # Matplotcheck can be used to test plots in Jupyter Notebooks as well. The main
 # difference is how you access the axes objects from the plot that you want to
-# test.
-# Below is an example of how you could access the axes of a plot you want to
-# test in a Jupyter Notebook.
+# test. Below is an example of how you could access the axes of a plot you want
+# to test in a Jupyter Notebook.
 
 # First, import the Notebook module from Matplotcheck
 import matplotcheck.notebook as nb
