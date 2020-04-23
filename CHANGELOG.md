@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+* Add `pillow` as a dev requirement (@lwasser, #253)
 * Removed the `m2r` package from MatPlotCheck (@nkorinek, #247)
 * Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
 * Added functions to get and assert the midpoint values of bins in a histogram (@nkorinek, #184)
