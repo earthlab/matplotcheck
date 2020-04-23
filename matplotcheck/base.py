@@ -932,7 +932,9 @@ class PlotTester(object):
                 raise AssertionError(message)
             except ValueError:
                 # xy_data and xy_expected do not have the same shape
-                raise AssertionError(message)
+                raise ValueError(
+                    "xy_data and xy_expected do not have the same shape"
+                )
             try:
                 np.testing.assert_array_max_ulp(
                     xy_data["y"].to_numpy(dtype=np.float64),
