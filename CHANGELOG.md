@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Created functions to test point geometries in VectorTester (@nkorinek, #176)
 * made `assert_string_contains()` accept correct strings with spaces in them (@nkorinek, #182)
 * added contributors file and updated README to remove that information (@nkorinek, #121)
+* Improved handling of datasets with different shapes in base.assert_xy() (@ryla5068, #233)
+* Bug fix for handling object datatypes in base.assert_xy() (@ryla5068, #232)
 
 ## [0.1.2]
 * Adding flake8 for format and other syntax issues! yay! (@lwasser, #195)
