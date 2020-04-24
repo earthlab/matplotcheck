@@ -919,8 +919,8 @@ class PlotTester(object):
             datetime data, this is essential for comparing high-precision
             datetime data (i.e. millisecond or lower).
 
-            We catch this error and throw our own so that we can use our own
-            message."""
+            We catch this error and raise our own that is more relevant to 
+            the assertion we are running."""
             try:
                 np.testing.assert_array_max_ulp(
                     xy_data["x"].to_numpy(dtype=np.float64),
