@@ -107,12 +107,6 @@ vector_test = VectorTester(ax)
 #   plot has multiple geometry types, such as lines, polygons, and points,
 #   make sure to check each geometry type separately.
 
-###############################################################################
-#
-# .. note::
-#   Most tests are created as assert statements. Thus, if a test fails,
-#   Matplotcheck will return an error. If the test passes, no message is
-#   returned.
 
 ################################################################################
 # Test Point Attribute Values and Geometry (x, y Locations)
@@ -132,7 +126,6 @@ vector_test = VectorTester(ax)
 # size is based off of, which is the 'size' column in this case.
 
 
-
 # Check point geometry location (x, y location)
 vector_test.assert_points(point_gdf)
 
@@ -142,10 +135,17 @@ vector_test.assert_points_grouped_by_type(point_gdf, "size")
 # Check points size is relative to a numeric attribute value
 vector_test.assert_collection_sorted_by_markersize(point_gdf, "size")
 
+###############################################################################
+#
+# .. note::
+#   Most tests are created as assert statements. Thus, if a test fails,
+#   Matplotcheck will return an error. If the test passes, no message is
+#   returned.
+
 ################################################################################
 # Test Line Attribute Values and Geometry (Coordinate Information)
 # ----------------------------------------------------------------
-# You can also test the position and plot values of line
+# You can also test the position and attributes of line
 # geometries.
 
 # Check line geometry
