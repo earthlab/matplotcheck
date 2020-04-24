@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-* Added a vignette for the VectorTester module functions. (@nkorinek, #208)
+* Add a vignette for testing vector data plots. (@nkorinek, #208)
 * Add `pillow` as a dev requirement (@lwasser, #253)
 * Removed the `m2r` package from MatPlotCheck (@nkorinek, #247)
 * Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
