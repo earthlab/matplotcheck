@@ -1,8 +1,8 @@
-import pytest
-from matplotcheck.timeseries import TimeSeriesTester
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import pytest
+from matplotcheck.timeseries import TimeSeriesTester
 
 
 @pytest.fixture
