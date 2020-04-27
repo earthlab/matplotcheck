@@ -14,6 +14,7 @@
 #
 import os
 import sys
+from datetime import date
 
 sys.path.insert(0, os.path.abspath("../"))
 
@@ -21,8 +22,11 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 
 project = "matplotcheck"
-copyright = "2019, Leah Wasser, Kristin Curry"
-author = "Leah Wasser, Kristin Curry"
+copyright = "{year}, Earth Lab Contributors, Leah Wasser".format(
+    year=date.today().year
+)
+
+author = "Leah Wasser"
 
 # The short X.Y version
 version = "0.1.2"
