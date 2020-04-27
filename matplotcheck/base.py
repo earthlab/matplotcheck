@@ -13,8 +13,8 @@ from matplotlib.backend_bases import RendererBase
 import math
 from scipy import stats
 import pandas as pd
-import geopandas as gpd
 import numbers
+import geopandas as gpd
 
 
 class InvalidPlotError(Exception):
