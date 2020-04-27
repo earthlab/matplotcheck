@@ -80,7 +80,7 @@ class RasterTester(VectorTester):
                     return label_opts[0]
         return None
 
-    def assert_legend_labels(self, im_expected, all_label_options):
+    def assert_raster_legend_labels(self, im_expected, all_label_options):
         """Asserts legend correctly describes classified image on Axes ax,
         checking the legend labels and the values
 
@@ -113,8 +113,7 @@ class RasterTester(VectorTester):
         """
         # Retrieve image array
         im_data = self.get_plot_image()
-        im = self.ax.get_images()[0]
-        im_cmap = im.get_cmap()
+        im_cmap = self.get_image_cmap()
 
         assert list(im_data), "No Image Displayed"
 
@@ -150,6 +149,10 @@ class RasterTester(VectorTester):
 
         # IMAGE TESTS/HELPER FUNCTIONS
 
+    def get_image_cmap(self):
+        """Return the cmap for the image in the matplotlib"""
+        return self.ax.get_images()[0].get_cmap()
+        
     def get_legend_labels(self, all_label_options):
         """Return labels from legend
 
