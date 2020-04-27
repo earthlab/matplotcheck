@@ -88,22 +88,19 @@ plot_tester_2.assert_xydata(line_2, xcol="Ax 2 X Vals", ycol="Ax 2 Y Vals")
 import matplotcheck.notebook as nb
 
 # Plot the data
-fig, ax = plt.subplots()
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize = (10, 5))
 
-# Points and line of regression
-sns.regplot('Data1', 'Data2',
-            data=data,
-            color='purple',
-            ax=ax)
+line_1.plot(ax=ax1, x="Ax 1 X Vals", y="Ax 1 Y Vals")
+line_2.plot(ax=ax2, x="Ax 2 X Vals", y="Ax 2 Y Vals")
 
-# 1:1 line
-ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
+fig.suptitle("Figure Title")
 
-ax.set(xlabel='Data1',
-       ylabel='Data2',
-       title='Example Data Regression Plot',
-       xlim=(0, 25),
-       ylim=(0, 25));
+ax1.set(title="Axes 1", xlabel = "Ax 1 X Vals", ylabel = "Ax 1 Y Vals")
+ax2.set(title="Axes 2", xlabel = "Ax 2 X Vals", ylabel = "Ax 2 Y Vals")
+
+# Create a Matplotcheck PlotTester object for each axes
+plot_tester_1 = pt.PlotTester(ax1)
+plot_tester_2 = pt.PlotTester(ax2)
 
 # HERE'S WHERE YOU STORE THE PLOT!
 # This line at the end of a cell you are expecting a plot in will store any
