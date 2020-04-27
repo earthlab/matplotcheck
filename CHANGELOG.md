@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Added a vignette to demonstrate how to grade multi axes plots (@nkorinek, #116)
+* Add a vignette for testing vector data plots. (@nkorinek, #208)
 * Add `pillow` as a dev requirement (@lwasser, #253)
 * Removed the `m2r` package from MatPlotCheck (@nkorinek, #247)
 * Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
