@@ -1085,9 +1085,9 @@ class PlotTester(object):
             with message `m` or `m2` if no line exists that covers the dataset
         """
         flag_exist = False
-        # flag_length = False
-        # xy = self.get_xy(points_only=True)
-        # min_val, max_val = min(xy["x"]), max(xy["x"])
+        flag_length = False
+        xy = self.get_xy(points_only=True)
+        min_val, max_val = min(xy["x"]), max(xy["x"])
 
         for l in self.ax.lines:
             # Here we will get the verticies for the line and reformat them in
@@ -1100,13 +1100,13 @@ class PlotTester(object):
                 y_intercept, intercept_exp, abs_tol=1e-4
             ):
                 flag_exist = True
-                # line_x_vals = [coord[0] for coord in path_verts]
-            # if min(line_x_vals) <= min_val and max(line_x_vals) >= max_val:
-            #    flag_length = True
-            #    break
+                line_x_vals = [coord[0] for coord in path_verts]
+                if min(line_x_vals) <= min_val and max(line_x_vals) >= max_val:
+                    flag_length = True
+                    break
 
         assert flag_exist, message_no_line
-        # assert flag_length, message_data
+        assert flag_length, message_data
 
     def assert_lines_of_type(self, line_types):
         """Asserts each line of type in `line_types` exist on `ax`
@@ -1132,16 +1132,15 @@ class PlotTester(object):
         for line_type in line_types:
             if line_type == "regression":
                 xy = self.get_xy(points_only=True)
-                slope_exp, intercept_exp, _, _, _ = stats.linregress(
-                    xy.x, xy.y
-                )
-
                 # Check that there is xy data for this line. Some one-to-one
                 # lines do not produce xy data.
                 if xy.empty:
                     raise AssertionError(
                         "regression line not displayed properly"
                     )
+                slope_exp, intercept_exp, _, _, _ = stats.linregress(
+                    xy.x, xy.y
+                )
             elif line_type == "onetoone":
                 slope_exp, intercept_exp = 1, 0
             else:
