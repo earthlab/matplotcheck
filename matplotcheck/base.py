@@ -1131,12 +1131,14 @@ class PlotTester(object):
 
         for line_type in line_types:
             if line_type == "regression":
-                try:
-                    xy = self.get_xy(points_only=True)
-                    slope_exp, intercept_exp, _, _, _ = stats.linregress(
-                        xy.x, xy.y
-                    )
-                except ValueError:
+                xy = self.get_xy(points_only=True)
+                slope_exp, intercept_exp, _, _, _ = stats.linregress(
+                    xy.x, xy.y
+                )
+
+                # Check that there is xy data for this line. Some one-to-one
+                # lines do not produce xy data.
+                if xy.empty:
                     raise AssertionError(
                         "regression line not displayed properly"
                     )
