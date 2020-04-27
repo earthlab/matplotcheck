@@ -1102,9 +1102,13 @@ class PlotTester(object):
             ):
                 flag_exist = True
                 line_x_vals = [coord[0] for coord in path_verts]
-                if math.isclose(
-                    min(line_x_vals), min_val, abs_tol=1e-4
-                ) and math.isclose(max(line_x_vals), max_val, abs_tol=1e-4):
+                if (
+                    math.isclose(min(line_x_vals), min_val, abs_tol=1e-4)
+                    or min(line_x_vals) <= min_val
+                ) and (
+                    math.isclose(max(line_x_vals), max_val, abs_tol=1e-4)
+                    or max(line_x_vals) >= max_val
+                ):
                     flag_length = True
                     break
 
