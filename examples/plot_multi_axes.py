@@ -98,14 +98,10 @@ fig.suptitle("Figure Title")
 ax1.set(title="Axes 1", xlabel = "Ax 1 X Vals", ylabel = "Ax 1 Y Vals")
 ax2.set(title="Axes 2", xlabel = "Ax 2 X Vals", ylabel = "Ax 2 Y Vals")
 
-# Create a Matplotcheck PlotTester object for each axes
-plot_tester_1 = pt.PlotTester(ax1)
-plot_tester_2 = pt.PlotTester(ax2)
-
 # HERE'S WHERE YOU STORE THE PLOT!
 # This line at the end of a cell you are expecting a plot in will store any
 # matplotlib plot made in that cell so you can test it at a later time.
-plot_test_hold = nb.convert_axes(plt, which_axes="current")
+plot_test_hold = nb.convert_axes(plt, which_axes="all")
 
 # This can then be turned into a PlotTester object.
 line_figure_tests = pt.PlotTester(plot_test_hold)

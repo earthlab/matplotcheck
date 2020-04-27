@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Added a vignette to demonstrate how to grade multi axes plots (@nkorinek, #116)
+* Add `pillow` as a dev requirement (@lwasser, #253)
+* Removed the `m2r` package from MatPlotCheck (@nkorinek, #247)
+* Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
 * Added functions to get and assert the midpoint values of bins in a histogram (@nkorinek, #184)
 * Created tests for the autograde module (@nkorinek, #105)
 * Created tests for the vector module (@nkorinek, #209)
