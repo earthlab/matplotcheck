@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Fixed bug with asserting raster legend labels (@nkorinek, #163)
+* Add a vignette for testing vector data plots. (@nkorinek, #208)
+* Add `pillow` as a dev requirement (@lwasser, #253)
+* Removed the `m2r` package from MatPlotCheck (@nkorinek, #247)
 * Made `assert_string_contains()` accept a string instead of a list (@nkorinek, #53)
 * Added functions to get and assert the midpoint values of bins in a histogram (@nkorinek, #184)
 * Created tests for the autograde module (@nkorinek, #105)
