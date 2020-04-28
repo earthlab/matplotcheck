@@ -2,7 +2,7 @@
 Testing Line Plots
 ==================
 
-These are some examples of using the basic functionality of MatPlotCheck
+These are some examples of using the basic functionality of Matplotcheck
 to test line plots (including regression lines) in Python.
 """
 
@@ -51,8 +51,8 @@ ax.set(xlabel='Data1',
 plt.show()
 
 ################################################################################
-# Testing the Line Plot
-# ---------------------
+# Test Line Plots
+# ---------------
 # Now you can make a PlotTester object and test the line plot. You can test
 # that the line type is a one to one line or a regression line, and you can
 # test that the line has the correct y intercept and slope.
@@ -61,8 +61,8 @@ plt.show()
 line_figure_tests = pt.PlotTester(ax)
 
 ################################################################################
-# Testing the Line Types
-# ----------------------
+# Test Line Types
+# ---------------
 # As you can see, there are two line types on this plot: a one-to-one line for
 # reference and a regression line of the data points. You can use the function
 # ``assert_lines_of_type()`` to test if a one to one or regression line
@@ -73,8 +73,8 @@ line_figure_tests = pt.PlotTester(ax)
 line_figure_tests.assert_lines_of_type(line_types=['regression', 'onetoone'])
 
 ################################################################################
-# Testing the Slope and Y Intercept
-# ---------------------------------
+# Test Slope and Y Intercept
+# --------------------------
 # Other aspects of the line plot that you can test are the slope and y
 # intercept to ensure that the line represents the correct values. If you made
 # your line from a list of vertices, you can use the
@@ -102,7 +102,7 @@ line_figure_tests.assert_line(slope_exp=slope_data, intercept_exp=intercept_data
 # test. Below is an example of how you could access the axes of a plot you want
 # to test in a Jupyter Notebook.
 
-# First, import the Notebook module from MatPlotCheck
+# First, import the Notebook module from Matplotcheck
 import matplotcheck.notebook as nb
 
 # Plot the data
