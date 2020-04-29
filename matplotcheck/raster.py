@@ -130,13 +130,8 @@ class RasterTester(VectorTester):
 
         # IMAGE TESTS/HELPER FUNCTIONS
 
-    def get_legend_labels(self, return_facecolors=False):
+    def get_legend_labels(self):
         """Return labels from legend in a list
-
-        Parameters
-        ----------
-        return_facecolors: boolean
-            Returns a list of facecolors alongside the labels themselves.
 
         Returns
         -------
@@ -148,8 +143,10 @@ class RasterTester(VectorTester):
         legends = self.get_legends()
         assert legends, "No legend displayed"
 
+        # Get each patch stored in the legends object
         patches = [leg.get_patches() for leg in legends]
 
+        # Go through each patch to retrieve the labels from the legend
         return [
             label.get_label().lower()
             for sublist in patches
