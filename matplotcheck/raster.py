@@ -64,7 +64,8 @@ class RasterTester(VectorTester):
         ----------
         label: string from legend to see if it contains an option in
             all_label_options
-        all_label_options: list of lists
+        all_label_options: list
+            List should be from an internal list from a list of lists.
             Each internal list represents a class and said list is a list of
             strings where at least one string is expected to be in the legend
             label for this category.
@@ -74,10 +75,9 @@ class RasterTester(VectorTester):
         string that is the first entry in the internal list which label is
         matched with. If no match is found, return value is None
         """
-        for label_opts in all_label_options:
-            for s in label_opts:
-                if s in label:
-                    return label_opts[0]
+        for label_option in all_label_options:
+            if label_option == label:
+                return label_option
         return None
 
     def assert_raster_legend_labels(self, im_expected, all_label_options):
@@ -87,7 +87,6 @@ class RasterTester(VectorTester):
         Parameters
         ----------
         im_expected: array of arrays with expected classified image on ax.
-            Class values must start with 0, 1, 2, etc.
         all_label_options: list of lists
             Each internal list represents a class and said list is a list of
             strings where at least one string is expected to be in the legend
@@ -98,101 +97,64 @@ class RasterTester(VectorTester):
         Returns
         ----------
         Nothing (if checks pass) or raises error
-
-
-        Notes
-        ----------
-        First compares all_label_options against the legend labels to find
-        which element of all_label_options matches that entry. E.g. if the
-        first legend entry has a match in the first list in all_label_options,
-        then that legend entry corresponds to the first class (value 0).
-        Then the plot image array is copied and the values are set to the
-        legend label that match the values (i.e. the element in
-        all_label_options). The same is done for the expected image array.
-        Finally those two arrays of strings are compared. Passes if they match.
         """
         # Retrieve image array
         im_data = self.get_plot_image()
-        im_cmap = self.get_image_cmap()
 
         assert list(im_data), "No Image Displayed"
 
         # Retrieve legend entries and find which element of all_label_options
         # matches that entry
-        legend_dict = self.get_legend_labels(all_label_options)
 
-        # Create two copies of image array, one filled with the plot data class
-        # labels (im_data_labels) and the other with the expected labels
-        # (im_expected_labels)
-        im_class_dict = {}
+        labels = self.get_legend_labels()
 
-        # Accounting for images that don't start at 0
-        correction = np.min(im_data)
+        assert len(labels) == len(all_label_options), (
+            "Number of label options provided doesn't match the number of"
+            " labels found in the image."
+        )
 
-        for val in np.unique(im_data):
-            im_class_dict[val - correction] = legend_dict[
-                im_cmap(self.ax.get_images()[0].norm(val))
-            ]
-        im_data_labels = [
-            [im_class_dict[val - correction] for val in row]
-            for row in im_data.data
-        ]
-        im_expected_labels = [
-            [all_label_options[val - correction][0] for val in row]
-            for row in im_expected
+        labels_check = [
+            self._which_label(label, all_label_options[i])
+            for i, label in enumerate(labels)
         ]
 
-        # Check that expected and actual labels match up
-        assert np.array_equal(
-            im_data_labels, im_expected_labels
+        # Check that each legend entry label is in one of all_label_options
+        assert all(
+            labels_check
         ), "Provided legend labels don't match labels found."
+
+        # Check that expected and actual arrays data match up
+        assert np.array_equal(
+            im_data, im_expected
+        ), "Expected image data doesn't match data in image."
 
         # IMAGE TESTS/HELPER FUNCTIONS
 
-    def get_image_cmap(self):
-        """Return the cmap for the image in the matplotlib"""
-        return self.ax.get_images()[0].get_cmap()
-        
-    def get_legend_labels(self, all_label_options):
-        """Return labels from legend
+    def get_legend_labels(self, return_facecolors=False):
+        """Return labels from legend in a list
+
+        Parameters
+        ----------
+        return_facecolors: boolean
+            Returns a list of facecolors alongside the labels themselves.
 
         Returns
         -------
-        im_data: List
-            Numpy array of images stored on Axes object.
-        all_label_options: list of lists
-            Each internal list represents a class and said list is a list of
-            strings where at least one string is expected to be in the legend
-            label for this category. Internal lists must be in the same order
-            as bins in im_expected, e.g. first internal list has the expected
-            label options for class 0.
+        labels: List
+            List of labels found in the legend of a raster plot.
         """
 
         # Retrieve legend
         legends = self.get_legends()
         assert legends, "No legend displayed"
 
-        legend_dict = {}
+        patches = [leg.get_patches() for leg in legends]
 
-        for p in [
-            p
-            for sublist in [leg.get_patches() for leg in legends]
-            for p in sublist
-        ]:
-            label = p.get_label().lower()
-            legend_dict[p.get_facecolor()] = self._which_label(
-                label, all_label_options
-            )
-
-        # Check that each legend entry label is in one of all_label_options
-        assert len([val for val in legend_dict.values() if val]) == len(
-            all_label_options
-        ), (
-            "Number of label options provided doesn't match the number of"
-            " labels found in the image."
-        )
-
-        return legend_dict
+        return [
+            label.get_label().lower()
+            for sublist in patches
+            for label in sublist
+        ]
 
     def get_plot_image(self):
         """Returns images stored on the Axes object as a list of numpy arrays.

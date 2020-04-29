@@ -157,13 +157,23 @@ def test_raster_assert_colorbar_range_blank(raster_plt_blank, np_ar):
 """ LEGEND TESTS """
 
 
+def test_get_legend_labels_accuracy(raster_plt_class, np_ar_discrete):
+    """Checks that helper function get_legend_labels returns the right labels.
+    """
+    values = np.sort(np.unique(np_ar_discrete))
+    label_options = ["level " + str(i) for i in values]
+
+    assert label_options == raster_plt_class.get_legend_labels()
+    plt.close()
+
+
 def test_raster_assert_legend_accuracy(raster_plt_class, np_ar_discrete):
     """Checks that legend matches image, checking both the labels and color
     patches"""
     values = np.sort(np.unique(np_ar_discrete))
-    label_options = [[str(i)] for i in values]
+    label_options = [["level " + str(i)] for i in values]
 
-    raster_plt_class.assert_legend_labels(np_ar_discrete, label_options)
+    raster_plt_class.assert_raster_legend_labels(np_ar_discrete, label_options)
     plt.close()
 
 
@@ -176,7 +186,7 @@ def test_raster_assert_legend_accuracy_badlabel(
     # Should fail with bad label
     bad_label_options = [["foo"] * values.shape[0]]
     with pytest.raises(AssertionError, match="Number of label options provid"):
-        raster_plt_class.assert_legend_labels(
+        raster_plt_class.assert_raster_legend_labels(
             np_ar_discrete, bad_label_options
         )
     plt.close()
@@ -198,7 +208,7 @@ def test_raster_assert_legend_accuracy_badvalues(
     with pytest.raises(
         AssertionError, match="Provided legend labels don't match labels found"
     ):
-        raster_plt_class.assert_legend_labels(bad_image, label_options)
+        raster_plt_class.assert_raster_legend_labels(bad_image, label_options)
     plt.close()
 
 
@@ -209,7 +219,7 @@ def test_raster_assert_legend_accuracy_nolegend(raster_plt, np_ar_discrete):
 
     # Fails without legend
     with pytest.raises(AssertionError, match="No legend displayed"):
-        raster_plt.assert_legend_labels(np_ar_discrete, label_options)
+        raster_plt.assert_raster_legend_labels(np_ar_discrete, label_options)
     plt.close()
 
 
@@ -222,7 +232,9 @@ def test_raster_assert_legend_accuracy_noimage(
 
     # Fails when no image displayed
     with pytest.raises(AssertionError, match="No Image Displayed"):
-        raster_plt_blank.assert_legend_labels(np_ar_discrete, label_options)
+        raster_plt_blank.assert_raster_legend_labels(
+            np_ar_discrete, label_options
+        )
     plt.close()
 
 
