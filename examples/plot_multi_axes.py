@@ -115,7 +115,7 @@ plot_test_hold = nb.convert_axes(plt, which_axes="all")
 
 # This object can then be turned into a VectorTester object by accessing its
 # indices.
-plot_tester_1 = VectorTester(plot_test_hold[0])
-plot_tester_2 = VectorTester(plot_test_hold[1])
+plot_tester_1 = pt.PlotTester(plot_test_hold[0])
+plot_tester_2 = pt.PlotTester(plot_test_hold[1])
 
 # Now you can run the tests as you did earlier!
