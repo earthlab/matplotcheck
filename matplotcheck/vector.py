@@ -95,7 +95,7 @@ class VectorTester(PlotTester):
             )
 
         points_grouped = [
-            [data["offset"][i] for i in data.index]
+            [data.offset[i] for i in data.index]
             for c, data in points_dataframe.groupby(
                 ["color", "mstyle", "msize"], sort=False
             )
@@ -216,18 +216,18 @@ class VectorTester(PlotTester):
         if isinstance(points_expected, gpd.geodataframe.GeoDataFrame):
             points = self.get_points()
             xy_expected = pd.DataFrame(columns=["x", "y"])
-            xy_expected["x"] = points_expected.geometry.x
-            xy_expected["y"] = points_expected.geometry.y
+            xy_expected.x = points_expected.geometry.x
+            xy_expected.y = points_expected.geometry.y
             xy_expected = xy_expected.sort_values(by=["x", "y"])
             xy_expected.reset_index(inplace=True, drop=True)
             # Fix for failure if more than points were plotted in matplotlib
             if len(points) != len(xy_expected):
                 # Checks if there are extra 0, 0 coords in the DataFrame
                 # returned from self.get_points and removes them.
-                points_zeros = (points["x"] == 0) & (points["y"] == 0)
+                points_zeros = (points.x == 0) & (points.y == 0)
                 if points_zeros.any():
-                    expected_zeros = (xy_expected["x"] == 0) & (
-                        xy_expected["y"] == 0
+                    expected_zeros = (xy_expected.x == 0) & (
+                        xy_expected.y == 0
                     )
                     keep = expected_zeros.sum()
                     zeros_index_vals = points_zeros.index[
@@ -385,7 +385,7 @@ class VectorTester(PlotTester):
             )
 
         lines_grouped = [
-            [data["seg"][i] for i in data.index]
+            [data.seg[i] for i in data.index]
             for c, data in lines_dataframe.groupby(
                 ["color", "lwidth", "lstyle"], sort=False
             )
@@ -405,7 +405,7 @@ class VectorTester(PlotTester):
         """
         if type(lines_expected) == gpd.geodataframe.GeoDataFrame:
             lines_expected = lines_expected[
-                ~lines_expected["geometry"].is_empty
+                ~lines_expected.geometry.is_empty
             ].reset_index(drop=True)
             fig, ax_exp = plt.subplots()
             lines_expected.plot(ax=ax_exp)
@@ -442,7 +442,7 @@ class VectorTester(PlotTester):
         if type(lines_expected) == gpd.geodataframe.GeoDataFrame:
             groups = self.get_lines_by_attributes()
             lines_expected = lines_expected[
-                ~lines_expected["geometry"].is_empty
+                ~lines_expected.geometry.is_empty
             ].reset_index(drop=True)
             fig, ax_exp = plt.subplots()
             for typ, data in lines_expected.groupby(sort_column):
@@ -532,7 +532,7 @@ class VectorTester(PlotTester):
                     )
             if isinstance(polygons_expected, gpd.geodataframe.GeoDataFrame):
                 polygons_expected = self._convert_multipolygons(
-                    polygons_expected["geometry"]
+                    polygons_expected.geometry
                 )
             polygons = self.get_polygons()
             if dec:

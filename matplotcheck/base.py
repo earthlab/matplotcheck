@@ -817,12 +817,12 @@ class PlotTester(object):
 
         # crop to limits
         lims = self.ax.get_xlim()
-        xy_data = xy_data[xy_data["x"] >= lims[0]]
-        xy_data = xy_data[xy_data["x"] <= lims[1]].reset_index(drop=True)
+        xy_data = xy_data[xy_data.x >= lims[0]]
+        xy_data = xy_data[xy_data.x <= lims[1]].reset_index(drop=True)
 
         # change to datetime dtype if needed
         if xtime:
-            xy_data["x"] = mdates.num2date(xy_data["x"])
+            xy_data.x = mdates.num2date(xy_data.x)
         return xy_data
 
     def assert_xydata(
@@ -917,13 +917,13 @@ class PlotTester(object):
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
             np.testing.assert_allclose(
-                xy_data["x"],
+                xy_data.x,
                 xy_expected[xcol],
                 rtol=tolerence,
                 err_msg=message,
             )
             np.testing.assert_allclose(
-                xy_data["y"],
+                xy_data.y,
                 xy_expected[ycol],
                 rtol=tolerence,
                 err_msg=message,
@@ -937,13 +937,13 @@ class PlotTester(object):
             that we can use our own message."""
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    np.array(xy_data.x), np.array(xy_expected[xcol])
                 )
             except AssertionError:
                 raise AssertionError(message)
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                    np.array(xy_data.y), np.array(xy_expected[ycol])
                 )
             except AssertionError:
                 raise AssertionError(message)
@@ -979,18 +979,18 @@ class PlotTester(object):
             "".join(c for c in l.get_text())
             for l in self.ax.xaxis.get_majorticklabels()
         ]
-        y_data = self.get_xy()["y"]
+        y_data = self.get_xy().y
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
 
         # If we expect x-values to be numbers
         if all([isinstance(i, numbers.Number) for i in xy_expected[xcol]]):
             x_is_numeric = True
             try:
-                x_data_numeric = [float(i) for i in xy_data["x"]]
+                x_data_numeric = [float(i) for i in xy_data.x]
             except ValueError:
                 raise AssertionError(message)
             else:
-                xy_data["x"] = x_data_numeric
+                xy_data.x = x_data_numeric
 
         # If we expect x-values to be strings
         else:
@@ -999,13 +999,13 @@ class PlotTester(object):
                 # We attempt to convert numeric strings to numbers
                 try:
                     x_expected = [float(s) for s in xy_expected[xcol]]
-                    x_data = [float(s) for s in xy_data["x"]]
+                    x_data = [float(s) for s in xy_data.x]
                 except ValueError:
                     x_is_numeric = False
                 else:
                     x_is_numeric = True
                     xy_expected[xcol] = x_expected
-                    xy_data["x"] = x_data
+                    xy_data.x = x_data
             # We expect x-values to be non-numeric strings
             else:
                 x_is_numeric = False
@@ -1014,19 +1014,19 @@ class PlotTester(object):
         if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    np.array(xy_data.x), np.array(xy_expected[xcol])
                 )
             except AssertionError:
                 raise AssertionError(message)
         else:
             np.testing.assert_equal(
-                np.array(xy_data["x"]), np.array(xy_expected[xcol]), message
+                np.array(xy_data.x), np.array(xy_expected[xcol]), message
             )
 
         # Testing y-data
         try:
             np.testing.assert_array_max_ulp(
-                np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                np.array(xy_data.y), np.array(xy_expected[ycol])
             )
         except AssertionError:
             raise AssertionError(message)
@@ -1090,7 +1090,7 @@ class PlotTester(object):
         """
         flag_exist, flag_length = False, False
         xy = self.get_xy(points_only=True)
-        min_val, max_val = min(xy["x"]), max(xy["x"])
+        min_val, max_val = min(xy.x), max(xy.x)
 
         for l in self.ax.lines:
             path_verts = self.ax.transData.inverted().transform(
@@ -1166,7 +1166,7 @@ class PlotTester(object):
             overlapping or stacked histograms in the same
             `matplotlib.axis.Axis` object, then this returns the number of bins
             with unique edges. """
-        x_data = self.get_xy(xtime=False)["x"]
+        x_data = self.get_xy(xtime=False).x
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
 
@@ -1210,7 +1210,7 @@ class PlotTester(object):
         Int :
             The number of bins in the histogram"""
 
-        bin_values = self.get_xy()["y"].tolist()
+        bin_values = self.get_xy().y.tolist()
 
         return bin_values
 
@@ -1222,7 +1222,7 @@ class PlotTester(object):
         Int :
             The number of bins in the histogram"""
 
-        bin_midpoints = self.get_xy()["x"].tolist()
+        bin_midpoints = self.get_xy().x.tolist()
 
         return bin_midpoints
 

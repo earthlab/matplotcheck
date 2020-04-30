@@ -168,11 +168,11 @@ class TimeSeriesTester(PlotTester):
         """
         if nodata:
             xy = self.get_xy(xtime=False)
-            assert ~np.isin(nodata, xy["x"]), (
+            assert ~np.isin(nodata, xy.x), (
                 "Values of {0} have been found in data. Be sure to remove no "
                 "data values"
             ).format(nodata)
-            assert ~np.isin(nodata, xy["y"]), (
+            assert ~np.isin(nodata, xy.y), (
                 "Values of {0} have been found in data. Be sure to remove no "
                 "data values"
             ).format(nodata)
@@ -189,6 +189,6 @@ class TimeSeriesTester(PlotTester):
         ----------
         x_exp: expected x_axis values, must be in a datetime format
         """
-        x_data = [math.floor(d) for d in self.get_xy(xtime=False)["x"]]
+        x_data = [math.floor(d) for d in self.get_xy(xtime=False).x]
         x_exp = [d.toordinal() for d in x_exp]  # convert to days elapsed
         assert np.array_equal(sorted(x_exp), sorted(x_data)), m
