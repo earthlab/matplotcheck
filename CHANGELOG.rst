@@ -9,6 +9,7 @@ The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`
 Unreleased
 ----------
 
+-  Changed changelog to an rst file. (@nkorinek, #266)
 -  Add a vignette for testing vector data plots. (@nkorinek, #208)
 -  Add ``pillow`` as a dev requirement (@lwasser, #253)
 -  Removed the ``m2r`` package from MatPlotCheck (@nkorinek, #247)
