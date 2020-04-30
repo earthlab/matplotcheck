@@ -21,7 +21,7 @@ import matplotcheck.base as pt
 ################################################################################
 # Create Example Data
 # -------------------
-# Before we create a plot, we need to create some data. For plots with
+# Before you create a plot, you need to create some data. For plots with
 # regression lines, you will need data in which you are looking for trends
 # over time, such as maximum values from lidar-derived measurements.
 
