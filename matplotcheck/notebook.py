@@ -77,7 +77,13 @@ def remove_comments(input_string):
         input_string.
     """
     split_lines = input_string.split("\n")
-    return "".join([line.split("#")[0] for line in split_lines])
+    return "\n".join(
+        [
+            line.split("#")[0]
+            for line in split_lines
+            if len(line.split("#")[0]) != 0
+        ]
+    )
 
 
 def import_test(var_dict, n):
