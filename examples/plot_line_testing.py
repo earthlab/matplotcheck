@@ -1,6 +1,6 @@
 """
-Testing Line Plots
-==================
+Test Line Plots with Matplotcheck
+=================================
 
 These are some examples of using the basic functionality of Matplotcheck
 to test line plots (including regression lines) in Python.
