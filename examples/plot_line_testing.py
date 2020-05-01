@@ -51,7 +51,7 @@ ax.set(xlabel='Data1',
 plt.show()
 
 ################################################################################
-# Test Line Plots
+# Test Line Plots Using a basic matplotcheck.PlotTester object
 # ---------------
 # Now you can make a PlotTester object and test the line plot. You can test
 # that the line type is a one to one line or a regression line, and you can
