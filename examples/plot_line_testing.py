@@ -28,13 +28,13 @@ import matplotcheck.base as pt
 # Create dataframe of data points
 col1 = list(np.random.randint(25, size=15))
 col2 = list(np.random.randint(25, size=15))
-data = pd.DataFrame(list(zip(col1, col2)), columns=['Data1', 'Data2'])
+data = pd.DataFrame(list(zip(col1, col2)), columns=['data1', 'data2'])
 
 # Plot data points, regression line, and one-to-one (1:1) line for reference
 fig, ax = plt.subplots()
 
 # Points and regression line
-sns.regplot('Data1', 'Data2',
+sns.regplot('data1', 'data2',
             data=data,
             color='purple',
             ax=ax)
@@ -42,8 +42,8 @@ sns.regplot('Data1', 'Data2',
 # 1:1 line
 ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
 
-ax.set(xlabel='Data1',
-       ylabel='Data2',
+ax.set(xlabel='data1',
+       ylabel='data2',
        title='Example Data Regression Plot',
        xlim=(0, 25),
        ylim=(0, 25))
@@ -88,19 +88,19 @@ line_figure_tests.assert_lines_of_type(line_types=['regression', 'onetoone'])
 
 # Get slope and y intercept data of regression line for testing
 slope_data, intercept_data, _, _, _ = stats.linregress(
-    data.Data1, data.Data2)
+    data.data1, data.data2)
 
 # Check that slope and y intercept are correct (expected) values
 line_figure_tests.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
 
 
 ################################################################################
-# Access the Axes object in a Jupyter Notebook
-# --------------------------------------------
-# Matplotcheck can be used to test plots in Jupyter Notebooks as well. The main
-# difference is how you access the axes objects from the plot that you want to
-# test. Below is an example of how you could access the axes of a plot you want
-# to test in a Jupyter Notebook.
+#
+# .. note::
+#    Matplotcheck can be used to test plots in Jupyter Notebooks as well. The main
+#    difference is how you access the axes objects from the plot that you want to
+#    test. Below is an example of how you could access the axes of a plot you want
+#    to test in a Jupyter Notebook.
 
 # First, import the Notebook module from Matplotcheck
 import matplotcheck.notebook as nb
@@ -109,7 +109,7 @@ import matplotcheck.notebook as nb
 fig, ax = plt.subplots()
 
 # Points and regression line
-sns.regplot('Data1', 'Data2',
+sns.regplot('data1', 'data2',
             data=data,
             color='purple',
             ax=ax)
@@ -117,8 +117,8 @@ sns.regplot('Data1', 'Data2',
 # 1:1 line
 ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
 
-ax.set(xlabel='Data1',
-       ylabel='Data2',
+ax.set(xlabel='data1',
+       ylabel='data2',
        title='Example Data Regression Plot',
        xlim=(0, 25),
        ylim=(0, 25));
