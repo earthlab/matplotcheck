@@ -10,7 +10,6 @@ Unreleased
 ----------
 
 -  Change list selection to use indexing instead of brackets (@nkorinek, #54)
--  Add a vignette to demonstrate how to grade multi axes plots (@nkorinek, #116)
 -  Changed changelog to an rst file. (@nkorinek, #266)
 -  Add a vignette for testing vector data plots. (@nkorinek, #208)
 -  Add ``pillow`` as a dev requirement (@lwasser, #253)
