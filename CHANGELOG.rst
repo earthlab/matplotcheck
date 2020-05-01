@@ -10,7 +10,7 @@ Unreleased
 ----------
 
 -  Added functionality to assert that polygons are grouped by a column
-(@nkorinek, #225)
+   (@nkorinek, #225)
 -  Changed changelog to an rst file. (@nkorinek, #266)
 -  Add a vignette for testing vector data plots. (@nkorinek, #208)
 -  Add ``pillow`` as a dev requirement (@lwasser, #253)
