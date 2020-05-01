@@ -917,16 +917,10 @@ class PlotTester(object):
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
             np.testing.assert_allclose(
-                xy_data.x,
-                xy_expected[xcol],
-                rtol=tolerence,
-                err_msg=message,
+                xy_data.x, xy_expected[xcol], rtol=tolerence, err_msg=message,
             )
             np.testing.assert_allclose(
-                xy_data.y,
-                xy_expected[ycol],
-                rtol=tolerence,
-                err_msg=message,
+                xy_data.y, xy_expected[ycol], rtol=tolerence, err_msg=message,
             )
 
         else:
