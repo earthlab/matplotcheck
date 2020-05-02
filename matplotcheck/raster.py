@@ -56,77 +56,148 @@ class RasterTester(VectorTester):
                 cb[0].vmax == crange[1]
             ), "Colorbar maximum is not expected value:{0}".format(crange[1])
 
-    def _which_label(self, label, all_label_options):
+    def _check_label(self, labels, expected_labels):
         """Helper function for assert_legend_labels
-        Returns string that represents a category label for label.
+        Tests each label in the legend to see if the text in expected labels
+        matches the text found in the legend labels.
 
         Parameters
         ----------
-        label: string from legend to see if it contains an option in
-            all_label_options
-        all_label_options: list
-            List should be from an internal list from a list of lists.
-            Each internal list represents a class and said list is a list of
-            strings where at least one string is expected to be in the legend
-            label for this category.
+        # TODO: update all parameters and associated parameter description
+        labels: string from legend to see if it contains an option in
+            expected_labels
+        expected_labels: list of lists
+            Each list within the main list should contain a list of strings
+            that are expected to be found in each label in the plot
+            legend that is being tested.
+            TODO: clarify if this is or or "and" - ie i think it's or - is
+            just makes sure that one of the words in the sublist of expected
+            labels is in the plot legend
 
         Returns
         ------
+        Dictionary ... #TODO update this return statement
         string that is the first entry in the internal list which label is
         matched with. If no match is found, return value is None
         """
-        for label_option in all_label_options:
-            if label_option == label:
-                return label_option
-        return None
+        # TODO: return boolean instead of a none value - true if it matches,
+        #  false if it does not match
 
-    def assert_raster_legend_labels(self, im_expected, all_label_options):
+        #
+        # for label_option in expected_labels:
+        #     if label_option == label:
+        #         return label_option
+
+        label_check = {}
+
+        # Iteratively test each label found in the plot legend to see if it is
+        # in the list of expected labels
+        for i, label in enumerate(labels):
+            test_output = any(
+                label in expected_label
+                for expected_label in expected_labels[i]
+            )
+            label_check[label] = test_output
+
+        return label_check
+
+    def assert_raster_legend_labels(self, im_expected, expected_labels):
         """Asserts legend correctly describes classified image on Axes ax,
         checking the legend labels and the values
 
         Parameters
         ----------
         im_expected: array of arrays with expected classified image on ax.
-        all_label_options: list of lists
-            Each internal list represents a class and said list is a list of
-            strings where at least one string is expected to be in the legend
-            label for this category. Internal lists must be in the same order
-            as bins in im_expected, e.g. first internal list has the expected
-            label options for class 0.
+        expected_labels: list of lists
+            Each sublist within the expected_labels list contains the word
+            or word variations expected to be found in the legend labels of
+            the plot being tested. Example list: [["gain", "increase"]]
+            would be provided if you wanted to test that the word "gain" OR
+            "increase"  were found in the first legend element.
+            TODO: i think it's or but let's just clarify it's not "and"
+            TODO: we should have tests that check what happens if someone
+            provides only 2 sublist but there are three legend labels.
+            Sublists must be in the same order as the legend elements are
+            in. EXAMPLE: the first sublist will map to the first labeled item
+            in a plot legend.
 
         Returns
         ----------
-        Nothing (if checks pass) or raises error
+        Nothing (if checks pass) or raises assertion error
         """
+
+        # TODO add test for a plot with no image in it. get_plot_image should
+        # return an error
+
         # Retrieve image array
         im_data = self.get_plot_image()
 
-        assert list(im_data), "No Image Displayed"
-
-        # Retrieve legend entries and find which element of all_label_options
-        # matches that entry
+        # TODO: We shouldn't need these tests because they happen in
+        #  get_plot_image already. But we should improve the output message in
+        # get_plot image to be something more expressive
+        # assert list(im_data), "No Image Displayed"
 
         labels = self.get_legend_labels()
 
-        assert len(labels) == len(all_label_options), (
+        # TODO: i think this should be a try, catch / return value error
+        assert len(labels) == len(expected_labels), (
             "Number of label options provided doesn't match the number of"
             " labels found in the image."
         )
 
-        labels_check = [
-            self._which_label(label, all_label_options[i])
-            for i, label in enumerate(labels)
-        ]
+        # TODO: this currently only returns a list of values. It would be
+        #  better if it returns a dictionary with the key being each
+        #  label being tested and the value being a boolean (True if there
+        #  is a match, False if there is no match)
 
-        # Check that each legend entry label is in one of all_label_options
-        assert all(
-            labels_check
-        ), "Provided legend labels don't match labels found."
+        labels_dict = self._check_label(labels, expected_labels)
+
+        # labels_check = [
+        #     self._check_label(label, expected_labels[i])
+        #     for i, label in enumerate(labels)
+        # ]
+
+        # TODO: this now becomes a bit more tricky but we need to 1) test that
+        # each label is true - if one is false, then return useful message
+        # stating which label is incorrect.
+
+        # Pull out any labels that failed the above test for final printing
+        # below
+        bad_labels = {
+            key: labels_dict[key]
+            for key in labels_dict
+            if not labels_dict[key]
+        }
+
+        # TODO: raise assertion error (value error?) and print out a list of
+        #  labels that are wrong ONLY if some are wrong
+        if bad_labels:
+            # get just the labels that are
+            bad_keys = [str(a_key) for a_key in bad_labels.keys()]
+            raise ValueError(
+                "Oops. It looks like atleast one of your legend "
+                "labels is incorrect. Double check the "
+                "following label(s): {"
+                "}".format(bad_keys)
+            )
+
+        # Check that each legend entry label is in one of expected_labels
+        # assert all(
+        #     labels_check
+        # ), "Provided legend labels don't match labels found."
+
+        # TODO: once we get the above working, let's then add another layer
+        #  where we grab the RGB values and also add that to the dictionary
+        # At that point we can test whether the colors in the plot array, map
+        # to the legend patch colors and in turn the expected image
 
         # Check that expected and actual arrays data match up
         assert np.array_equal(
             im_data, im_expected
         ), "Expected image data doesn't match data in image."
+
+        # TODO: warning -- proj_create: init=epsg:/init=IGNF: syntax not
+        #  supported in non-PROJ4 emulation mode - where is this coming from?
 
         # IMAGE TESTS/HELPER FUNCTIONS
 
