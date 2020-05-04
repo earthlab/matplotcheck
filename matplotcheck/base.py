@@ -122,6 +122,10 @@ class PlotTester(object):
             return
 
         string = string.lower().replace(" ", "")
+
+        if isinstance(strings_expected, str):
+            strings_expected = [strings_expected]
+
         for check in strings_expected:
             if isinstance(check, str):
                 if not check.lower().replace(" ", "") in string:
