@@ -1061,13 +1061,12 @@ class PlotTester(object):
         self,
         slope_exp,
         intercept_exp,
-        xtime=False,
+        check_coverage=False,
         message_no_line="Expected line not displayed",
         message_data="Line does not cover data set",
     ):
         """Asserts that there exists a line on Axes `ax` with slope `slope_exp`
-        and y-intercept `intercept_exp` and goes at least from x coordinate
-        `min_val` to x coordinate `max_val`
+        and y-intercept `intercept_exp` and
 
         Parameters
         ----------
@@ -1075,23 +1074,29 @@ class PlotTester(object):
             Expected slope of line
         intercept_exp : float
             Expeted y intercept of line
-        xtime : boolean
-            Set ``True`` if x-axis values are datetime
+        check_coverage : boolean
+            If `check_coverage` is `True`, function will check that the goes at
+            least from x coordinate `min_val` to x coordinate `max_val`. If the
+            line does not cover the entire dataset, and `AssertionError` with
+            be thrown with message `message_data`.
         message_no_line : string
             The error message to be displayed if the line does not exist.
         message_data : string
             The error message to be displayed if the line exists but does not
-            cover the dataset.
+            cover the dataset, and if `check_coverage` is `True`.
 
         Raises
         -------
         AssertionError
-            with message `m` or `m2` if no line exists that covers the dataset
+            with message `message_no_line` or `message_data` if no line exists
+            that covers the dataset.
         """
         flag_exist = False
-        flag_length = False
-        xy = self.get_xy(points_only=True)
-        min_val, max_val = min(xy["x"]), max(xy["x"])
+
+        if check_coverage:
+            flag_length = not check_coverage
+            xy = self.get_xy(points_only=True)
+            min_val, max_val = min(xy["x"]), max(xy["x"])
 
         for l in self.ax.lines:
             # Here we will get the verticies for the line and reformat them in
@@ -1104,13 +1109,18 @@ class PlotTester(object):
                 y_intercept, intercept_exp, abs_tol=1e-4
             ):
                 flag_exist = True
-                line_x_vals = [coord[0] for coord in path_verts]
-                if min(line_x_vals) <= min_val and max(line_x_vals) >= max_val:
-                    flag_length = True
-                    break
+                if check_coverage:
+                    line_x_vals = [coord[0] for coord in path_verts]
+                    if (
+                        min(line_x_vals) <= min_val
+                        and max(line_x_vals) >= max_val
+                    ):
+                        flag_length = True
+                        break
 
         assert flag_exist, message_no_line
-        assert flag_length, message_data
+        if check_coverage:
+            assert flag_length, message_data
 
     def assert_lines_of_type(self, line_types):
         """Asserts each line of type in `line_types` exist on `ax`

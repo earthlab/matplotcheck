@@ -25,6 +25,9 @@ Unreleased
    in them (@nkorinek, #182)
 -  added contributors file and updated README to remove that information
    (@nkorinek, #121)
+-  Made checking line coverage optional for `base.assert_line()`
+   (@ryla5068, #239)
+-  Fixed bugs involving line tests (@ryla5068, #239)
 
 0.1.2
 -----
