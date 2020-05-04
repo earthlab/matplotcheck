@@ -21,6 +21,7 @@ It currently supports.
    Examples Gallery <gallery_vignettes/index>
    contributing
    code-of-conduct
+   changelog
 
 Indices and tables
 ==================
