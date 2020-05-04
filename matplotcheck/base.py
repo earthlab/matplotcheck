@@ -1102,6 +1102,10 @@ class PlotTester(object):
             ):
                 flag_exist = True
                 line_x_vals = [coord[0] for coord in path_verts]
+                # This check ensures that the minimum and maximum values of the
+                # line are within or very close to the minimum and maximum
+                # values in the pandas dataframe provided. This accounts for
+                # small errors sometimes found in matplotlib plots.
                 if (
                     math.isclose(min(line_x_vals), min_val, abs_tol=1e-4)
                     or min(line_x_vals) <= min_val
