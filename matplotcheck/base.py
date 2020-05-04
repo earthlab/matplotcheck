@@ -919,7 +919,7 @@ class PlotTester(object):
             datetime data, this is essential for comparing high-precision
             datetime data (i.e. millisecond or lower).
 
-            We catch this error and raise our own that is more relevant to 
+            We catch this error and raise our own that is more relevant to
             the assertion we are running."""
             try:
                 np.testing.assert_array_max_ulp(
@@ -947,7 +947,9 @@ class PlotTester(object):
                 raise AssertionError(message)
             except ValueError:
                 # xy_data and xy_expected do not have the same shape
-                raise AssertionError(message)
+                raise ValueError(
+                    "xy_data and xy_expected do not have the same shape"
+                )
 
     def assert_xlabel_ydata(
         self, xy_expected, xcol, ycol, message="Incorrect Data"
