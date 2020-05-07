@@ -83,29 +83,31 @@ def test_reg_plot_intercept_fails(pd_df_reg_data, pt_reg_data):
 
 def test_line_type_reg(pt_reg_data):
     """Check that assert_lines_of_type() correctly passes when checking for a
-    regression line."""
-    pt_reg_data.assert_lines_of_type("regression")
+    linear-regression line."""
+    pt_reg_data.assert_lines_of_type("linear-regression")
 
 
 def test_line_type_one2one(pt_one2one):
     """Check that assert_lines_of_type() correctly passes when checking for a
     one-to-one line."""
-    pt_one2one.assert_lines_of_type("onetoone")
+    pt_one2one.assert_lines_of_type("onetoone", check_coverage=False)
 
 
 def test_line_type_reg_one2one(pt_reg_one2one):
     """Check that assert_lines_of_type() correctly passes when checking for
-    both a regression line and a one-to-one line."""
-    pt_reg_one2one.assert_lines_of_type(["regression", "onetoone"])
+    both a linear-regression line and a one-to-one line."""
+    pt_reg_one2one.assert_lines_of_type(
+        ["linear-regression", "onetoone"], check_coverage=False
+    )
 
 
 def test_line_type_reg_fails(pt_one2one):
     """Check that assert_lines_of_type() correctly fails when checking for a
-    regression line, but one does not exist."""
+    linear-regression line, but one does not exist."""
     with pytest.raises(
-        AssertionError, match="regression line not displayed properly"
+        AssertionError, match="linear-regression line not displayed properly"
     ):
-        pt_one2one.assert_lines_of_type("regression")
+        pt_one2one.assert_lines_of_type("linear-regression")
 
 
 def test_line_type_one2one_fails(pt_reg_data):
