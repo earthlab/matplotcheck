@@ -25,6 +25,8 @@ Unreleased
    in them (@nkorinek, #182)
 -  added contributors file and updated README to remove that information
    (@nkorinek, #121)
+-  Changed tolerance functionality from relative tolerance to absolute
+   tolerance. (@ryla5068, #234)
 
 0.1.2
 -----
