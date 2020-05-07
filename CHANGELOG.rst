@@ -9,6 +9,7 @@ The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`
 Unreleased
 ----------
 
+-  Changed how `assert_lines` checks the limits of lines (@nkorinek, #243)
 -  Changed changelog to an rst file. (@nkorinek, #266)
 -  Add a vignette for testing vector data plots. (@nkorinek, #208)
 -  Add ``pillow`` as a dev requirement (@lwasser, #253)
@@ -25,6 +26,8 @@ Unreleased
    in them (@nkorinek, #182)
 -  added contributors file and updated README to remove that information
    (@nkorinek, #121)
+-  Changed tolerance functionality from relative tolerance to absolute
+   tolerance. (@ryla5068, #234)
 -  Made checking line coverage optional for `base.assert_line()`
    (@ryla5068, #239)
 -  Fixed bugs involving line tests (@ryla5068, #239)
