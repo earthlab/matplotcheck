@@ -25,8 +25,8 @@ Unreleased
    in them (@nkorinek, #182)
 -  added contributors file and updated README to remove that information
    (@nkorinek, #121)
-- Improved handling of datasets with different shapes in base.assert_xy() (@ryla5068, #233)
-- Bug fix for handling object datatypes in base.assert_xy() (@ryla5068, #232)
+-  Improved handling of datasets with different shapes in base.assert_xy() (@ryla5068, #233)
+-  Bug fix for handling object datatypes in base.assert_xy() (@ryla5068, #232)
 
 0.1.2
 -----

@@ -1021,7 +1021,8 @@ class PlotTester(object):
         if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol]), 5
+                    np.array(xy_data["x"]),
+                    np.array(xy_expected[xcol]),
                 )
             except AssertionError:
                 raise AssertionError(message)
@@ -1033,7 +1034,7 @@ class PlotTester(object):
         # Testing y-data
         try:
             np.testing.assert_array_max_ulp(
-                np.array(xy_data["y"]), np.array(xy_expected[ycol]), 5
+                np.array(xy_data["y"]), np.array(xy_expected[ycol])
             )
         except AssertionError:
             raise AssertionError(message)
