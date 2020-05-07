@@ -352,7 +352,7 @@ def test_assert_bin_values_incorrect(pt_hist_overlapping):
 
 
 def test_assert_bin_values_tolerance(pt_hist_overlapping):
-    """Test that assert_bin_values correctly passes when using tolerence."""
+    """Test that assert_bin_values correctly passes when using tolerance."""
     bin_values = pt_hist_overlapping.get_bin_values()
     for i in range(len(bin_values)):
         bin_values[i] = bin_values[i] + 1
