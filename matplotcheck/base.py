@@ -833,11 +833,12 @@ class PlotTester(object):
         points_only=False,
         xtime=False,
         xlabels=False,
-        tolerence=0,
+        tolerance=0,
         message="Incorrect data values",
     ):
         """Asserts that the x and y data of Axes `ax` matches `xy_expected`
-        with error message `m`. If ``xy_expected = None``, assertion is passed.
+        with error message `message`. If ``xy_expected = None``,
+        assertion is passed.
 
         Parameters
         ----------
@@ -864,12 +865,11 @@ class PlotTester(object):
             Set ``True`` if using x axis labels rather than x data. Instead of
             comparing numbers in the x-column to expected, compares numbers or
             text in x labels to expected.
-        tolerence : float
-            Measure of relative error allowed.
-            For example: Given a tolerance ``tolerence=0.1``, an expected value
-            ``e``, and an actual value ``a``, this asserts
-            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+        tolerance : float
+            A non-zero value of tol_rel allows an absolute tolerance when
+            checking the data. For example, a tolerance of 0.1 would
+            check that the actual data is within 0.1 units of the actual data.
+            Note that the units for datetime data is always days.
         message : string
             The error message to be displayed if the xy-data does not match
             `xy_expected`
@@ -878,7 +878,8 @@ class PlotTester(object):
         Raises
         -------
         AssertionError
-            with message `m` if legends overlap
+            with message `message`, if x and y data of Axes `ax` does not match
+            `xy_expected`
         """
         if xy_expected is None:
             return
@@ -913,19 +914,19 @@ class PlotTester(object):
             xy_expected.sort_values(by=xcol),
         )
 
-        if tolerence > 0:
+        if tolerance > 0:
             if xtime:
                 raise ValueError("tolerance must be 0 with datetime on x-axis")
             np.testing.assert_allclose(
                 xy_data["x"],
                 xy_expected[xcol],
-                rtol=tolerence,
+                atol=tolerance,
                 err_msg=message,
             )
             np.testing.assert_allclose(
                 xy_data["y"],
                 xy_expected[ycol],
-                rtol=tolerence,
+                atol=tolerance,
                 err_msg=message,
             )
 
@@ -1249,12 +1250,11 @@ class PlotTester(object):
         bin_values : list
             A list of numbers representing the expected values of each
             consecutive bin (i.e. the heights of the bars in the histogram).
-        tolerence : float
-            Measure of relative error allowed.
-            For example: Given a tolerance ``tolerence=0.1``, an expected value
-            ``e``, and an actual value ``a``, this asserts
-            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+        tolerance : float
+            A non-zero value of tol_abs allows an absolute tolerance when
+            checking the bin values. For example, an absolute tolerance of 1
+            checks that the actual bin values do not differ from the expected
+            bin values by more than 1.
         message : string
             The error message to be displayed if the bin values do not match
             `bin_values`
@@ -1281,7 +1281,7 @@ class PlotTester(object):
                 np.testing.assert_allclose(
                     plot_bin_values,
                     expected_bin_values,
-                    rtol=tolerance,
+                    atol=tolerance,
                     err_msg=message,
                 )
             except AssertionError:
