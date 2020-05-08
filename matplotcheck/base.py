@@ -924,7 +924,7 @@ class PlotTester(object):
             datetime data (i.e. millisecond or lower).
 
             We catch this error and raise our own that is more relevant to
-            the assertion we are running."""
+            the assertion being run."""
             try:
                 np.testing.assert_array_max_ulp(
                     xy_data["x"].to_numpy(dtype=np.float64),
