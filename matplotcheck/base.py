@@ -1187,7 +1187,7 @@ class PlotTester(object):
                 message_data="{0} line does not cover dataset".format(
                     line_type
                 ),
-                check_coverage=check_coverage
+                check_coverage=check_coverage,
             )
 
     # HISTOGRAM FUNCTIONS
