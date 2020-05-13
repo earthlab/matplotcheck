@@ -21,10 +21,32 @@ def pd_df_reg_data():
 
 
 @pytest.fixture
+def pd_df_reg_one2one_data():
+    """Create a pandas dataframe with points that are along a one to one
+    line."""
+    data = {
+        "A": [0.0, 2.0],
+        "B": [0.0, 2.0],
+    }
+
+    return pd.DataFrame(data)
+
+
+@pytest.fixture
 def pt_reg_data(pd_df_reg_data):
     """Create a PlotTester object with a regression line"""
     fig, ax = plt.subplots()
     sns.regplot("A", "B", data=pd_df_reg_data, ax=ax)
+
+    return PlotTester(ax)
+
+
+@pytest.fixture
+def pt_multiple_reg(pd_df_reg_data):
+    """Create a PlotTester object with multiple regression line"""
+    fig, ax = plt.subplots()
+    sns.regplot("A", "B", data=pd_df_reg_data[:5], ax=ax)
+    sns.regplot("A", "B", data=pd_df_reg_data[5:], ax=ax)
 
     return PlotTester(ax)
 
@@ -46,6 +68,32 @@ def pt_reg_one2one(pd_df_reg_data):
     sns.regplot("A", "B", data=pd_df_reg_data, ax=ax)
     ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls="--", c="k")
 
+    return PlotTester(ax)
+
+
+@pytest.fixture
+def pt_one2one_reg_close(pd_df_reg_one2one_data):
+    """Create a PlotTester object with a regression line that doesn't cover
+    all the points in a plot."""
+    fig, ax = plt.subplots()
+    sns.regplot("A", "B", data=pd_df_reg_one2one_data, ax=ax, fit_reg=False)
+    ax.plot(
+        (0.0001, 1.9999),
+        (0.0001, 1.9999),
+        transform=ax.transAxes,
+        ls="--",
+        c="k",
+    )
+    return PlotTester(ax)
+
+
+@pytest.fixture
+def pt_one2one_reg(pd_df_reg_one2one_data):
+    """Create a PlotTester object with a regression line that is plotted so the
+    points are not covered by the regression line."""
+    fig, ax = plt.subplots()
+    sns.regplot("A", "B", data=pd_df_reg_one2one_data, ax=ax, fit_reg=False)
+    ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls="--", c="k")
     return PlotTester(ax)
 
 
@@ -117,3 +165,27 @@ def test_line_type_one2one_fails(pt_reg_data):
         AssertionError, match="onetoone line not displayed properly"
     ):
         pt_reg_data.assert_lines_of_type("onetoone")
+
+
+def test_multi_reg_plot_line_fails(pt_multiple_reg):
+    """Check that multiple regression lines fails when the not all points are
+    used to make the regression lines."""
+    with pytest.raises(
+        AssertionError, match="linear-regression line not displayed properly"
+    ):
+        pt_multiple_reg.assert_lines_of_type("linear-regression")
+
+
+def test_reg_one2one_fails(pt_one2one_reg):
+    """Testing that a regression line that doesn't cover all the points in a
+    plot fails."""
+    with pytest.raises(
+        AssertionError, match="linear-regression line does not cover dataset"
+    ):
+        pt_one2one_reg.assert_lines_of_type("linear-regression")
+
+
+def test_reg_one2one_passes_close_lims(pt_one2one_reg_close):
+    """Testing that a regression line that doesn't cover all the points in a
+    plot fails."""
+    pt_one2one_reg_close.assert_lines_of_type("linear-regression")
