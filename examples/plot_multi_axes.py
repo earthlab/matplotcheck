@@ -1,5 +1,5 @@
 """
-Test Plots with Multiple Axes (Created Using Matplotlib) in Matplotcheck
+Test Matplotlib Figures with SubPlots Using Matplotcheck
 ========================================================================
 
 Below you will find some examples of how to use Matplotcheck
