@@ -2,14 +2,13 @@
 Test Line Plots with Matplotcheck
 =================================
 
-These are some examples of using the basic functionality of Matplotcheck
-to test line plots (including regression lines) in Python.
+You can use MatPlotcheck to test lines on plots. In this example you will
+learn how to test that a 1:1 line or a regression line is correct as
+rendered on a scatter plot.
 """
 
 ################################################################################
-# Import Packages
-# ---------------
-# You will start by importing the required packages and plotting a line plot.
+# To begin, import the required Python packages.
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -21,11 +20,12 @@ import matplotcheck.base as pt
 ################################################################################
 # Create Example Data
 # -------------------
-# Before you create a plot, you need to create some data. For plots with
-# regression lines, you will need data in which you are looking for trends
-# over time, such as maximum values from lidar-derived measurements.
+# Below you create some data to add to a scatter plot. You will use the
+# points to calculate and create a linear regression fit line to your
+# plot. You will also add a 1:1 line to your plot. This will allow you to
+# compare the slope of the regression output to a standard 1:1 fit.
 
-# Create dataframe of data points
+# Create Pandas DataFrame containing data points
 col1 = list(np.random.randint(25, size=15))
 col2 = list(np.random.randint(25, size=15))
 data = pd.DataFrame(list(zip(col1, col2)), columns=['data1', 'data2'])
@@ -33,13 +33,13 @@ data = pd.DataFrame(list(zip(col1, col2)), columns=['data1', 'data2'])
 # Plot data points, regression line, and one-to-one (1:1) line for reference
 fig, ax = plt.subplots()
 
-# Points and regression line
+# Use Seaborn to calculate and plot a regression line + associated points
 sns.regplot('data1', 'data2',
             data=data,
             color='purple',
             ax=ax)
 
-# 1:1 line
+# Add 1:1 line to your plot
 ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
 
 ax.set(xlabel='data1',
@@ -53,24 +53,23 @@ plt.show()
 ################################################################################
 # Test Line Plots Using a matplotcheck.PlotTester Object
 # ------------------------------------------------------------
-# Now you can make a ``matplotcheck.PlotTester`` object and test the line plot.
-# You can test that the line type is a one to one line or a regression line,
-# and you can test that the line has the correct y intercept and slope.
+# Once you have your plot, you can test the lines on the plot using
+# MatPlotCheck. To begin, create a  ``matplotcheck.PlotTester``
+# object. MatPlotCheck can test to see if there is a 1:1 and / or a regression
+# line on your plot. It will also test that the line has the correct
+# y-intercept and slope.
 
 # Convert matplotlib plot axes object into a matplotcheck PlotTester object
-line_figure_tests = pt.PlotTester(ax)
+line_plot_tester = pt.PlotTester(ax)
 
 ################################################################################
-# Test Line Types
-# ---------------
-# There are two line types on the plot above: a one-to-one line for
-# reference and a regression line derived from the data points. You can use the method
-# ``assert_lines_of_type()`` to test if a one to one or regression line
-# (or both line types) are present in the plot. (NOTE: Regression and 1:1 lines are the only types
-# of lines you can currently test for with this function.)
+# Test For Regression and 1:1 Lines on a Plot
+# --------------------------------------------
+# You can use the method ``assert_lines_of_type()`` to test if a 1:1 or
+# regression line (or both line types) are present in the plot.
 
 # Check line types
-line_figure_tests.assert_lines_of_type(line_types=['regression', 'onetoone'])
+line_plot_tester.assert_lines_of_type(line_types=['regression', 'onetoone'])
 
 ################################################################################
 # Test Slope and Y Intercept
@@ -91,7 +90,7 @@ slope_data, intercept_data, _, _, _ = stats.linregress(
     data.data1, data.data2)
 
 # Check that slope and y intercept are correct (expected) values
-line_figure_tests.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
+line_plot_tester.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
 
 
 ################################################################################
@@ -126,9 +125,9 @@ ax.set(xlabel='data1',
 # Here is where you access the axes objects of the plot for testing.
 # You can add the code line below to the end of any plot cell to store all axes
 # objects created by matplotlib in that cell.
-plot_test_hold = nb.convert_axes(plt, which_axes="current")
+axis_object = nb.convert_axes(plt, which_axes="current")
 
 # This object can then be turned into a PlotTester object.
-line_figure_tests = pt.PlotTester(plot_test_hold)
+line_plot_tester_2 = pt.PlotTester(axis_object)
 
 # Now you can run the tests as you did earlier!
