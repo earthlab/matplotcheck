@@ -1,6 +1,6 @@
 """
-Test Line Plots with Matplotcheck
-=================================
+Test Regression and 1:1 Lines On Plots Using Matplotcheck
+===========================================================
 
 You can use MatPlotcheck to test lines on plots. In this example you will
 learn how to test that a 1:1 line or a regression line is correct as
