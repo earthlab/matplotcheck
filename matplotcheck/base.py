@@ -48,11 +48,11 @@ class PlotTester(object):
         """
 
         if self.ax.lines:
-            for l in self.ax.lines:
+            for line in self.ax.lines:
                 if (
-                    not l.get_linestyle()
-                    or not l.get_linewidth()
-                    or l.get_linewidth() > 0
+                    not line.get_linestyle()
+                    or not line.get_linewidth()
+                    or line.get_linewidth() > 0
                 ):
                     return True
 
@@ -69,11 +69,11 @@ class PlotTester(object):
         if self.ax.collections:
             return True
         elif self.ax.lines:
-            for l in self.ax.lines:
+            for line in self.ax.lines:
                 if (
-                    l.get_linestyle() == "None"
-                    or l.get_linewidth() == "None"
-                    or l.get_linewidth() == 0
+                    line.get_linestyle() == "None"
+                    or line.get_linewidth() == "None"
+                    or line.get_linewidth() == 0
                 ):
                     return True
         return False
@@ -483,9 +483,9 @@ class PlotTester(object):
         """
         # Get axis limit values
         if axis == "x":
-            lims = [int(l) for l in self.ax.get_xlim()]
+            lims = [int(xlim) for xlim in self.ax.get_xlim()]
         elif axis == "y":
-            lims = [int(l) for l in self.ax.get_ylim()]
+            lims = [int(ylim) for ylim in self.ax.get_ylim()]
         else:
             raise ValueError(
                 "axis must be one of the following string ['x', 'y']"
@@ -674,7 +674,7 @@ class PlotTester(object):
         legend_texts = [
             t.get_text().lower() for leg in legends for t in leg.get_texts()
         ]
-        labels_exp = [l.lower() for l in labels_exp]
+        labels_exp = [label.lower() for label in labels_exp]
 
         num_exp_labs = len(labels_exp)
         num_actual_labs = len(legend_texts)
@@ -790,9 +790,12 @@ class PlotTester(object):
         if points_only:
             xy_coords = [
                 val
-                for l in self.ax.lines
-                if (l.get_linestyle() == "None" or l.get_linewidth() == "None")
-                for val in l.get_xydata()
+                for line in self.ax.lines
+                if (
+                    line.get_linestyle() == "None"
+                    or line.get_linewidth() == "None"
+                )
+                for val in line.get_xydata()
             ]  # .plot()
             xy_coords += [
                 val
@@ -803,7 +806,7 @@ class PlotTester(object):
 
         else:
             xy_coords = [
-                val for l in self.ax.lines for val in l.get_xydata()
+                val for line in self.ax.lines for val in line.get_xydata()
             ]  # .plot()
             xy_coords += [
                 val for c in self.ax.collections for val in c.get_offsets()
@@ -977,8 +980,8 @@ class PlotTester(object):
         This is only testing the numbers in x-axis labels.
         """
         x_data = [
-            "".join(c for c in l.get_text())
-            for l in self.ax.xaxis.get_majorticklabels()
+            "".join(c for c in label.get_text())
+            for label in self.ax.xaxis.get_majorticklabels()
         ]
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
@@ -1099,11 +1102,11 @@ class PlotTester(object):
             xy = self.get_xy(points_only=True)
             min_val, max_val = min(xy["x"]), max(xy["x"])
 
-        for l in self.ax.lines:
-
+        for line in self.ax.lines:
             # Here we will get the verticies for the line and reformat them in
+
             # the way that get_slope_yintercept() expects
-            data = l.get_data()
+            data = line.get_data()
             path_verts = np.column_stack((data[0], data[1]))
 
             slope, y_intercept = self.get_slope_yintercept(path_verts)
