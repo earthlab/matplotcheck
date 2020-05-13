@@ -2,15 +2,13 @@
 Test Matplotlib Figures with SubPlots Using Matplotcheck
 ========================================================================
 
-Below you will find some examples of how to use Matplotcheck
-to test figures with multiple axes created using Matplotlib.
+Matplotlib figures can have more than one subplot. In this vignette, you will 
+learn how to use Matplotcheck to test a figure with multiple subplots. 
 
 """
 
 ################################################################################
-# Import Packages
-# ---------------
-# To begin, import the libraries that you need.
+# To begin, import your Python libraries.
 
 import matplotcheck.base as pt
 import matplotlib.pyplot as plt
