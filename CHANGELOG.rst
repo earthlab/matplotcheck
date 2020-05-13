@@ -27,6 +27,8 @@ Unreleased
    (@nkorinek, #121)
 -  Changed tolerance functionality from relative tolerance to absolute
    tolerance. (@ryla5068, #234)
+-  Improved handling of datasets with different shapes in base.assert_xy() (@ryla5068, #233)
+-  Bug fix for handling object datatypes in base.assert_xy() (@ryla5068, #232)
 
 0.1.2
 -----
