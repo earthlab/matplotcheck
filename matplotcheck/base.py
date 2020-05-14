@@ -47,11 +47,11 @@ class PlotTester(object):
         """
 
         if self.ax.lines:
-            for l in self.ax.lines:
+            for line in self.ax.lines:
                 if (
-                    not l.get_linestyle()
-                    or not l.get_linewidth()
-                    or l.get_linewidth() > 0
+                    not line.get_linestyle()
+                    or not line.get_linewidth()
+                    or line.get_linewidth() > 0
                 ):
                     return True
 
@@ -68,11 +68,11 @@ class PlotTester(object):
         if self.ax.collections:
             return True
         elif self.ax.lines:
-            for l in self.ax.lines:
+            for line in self.ax.lines:
                 if (
-                    l.get_linestyle() == "None"
-                    or l.get_linewidth() == "None"
-                    or l.get_linewidth() == 0
+                    line.get_linestyle() == "None"
+                    or line.get_linewidth() == "None"
+                    or line.get_linewidth() == 0
                 ):
                     return True
         return False
@@ -482,9 +482,9 @@ class PlotTester(object):
         """
         # Get axis limit values
         if axis == "x":
-            lims = [int(l) for l in self.ax.get_xlim()]
+            lims = [int(xlim) for xlim in self.ax.get_xlim()]
         elif axis == "y":
-            lims = [int(l) for l in self.ax.get_ylim()]
+            lims = [int(ylim) for ylim in self.ax.get_ylim()]
         else:
             raise ValueError(
                 "axis must be one of the following string ['x', 'y']"
@@ -673,7 +673,7 @@ class PlotTester(object):
         legend_texts = [
             t.get_text().lower() for leg in legends for t in leg.get_texts()
         ]
-        labels_exp = [l.lower() for l in labels_exp]
+        labels_exp = [label.lower() for label in labels_exp]
 
         num_exp_labs = len(labels_exp)
         num_actual_labs = len(legend_texts)
@@ -786,9 +786,12 @@ class PlotTester(object):
         if points_only:
             xy_coords = [
                 val
-                for l in self.ax.lines
-                if (l.get_linestyle() == "None" or l.get_linewidth() == "None")
-                for val in l.get_xydata()
+                for line in self.ax.lines
+                if (
+                    line.get_linestyle() == "None"
+                    or line.get_linewidth() == "None"
+                )
+                for val in line.get_xydata()
             ]  # .plot()
             xy_coords += [
                 val
@@ -799,7 +802,7 @@ class PlotTester(object):
 
         else:
             xy_coords = [
-                val for l in self.ax.lines for val in l.get_xydata()
+                val for line in self.ax.lines for val in line.get_xydata()
             ]  # .plot()
             xy_coords += [
                 val for c in self.ax.collections for val in c.get_offsets()
@@ -983,8 +986,8 @@ class PlotTester(object):
         This is only testing the numbers in x-axis labels.
         """
         x_data = [
-            "".join(c for c in l.get_text())
-            for l in self.ax.xaxis.get_majorticklabels()
+            "".join(c for c in label.get_text())
+            for label in self.ax.xaxis.get_majorticklabels()
         ]
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
@@ -1068,13 +1071,12 @@ class PlotTester(object):
         self,
         slope_exp,
         intercept_exp,
-        xtime=False,
+        check_coverage=True,
         message_no_line="Expected line not displayed",
         message_data="Line does not cover data set",
     ):
         """Asserts that there exists a line on Axes `ax` with slope `slope_exp`
-        and y-intercept `intercept_exp` and goes at least from x coordinate
-        `min_val` to x coordinate `max_val`
+        and y-intercept `intercept_exp` and
 
         Parameters
         ----------
@@ -1082,48 +1084,76 @@ class PlotTester(object):
             Expected slope of line
         intercept_exp : float
             Expeted y intercept of line
-        xtime : boolean
-            Set ``True`` if x-axis values are datetime
+        check_coverage : boolean (default = True)
+            If `check_coverage` is `True`, function will check that the goes at
+            least from x coordinate `min_val` to x coordinate `max_val`. If the
+            line does not cover the entire dataset, and `AssertionError` with
+            be thrown with message `message_data`.
         message_no_line : string
             The error message to be displayed if the line does not exist.
         message_data : string
             The error message to be displayed if the line exists but does not
-            cover the dataset.
+            cover the dataset, and if `check_coverage` is `True`.
 
         Raises
         -------
         AssertionError
-            with message `m` or `m2` if no line exists that covers the dataset
+            with message `message_no_line` or `message_data` if no line exists
+            that covers the dataset.
         """
-        flag_exist, flag_length = False, False
-        xy = self.get_xy(points_only=True)
-        min_val, max_val = min(xy["x"]), max(xy["x"])
+        flag_exist = False
 
-        for l in self.ax.lines:
-            path_verts = self.ax.transData.inverted().transform(
-                l._transformed_path.get_fully_transformed_path().vertices
-            )
+        if check_coverage:
+            flag_length = False
+            xy = self.get_xy(points_only=True)
+            min_val, max_val = min(xy["x"]), max(xy["x"])
+
+        for line in self.ax.lines:
+            # Here we will get the verticies for the line and reformat them in
+
+            # the way that get_slope_yintercept() expects
+            data = line.get_data()
+            path_verts = np.column_stack((data[0], data[1]))
+
             slope, y_intercept = self.get_slope_yintercept(path_verts)
             if math.isclose(slope, slope_exp, abs_tol=1e-4) and math.isclose(
                 y_intercept, intercept_exp, abs_tol=1e-4
             ):
                 flag_exist = True
                 line_x_vals = [coord[0] for coord in path_verts]
-                if min(line_x_vals) <= min_val and max(line_x_vals) >= max_val:
-                    flag_length = True
-                    break
+
+                # This check ensures that the minimum and maximum values of the
+                # line are within or very close to the minimum and maximum
+                # values in the pandas dataframe provided. This accounts for
+                # small errors sometimes found in matplotlib plots.
+                if check_coverage:
+                    if (
+                        math.isclose(min(line_x_vals), min_val, abs_tol=1e-4)
+                        or min(line_x_vals) <= min_val
+                    ) and (
+                        math.isclose(max(line_x_vals), max_val, abs_tol=1e-4)
+                        or max(line_x_vals) >= max_val
+                    ):
+                        flag_length = True
+                        break
 
         assert flag_exist, message_no_line
-        assert flag_length, message_data
+        if check_coverage:
+            assert flag_length, message_data
 
-    def assert_lines_of_type(self, line_types):
+    def assert_lines_of_type(self, line_types, check_coverage=True):
         """Asserts each line of type in `line_types` exist on `ax`
 
         Parameters
         ----------
-        line_types : list of strings
+        line_types : string or list of strings
             Acceptable strings in line_types are as follows
-            ``['regression', 'onetoone']``.
+            ``['linear-regression', 'onetoone']``.
+        check_coverage : boolean (default = True)
+            If `check_coverage` is `True`, function will check that the goes at
+            least from x coordinate `min_val` to x coordinate `max_val`. If the
+            line does not cover the entire dataset, and `AssertionError` with
+            be thrown with message `message_data`.
 
         Raises
         -------
@@ -1134,31 +1164,40 @@ class PlotTester(object):
         -----
             If `line_types` is empty, assertion is passed.
         """
-        if line_types:
-            for line_type in line_types:
-                if line_type == "regression":
-                    xy = self.get_xy(points_only=True)
-                    slope_exp, intercept_exp, _, _, _ = stats.linregress(
-                        xy.x, xy.y
-                    )
-                elif line_type == "onetoone":
-                    slope_exp, intercept_exp = 1, 0
-                else:
-                    raise ValueError(
-                        "each string in line_types must be from the following "
-                        + '["regression","onetoone"]'
-                    )
+        if isinstance(line_types, str):
+            line_types = [line_types]
 
-                self.assert_line(
-                    slope_exp,
-                    intercept_exp,
-                    message_no_line="{0} line not displayed properly".format(
-                        line_type
-                    ),
-                    message_data="{0} line does not cover dataset".format(
-                        line_type
-                    ),
+        for line_type in line_types:
+            if line_type == "linear-regression":
+                xy = self.get_xy(points_only=True)
+                # Check that there is xy data for this line. Some one-to-one
+                # lines do not produce xy data.
+                if xy.empty:
+                    raise AssertionError(
+                        "linear-regression line not displayed properly"
+                    )
+                slope_exp, intercept_exp, _, _, _ = stats.linregress(
+                    xy.x, xy.y
                 )
+            elif line_type == "onetoone":
+                slope_exp, intercept_exp = 1, 0
+            else:
+                raise ValueError(
+                    "each string in line_types must be from the following "
+                    + '["linear-regression","onetoone"]'
+                )
+
+            self.assert_line(
+                slope_exp,
+                intercept_exp,
+                message_no_line="{0} line not displayed properly".format(
+                    line_type
+                ),
+                message_data="{0} line does not cover dataset".format(
+                    line_type
+                ),
+                check_coverage=check_coverage,
+            )
 
     # HISTOGRAM FUNCTIONS
 
