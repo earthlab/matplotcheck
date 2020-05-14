@@ -174,9 +174,10 @@ except AssertionError as message:
 
 ###############################################################################
 # However, if you set a tolerance, the assertion can pass. Here you will test
-# it with ``tolerance=0.2``.
+# it with ``tolerance=6``, as that is the maximum difference between the two
+# datasets.
 
-plot_tester_testing_2.assert_bin_values(bins_expected_1, tolerance=0.2)
+plot_tester_testing_2.assert_bin_values(bins_expected_1, tolerance=6)
 
 ###############################################################################
 # Because no ``AssertionError`` is raised, you know that the test passed with

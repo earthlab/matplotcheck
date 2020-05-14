@@ -166,6 +166,6 @@ def test_get_lines_by_collection(multiline_geo_plot):
             [(2, 1), (3, 1), (4, 1), (5, 2)],
         ]
     ]
-    sorted_lines_list = sorted([sorted(l) for l in lines_list])
+    sorted_lines_list = sorted([sorted(line) for line in lines_list])
     assert sorted_lines_list == multiline_geo_plot.get_lines_by_collection()
     plt.close("all")
