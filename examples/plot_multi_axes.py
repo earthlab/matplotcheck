@@ -77,28 +77,28 @@ plot_tester_1 = pt.PlotTester(ax1)
 plot_tester_2 = pt.PlotTester(ax2)
 
 ###############################################################################
-# Test Individual Axes Using PlotTester Objects
+# Test Individual Subplots Using PlotTester Objects
 # ---------------------------------------------
-# Now that you have two ``PlotTester`` objects, one for each axes, you can run
-# tests like you normally would on the plots!
+# Now that you have two ``PlotTester`` objects, one for each subplot, you can
+# run tests like you normally would on the plots!
 #
-# In this example, both axes share the same figure title. You can test for the
-# figure title specifically in the ``assert_title_contains()`` function with
-# the ``title_type`` argument. The default for the ``title_type`` argument is
-# to check both the figure and the axes title for the expected string, so make
-# sure to specify if you need to!
+# In this example, both subplots share the same figure title. You can test for
+# the figure title specifically in the ``assert_title_contains()`` function
+# with the ``title_type`` argument. The default for the ``title_type`` argument
+# is to check both the figure and the subplot titles for the expected string,
+# so make sure to specify if you need to!
 
-# Test titles of individual axes
+# Test titles of individual subplots
 plot_tester_1.assert_title_contains("Subplot 1", title_type="axes")
 
 plot_tester_2.assert_title_contains("Subplot 2", title_type="axes")
 
-# Test figure title shared by both axes
+# Test figure title shared by both subplots
 plot_tester_1.assert_title_contains("Figure", title_type="figure")
 
 plot_tester_2.assert_title_contains("Figure", title_type="figure")
 
-# Test xy data of individual axes
+# Test xy data of individual subplots
 plot_tester_1.assert_xydata(line_1, xcol="ax1-x-values", ycol="ax1-y-values")
 
 plot_tester_2.assert_xydata(line_2, xcol="ax2-x-values", ycol="ax2-y-values")
@@ -107,14 +107,14 @@ plot_tester_2.assert_xydata(line_2, xcol="ax2-x-values", ycol="ax2-y-values")
 # Access Axes Objects in a Jupyter Notebook
 # -----------------------------------------
 # Matplotcheck can be used to test plots in Jupyter Notebooks as well. The main
-# difference is how you access the axes objects from the plot that you want to
-# test. Below is an example of how you could access the axes of a plot with
-# multiple axes you want to test in a Jupyter Notebook.
+# difference is how you access the axes objects (subplots) from the plot that
+# you want to test. Below is an example of how you could access the subplots of
+# a plot with multiple subplots you want to test in a Jupyter Notebook.
 
 # First, import the Notebook module from Matplotcheck
 import matplotcheck.notebook as nb
 
-# Plot example data on individual axes
+# Plot example data on individual subplots
 fig, (ax1, ax2)=plt.subplots(1, 2, figsize = (10, 5))
 
 line_1.plot(ax=ax1, x="ax1-x-values", y="ax1-y-values")
@@ -125,15 +125,15 @@ fig.suptitle("Figure Title")
 ax1.set(title="Subplot 1", xlabel="Ax 1 X Vals", ylabel="Ax 1 Y Vals")
 ax2.set(title="Subplot 2", xlabel="Ax 2 X Vals", ylabel="Ax 2 Y Vals")
 
-# Here is where you access the axes objects of the plot for testing.
+# Here is where you access the subplots of the plot for testing.
 # You can add the code line below to the end of any plot cell to store all axes
-# objects created by matplotlib in that cell.
-# Note that the ``which_axes`` value is set to "all". This will return all axes
-# when there is more than one axes, such as in this example figure.
+# objects (subplots) created by matplotlib in that cell.
+# Note that the ``which_axes`` value is set to "all". This will return all
+# subplots when there is more than one subplot, such as in this example figure.
 plot_test_hold = nb.convert_axes(plt, which_axes="all")
 
 # This object can then be turned into a VectorTester object by accessing its
-# indices, such as [0] for the first axes of the figure.
+# indices, such as [0] for the first subplot of the figure.
 plot_tester_1 = pt.PlotTester(plot_test_hold[0])
 plot_tester_2 = pt.PlotTester(plot_test_hold[1])
 
