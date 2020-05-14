@@ -946,8 +946,6 @@ class PlotTester(object):
                 np.testing.assert_array_max_ulp(
                     xy_data["y"].to_numpy(dtype=np.float64).flatten(),
                     xy_expected[ycol].to_numpy(dtype=np.float64).flatten(),
-                    xy_data["y"].to_numpy(dtype=np.float64),
-                    xy_expected[ycol].to_numpy(dtype=np.float64),
                     5,
                 )
 
