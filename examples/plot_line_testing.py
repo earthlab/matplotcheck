@@ -64,13 +64,14 @@ line_figure_tests = pt.PlotTester(ax)
 # Test Line Types
 # ---------------
 # There are two line types on the plot above: a one-to-one line for
-# reference and a regression line derived from the data points. You can use the method
-# ``assert_lines_of_type()`` to test if a one to one or regression line
-# (or both line types) are present in the plot. (NOTE: Regression and 1:1 lines are the only types
-# of lines you can currently test for with this function.)
+# reference and a regression line derived from the data points. You can use the
+# method ``assert_lines_of_type()`` to test if a one to one or regression line
+# (or both line types) are present in the plot. (NOTE: Linear regression and
+# 1:1 lines are the only types of lines you can currently test for with this
+# function.)
 
 # Check line types
-line_figure_tests.assert_lines_of_type(line_types=['regression', 'onetoone'])
+line_figure_tests.assert_lines_of_type(line_types=['linear-regression', 'onetoone'])
 
 ################################################################################
 # Test Slope and Y Intercept
@@ -93,6 +94,14 @@ slope_data, intercept_data, _, _, _ = stats.linregress(
 # Check that slope and y intercept are correct (expected) values
 line_figure_tests.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
 
+
+################################################################################
+# Test Other Aspects of the Plot
+# ------------------------------
+# Plots with linear regression lines and one to one lines generally have other
+# important aspects to the plots aside from the lines themselves, such as the
+# points the regression is based off of, or the labels of the plot. We can
+# test those aspects as well to ensure they are accurate.
 
 ################################################################################
 #
