@@ -26,9 +26,9 @@ import matplotcheck.base as pt
 # compare the slope of the regression output to a standard 1:1 fit.
 
 # Create Pandas DataFrame containing data points
-col1 = list(np.random.randint(25, size=15))
-col2 = list(np.random.randint(25, size=15))
-data = pd.DataFrame(list(zip(col1, col2)), columns=['data1', 'data2'])
+col1 = np.random.randint(25, size=15)
+col2 = np.random.randint(25, size=15)
+data = pd.DataFrame({'data1':col1, 'data2':col2})
 
 # Plot data points, regression line, and one-to-one (1:1) line for reference
 fig, ax = plt.subplots()
@@ -37,7 +37,8 @@ fig, ax = plt.subplots()
 sns.regplot('data1', 'data2',
             data=data,
             color='purple',
-            ax=ax)
+            ax=ax,
+            scatter=True)
 
 # Add 1:1 line to your plot
 ax.plot((0, 1), (0, 1), transform=ax.transAxes, ls='--', c='k')
@@ -66,10 +67,16 @@ line_plot_tester = pt.PlotTester(ax)
 # Test For Regression and 1:1 Lines on a Plot
 # --------------------------------------------
 # You can use the method ``assert_lines_of_type()`` to test if a 1:1 or
-# regression line (or both line types) are present in the plot.
+# linear regression line (or both line types) are present in the plot.
 
-# Check line types
-line_plot_tester.assert_lines_of_type(line_types=['regression', 'onetoone'])
+# Check regression line is accurate to the points in the plot
+line_plot_tester.assert_lines_of_type(line_types=['linear-regression'])
+
+# Check onetoone line is present in the data. Set check_coverage to false since
+# the onetoone line goes past the extent of the points.
+line_plot_tester.assert_lines_of_type(
+        line_types=['onetoone'], check_coverage=False
+    )
 
 ################################################################################
 # Test Slope and Y Intercept
@@ -87,7 +94,8 @@ line_plot_tester.assert_lines_of_type(line_types=['regression', 'onetoone'])
 
 # Get slope and y intercept data of regression line for testing
 slope_data, intercept_data, _, _, _ = stats.linregress(
-    data.data1, data.data2)
+        data.data1, data.data2
+    )
 
 # Check that slope and y intercept are correct (expected) values
 line_plot_tester.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
@@ -98,16 +106,34 @@ line_plot_tester.assert_line(slope_exp=slope_data, intercept_exp=intercept_data)
 # ------------------------------
 # Plots with linear regression lines and one to one lines generally have other
 # important aspects to the plots aside from the lines themselves, such as the
-# points the regression is based off of, or the labels of the plot. We can
+# points the regression is based off of, or the labels of the plot. You can
 # test those aspects as well to ensure they are accurate.
+
+# Checking key words are found in the title
+line_plot_tester.assert_title_contains(
+        strings_expected=[["Example"], ["Regression"], ["Plot"]]
+    )
+
+# Check labels contain key words
+line_plot_tester.assert_axis_label_contains(
+        axis="x", strings_expected=["data1"]
+    )
+line_plot_tester.assert_axis_label_contains(
+        axis="y", strings_expected=["data2"]
+    )
+
+# Checking point data matches the expected data
+line_plot_tester.assert_xydata(
+        xy_expected=data, xcol=['data1'], ycol=['data2'], points_only=True
+    )
 
 ################################################################################
 #
 # .. note::
-#    Matplotcheck can be used to test plots in Jupyter Notebooks as well. The main
-#    difference is how you access the axes objects from the plot that you want to
-#    test. Below is an example of how you could access the axes of a plot you want
-#    to test in a Jupyter Notebook.
+#    Matplotcheck can be used to test plots in Jupyter Notebooks as well. The
+#    main difference is how you access the axes objects from the plot that you
+#    want to test. Below is an example of how you could access the axes of a
+#    plot you want to test in a Jupyter Notebook.
 
 # First, import the Notebook module from Matplotcheck
 import matplotcheck.notebook as nb

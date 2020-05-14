@@ -930,8 +930,8 @@ class PlotTester(object):
             the assertion being run."""
             try:
                 np.testing.assert_array_max_ulp(
-                    xy_data["x"].to_numpy(dtype=np.float64),
-                    xy_expected[xcol].to_numpy(dtype=np.float64),
+                    xy_data["x"].to_numpy(dtype=np.float64).flatten(),
+                    xy_expected[xcol].to_numpy(dtype=np.float64).flatten(),
                     5,
                 )
             except AssertionError:
@@ -944,8 +944,8 @@ class PlotTester(object):
                 )
             try:
                 np.testing.assert_array_max_ulp(
-                    xy_data["y"].to_numpy(dtype=np.float64),
-                    xy_expected[ycol].to_numpy(dtype=np.float64),
+                    xy_data["y"].to_numpy(dtype=np.float64).flatten(),
+                    xy_expected[ycol].to_numpy(dtype=np.float64).flatten(),
                     5,
                 )
 
