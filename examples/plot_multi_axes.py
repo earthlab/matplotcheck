@@ -14,36 +14,65 @@ import matplotcheck.base as pt
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
+###############################################################################
+# Review: The Anatomy of a Matplotlib Figure
+# -------------------------------------------
+#
+# To understand how to test figures with subplots, you need to first
+# understand the anatomy of a Matplotlib figure. A figure contains the
+# figure itself and then one or more subplots. These subplots are technically
+# ``matplotlib.axes`` objects.
+
+# Create a new figure with two subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 6))
+fig.suptitle("This is a Matplotlib Figure")
+
+ax1.set(title="Subplot 1 title (ax1 - Matplotlib.axes object)",
+        xlabel="Subplot1 x Label",
+        ylabel="Subplot1 y Label")
+
+ax2.set(title="Subplot 2 title (ax2 - Matplotlib.axes object)",
+        xlabel="Subplot 2 x Label",
+        ylabel="Subplot 2 y Label")
+
+
+# If you want to test a figure with multiple subplots, you will need to create
+# a test objects for each subplot in the figure individually. You will learn
+# how to do this below.
+
+
 ###############################################################################
 # Create Example Data and Plots
 # -----------------------------
-# First, you need some data to plot over multiple axes of a figure. This data
-# could be satellite imagery bands, calculated values of vegetation indices
-# over time for multiple sites, or any other data for which you want to create
-# multiple plots within one figure. In this example, two Pandas dataframes are
-# created to represent different datasets that can be plotted as individual
-# line plots.
+# To begin, create some data to plot in your figure. You will create a
+# figure with two subplots. In this example, two Pandas DataFrames are
+# created to represent two different datasets. Each dataset will be plotted
+# as lines in its own subplot.
 #
 # Once you have created your plot, you will create a Matplotcheck
-# ``PlotTester`` object for each Matplotlib axis object using the
+# ``PlotTester`` object for each subplot using the
 # ``PlotTester()`` function.
 
 # Create example data
-line_1 = pd.DataFrame({"Ax 1 X Vals": [(0), (10)], "Ax 1 Y Vals": [(0), (10)]})
-line_2 = pd.DataFrame({"Ax 2 X Vals": [(10), (0)], "Ax 2 Y Vals": [(0), (10)]})
+line_1 = pd.DataFrame({"ax1-x-values": [(0), (10)], "ax1-y-values": [(
+    0), (10)]})
+line_2 = pd.DataFrame({"ax2-x-values": [(10), (0)], "ax2-y-values": [(0),
+                                                                    (10)]})
 
-# Plot example data on two separate axes
+# Create figure that plots each dataset on it's own subplot
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize = (10, 5))
-
-line_1.plot(ax=ax1, x="Ax 1 X Vals", y="Ax 1 Y Vals")
-line_2.plot(ax=ax2, x="Ax 2 X Vals", y="Ax 2 Y Vals")
-
 fig.suptitle("Figure Title")
 
-ax1.set(title="Axes 1", xlabel = "Ax 1 X Vals", ylabel = "Ax 1 Y Vals")
-ax2.set(title="Axes 2", xlabel = "Ax 2 X Vals", ylabel = "Ax 2 Y Vals")
+line_1.plot(ax=ax1, x="ax1-x-values", y="ax1-y-values")
+line_2.plot(ax=ax2, x="ax2-x-values", y="ax2-y-values")
 
-# Create a Matplotcheck PlotTester object for each axes
+
+ax1.set(title="Axes 1", xlabel="Ax 1 X Vals", ylabel="Ax 1 Y Vals")
+ax2.set(title="Axes 2", xlabel="Ax 2 X Vals", ylabel="Ax 2 Y Vals")
+
+# Create Matplotcheck PlotTester object for each subplot (matplotlib.axes
+# object)
 plot_tester_1 = pt.PlotTester(ax1)
 plot_tester_2 = pt.PlotTester(ax2)
 
@@ -60,19 +89,19 @@ plot_tester_2 = pt.PlotTester(ax2)
 # sure to specify if you need to!
 
 # Test titles of individual axes
-plot_tester_1.assert_title_contains("Axes 1", title_type = "axes")
+plot_tester_1.assert_title_contains("Axes 1", title_type="axes")
 
-plot_tester_2.assert_title_contains("Axes 2", title_type = "axes")
+plot_tester_2.assert_title_contains("Axes 2", title_type= "axes")
 
 # Test figure title shared by both axes
-plot_tester_1.assert_title_contains("Figure", title_type = "figure")
+plot_tester_1.assert_title_contains("Figure", title_type="figure")
 
-plot_tester_2.assert_title_contains("Figure", title_type = "figure")
+plot_tester_2.assert_title_contains("Figure", title_type="figure")
 
 # Test xy data of individual axes
-plot_tester_1.assert_xydata(line_1, xcol="Ax 1 X Vals", ycol="Ax 1 Y Vals")
+plot_tester_1.assert_xydata(line_1, xcol="ax1-x-values", ycol="ax1-y-values")
 
-plot_tester_2.assert_xydata(line_2, xcol="Ax 2 X Vals", ycol="Ax 2 Y Vals")
+plot_tester_2.assert_xydata(line_2, xcol="ax2-x-values", ycol="ax2-y-values")
 
 ################################################################################
 # Access Axes Objects in a Jupyter Notebook
@@ -88,13 +117,13 @@ import matplotcheck.notebook as nb
 # Plot example data on individual axes
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize = (10, 5))
 
-line_1.plot(ax=ax1, x="Ax 1 X Vals", y="Ax 1 Y Vals")
-line_2.plot(ax=ax2, x="Ax 2 X Vals", y="Ax 2 Y Vals")
+line_1.plot(ax=ax1, x="ax1-x-values", y="ax1-y-values")
+line_2.plot(ax=ax2, x="ax2-x-values", y="ax2-y-values")
 
 fig.suptitle("Figure Title")
 
-ax1.set(title="Axes 1", xlabel = "Ax 1 X Vals", ylabel = "Ax 1 Y Vals")
-ax2.set(title="Axes 2", xlabel = "Ax 2 X Vals", ylabel = "Ax 2 Y Vals")
+ax1.set(title="Axes 1", xlabel="Ax 1 X Vals", ylabel="Ax 1 Y Vals")
+ax2.set(title="Axes 2", xlabel="Ax 2 X Vals", ylabel="Ax 2 Y Vals")
 
 # Here is where you access the axes objects of the plot for testing.
 # You can add the code line below to the end of any plot cell to store all axes
