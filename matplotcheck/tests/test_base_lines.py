@@ -186,6 +186,6 @@ def test_reg_one2one_fails(pt_one2one_reg):
 
 
 def test_reg_one2one_passes_close_lims(pt_one2one_reg_close):
-    """Testing that a regression line that doesn't cover all the points in a
-    plot fails."""
+    """Testing that a regression line that is slightly out of coverage still
+    passes."""
     pt_one2one_reg_close.assert_lines_of_type("linear-regression")
