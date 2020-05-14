@@ -31,6 +31,8 @@ Unreleased
 -  Made checking line coverage optional for `base.assert_line()`
    (@ryla5068, #239)
 -  Fixed bugs involving line tests (@ryla5068, #239)
+-  Improved handling of datasets with different shapes in base.assert_xy() (@ryla5068, #233)
+-  Bug fix for handling object datatypes in base.assert_xy() (@ryla5068, #232)
 
 0.1.2
 -----
