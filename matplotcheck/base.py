@@ -1084,7 +1084,7 @@ class PlotTester(object):
             Expected slope of line
         intercept_exp : float
             Expeted y intercept of line
-        check_coverage : boolean
+        check_coverage : boolean (default = True)
             If `check_coverage` is `True`, function will check that the goes at
             least from x coordinate `min_val` to x coordinate `max_val`. If the
             line does not cover the entire dataset, and `AssertionError` with
