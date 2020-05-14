@@ -47,9 +47,7 @@ ax.set(xlabel='data1',
        ylabel='data2',
        title='Example Data Regression Plot',
        xlim=(0, 25),
-       ylim=(0, 25))
-
-plt.show()
+       ylim=(0, 25));
 
 ################################################################################
 # Test Line Plots Using a matplotcheck.PlotTester Object
