@@ -340,7 +340,7 @@ class VectorTester(PlotTester):
             for c in self.ax.collections
             if type(c) == matplotlib.collections.LineCollection
         ]
-        return sorted([sorted(l) for l in lines_grouped])
+        return sorted([sorted(lines) for lines in lines_grouped])
 
     def get_lines_by_attributes(self):
         """Returns a sorted list of lists where each list contains line
@@ -390,7 +390,7 @@ class VectorTester(PlotTester):
                 ["color", "lwidth", "lstyle"], sort=False
             )
         ]
-        return sorted([sorted(l) for l in lines_grouped])
+        return sorted([sorted(lines) for lines in lines_grouped])
 
     def assert_lines(self, lines_expected, m="Incorrect Line Data"):
         """Asserts the line data in Axes ax is equal to lines_expected with
@@ -452,7 +452,7 @@ class VectorTester(PlotTester):
                 for c in ax_exp.collections
                 if type(c) == matplotlib.collections.LineCollection
             ]
-            grouped_exp = sorted([sorted(l) for l in grouped_exp])
+            grouped_exp = sorted([sorted(lines) for lines in grouped_exp])
             plt.close(fig)
             np.testing.assert_equal(groups, grouped_exp, m)
         elif lines_expected is None:

@@ -104,7 +104,7 @@ class TimeSeriesTester(PlotTester):
         """
 
         if loc_exp:
-            xlims = [mdates.num2date(l) for l in self.ax.get_xlim()]
+            xlims = [mdates.num2date(limit) for limit in self.ax.get_xlim()]
             if tick_size == "large":
                 ticks = self.ax.xaxis.get_majorticklocs()
             elif tick_size == "small":

@@ -8,14 +8,13 @@ whether they are spatial or not.
 """
 
 import numpy as np
-import matplotlib.dates as mdates
 import matplotlib
 from matplotlib.backend_bases import RendererBase
 import math
 from scipy import stats
 import pandas as pd
-import geopandas as gpd
 import numbers
+import geopandas as gpd
 
 
 class InvalidPlotError(Exception):
@@ -48,11 +47,11 @@ class PlotTester(object):
         """
 
         if self.ax.lines:
-            for l in self.ax.lines:
+            for line in self.ax.lines:
                 if (
-                    not l.get_linestyle()
-                    or not l.get_linewidth()
-                    or l.get_linewidth() > 0
+                    not line.get_linestyle()
+                    or not line.get_linewidth()
+                    or line.get_linewidth() > 0
                 ):
                     return True
 
@@ -69,11 +68,11 @@ class PlotTester(object):
         if self.ax.collections:
             return True
         elif self.ax.lines:
-            for l in self.ax.lines:
+            for line in self.ax.lines:
                 if (
-                    l.get_linestyle() == "None"
-                    or l.get_linewidth() == "None"
-                    or l.get_linewidth() == 0
+                    line.get_linestyle() == "None"
+                    or line.get_linewidth() == "None"
+                    or line.get_linewidth() == 0
                 ):
                     return True
         return False
@@ -483,9 +482,9 @@ class PlotTester(object):
         """
         # Get axis limit values
         if axis == "x":
-            lims = [int(l) for l in self.ax.get_xlim()]
+            lims = [int(xlim) for xlim in self.ax.get_xlim()]
         elif axis == "y":
-            lims = [int(l) for l in self.ax.get_ylim()]
+            lims = [int(ylim) for ylim in self.ax.get_ylim()]
         else:
             raise ValueError(
                 "axis must be one of the following string ['x', 'y']"
@@ -674,7 +673,7 @@ class PlotTester(object):
         legend_texts = [
             t.get_text().lower() for leg in legends for t in leg.get_texts()
         ]
-        labels_exp = [l.lower() for l in labels_exp]
+        labels_exp = [label.lower() for label in labels_exp]
 
         num_exp_labs = len(labels_exp)
         num_actual_labs = len(legend_texts)
@@ -766,7 +765,7 @@ class PlotTester(object):
 
     """ BASIC PLOT DATA FUNCTIONS """
 
-    def get_xy(self, points_only=False, xtime=False):
+    def get_xy(self, points_only=False):
         """Returns a pandas dataframe with columns "x" and "y" holding the x
         and y coords on Axes `ax`
 
@@ -777,9 +776,6 @@ class PlotTester(object):
         points_only : boolean
             Set ``True`` to check only points, set ``False`` to check all data
             on plot.
-        xtime : boolean
-            Set equal to True if the x axis of the plot contains datetime
-            values
 
         Returns
         -------
@@ -790,9 +786,12 @@ class PlotTester(object):
         if points_only:
             xy_coords = [
                 val
-                for l in self.ax.lines
-                if (l.get_linestyle() == "None" or l.get_linewidth() == "None")
-                for val in l.get_xydata()
+                for line in self.ax.lines
+                if (
+                    line.get_linestyle() == "None"
+                    or line.get_linewidth() == "None"
+                )
+                for val in line.get_xydata()
             ]  # .plot()
             xy_coords += [
                 val
@@ -803,7 +802,7 @@ class PlotTester(object):
 
         else:
             xy_coords = [
-                val for l in self.ax.lines for val in l.get_xydata()
+                val for line in self.ax.lines for val in line.get_xydata()
             ]  # .plot()
             xy_coords += [
                 val for c in self.ax.collections for val in c.get_offsets()
@@ -820,9 +819,6 @@ class PlotTester(object):
         xy_data = xy_data[xy_data["x"] >= lims[0]]
         xy_data = xy_data[xy_data["x"] <= lims[1]].reset_index(drop=True)
 
-        # change to datetime dtype if needed
-        if xtime:
-            xy_data["x"] = mdates.num2date(xy_data["x"])
         return xy_data
 
     def assert_xydata(
@@ -831,13 +827,13 @@ class PlotTester(object):
         xcol=None,
         ycol=None,
         points_only=False,
-        xtime=False,
         xlabels=False,
-        tolerence=0,
+        tolerance=0,
         message="Incorrect data values",
     ):
         """Asserts that the x and y data of Axes `ax` matches `xy_expected`
-        with error message `m`. If ``xy_expected = None``, assertion is passed.
+        with error message `message`. If ``xy_expected = None``,
+        assertion is passed.
 
         Parameters
         ----------
@@ -855,21 +851,15 @@ class PlotTester(object):
         points_only : boolean,
             Set ``True`` to check only points, set ``False`` tp check all data
             on plot.
-        xtime : boolean
-            Set ``True`` if the a-axis contains datetime values. Matplotlib
-            converts datetime objects to seconds? This parameter will ensure
-            the provided x col values are converted if they are datetime
-            elements.
         xlabels : boolean
             Set ``True`` if using x axis labels rather than x data. Instead of
             comparing numbers in the x-column to expected, compares numbers or
             text in x labels to expected.
-        tolerence : float
-            Measure of relative error allowed.
-            For example: Given a tolerance ``tolerence=0.1``, an expected value
-            ``e``, and an actual value ``a``, this asserts
-            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+        tolerance : float
+            A non-zero value of tol_rel allows an absolute tolerance when
+            checking the data. For example, a tolerance of 0.1 would
+            check that the actual data is within 0.1 units of the actual data.
+            Note that the units for datetime data is always days.
         message : string
             The error message to be displayed if the xy-data does not match
             `xy_expected`
@@ -878,7 +868,8 @@ class PlotTester(object):
         Raises
         -------
         AssertionError
-            with message `m` if legends overlap
+            with message `message`, if x and y data of Axes `ax` does not match
+            `xy_expected`
         """
         if xy_expected is None:
             return
@@ -905,7 +896,7 @@ class PlotTester(object):
                 xy_expected, xcol=xcol, ycol=ycol, message=message
             )
             return
-        xy_data = self.get_xy(points_only=points_only, xtime=xtime)
+        xy_data = self.get_xy(points_only=points_only)
 
         # Make sure the data are sorted the same
         xy_data, xy_expected = (
@@ -913,19 +904,17 @@ class PlotTester(object):
             xy_expected.sort_values(by=xcol),
         )
 
-        if tolerence > 0:
-            if xtime:
-                raise ValueError("tolerance must be 0 with datetime on x-axis")
+        if tolerance > 0:
             np.testing.assert_allclose(
                 xy_data["x"],
                 xy_expected[xcol],
-                rtol=tolerence,
+                atol=tolerance,
                 err_msg=message,
             )
             np.testing.assert_allclose(
                 xy_data["y"],
                 xy_expected[ycol],
-                rtol=tolerence,
+                atol=tolerance,
                 err_msg=message,
             )
 
@@ -933,20 +922,41 @@ class PlotTester(object):
             """We use `assert_array_max_ulp()` to compare the
             two datasets because it is able to account for small errors in
             floating point numbers, and it scales nicely between extremely
-            small or large numbers. We catch this error and throw our own so
-            that we can use our own message."""
+            small or large numbers. Because of the way that matplotlib stores
+            datetime data, this is essential for comparing high-precision
+            datetime data (i.e. millisecond or lower).
+
+            We catch this error and raise our own that is more relevant to
+            the assertion being run."""
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    xy_data["x"].to_numpy(dtype=np.float64),
+                    xy_expected[xcol].to_numpy(dtype=np.float64),
+                    5,
                 )
             except AssertionError:
+                # xy_data and xy_expected do not contain the same data
                 raise AssertionError(message)
+            except ValueError:
+                # xy_data and xy_expected do not have the same shape
+                raise ValueError(
+                    "xy_data and xy_expected do not have the same shape"
+                )
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["y"]), np.array(xy_expected[ycol])
+                    xy_data["y"].to_numpy(dtype=np.float64),
+                    xy_expected[ycol].to_numpy(dtype=np.float64),
+                    5,
                 )
+
             except AssertionError:
+                # xy_data and xy_expected do not contain the same data
                 raise AssertionError(message)
+            except ValueError:
+                # xy_data and xy_expected do not have the same shape
+                raise ValueError(
+                    "xy_data and xy_expected do not have the same shape"
+                )
 
     def assert_xlabel_ydata(
         self, xy_expected, xcol, ycol, message="Incorrect Data"
@@ -976,8 +986,8 @@ class PlotTester(object):
         This is only testing the numbers in x-axis labels.
         """
         x_data = [
-            "".join(c for c in l.get_text())
-            for l in self.ax.xaxis.get_majorticklabels()
+            "".join(c for c in label.get_text())
+            for label in self.ax.xaxis.get_majorticklabels()
         ]
         y_data = self.get_xy()["y"]
         xy_data = pd.DataFrame(data={"x": x_data, "y": y_data})
@@ -1014,7 +1024,7 @@ class PlotTester(object):
         if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol])
+                    np.array(xy_data["x"]), np.array(xy_expected[xcol]),
                 )
             except AssertionError:
                 raise AssertionError(message)
@@ -1061,13 +1071,12 @@ class PlotTester(object):
         self,
         slope_exp,
         intercept_exp,
-        xtime=False,
+        check_coverage=True,
         message_no_line="Expected line not displayed",
         message_data="Line does not cover data set",
     ):
         """Asserts that there exists a line on Axes `ax` with slope `slope_exp`
-        and y-intercept `intercept_exp` and goes at least from x coordinate
-        `min_val` to x coordinate `max_val`
+        and y-intercept `intercept_exp` and
 
         Parameters
         ----------
@@ -1075,54 +1084,76 @@ class PlotTester(object):
             Expected slope of line
         intercept_exp : float
             Expeted y intercept of line
-        xtime : boolean
-            Set ``True`` if x-axis values are datetime
+        check_coverage : boolean (default = True)
+            If `check_coverage` is `True`, function will check that the goes at
+            least from x coordinate `min_val` to x coordinate `max_val`. If the
+            line does not cover the entire dataset, and `AssertionError` with
+            be thrown with message `message_data`.
         message_no_line : string
             The error message to be displayed if the line does not exist.
         message_data : string
             The error message to be displayed if the line exists but does not
-            cover the dataset.
+            cover the dataset, and if `check_coverage` is `True`.
 
         Raises
         -------
         AssertionError
-            with message `m` or `m2` if no line exists that covers the dataset
+            with message `message_no_line` or `message_data` if no line exists
+            that covers the dataset.
         """
-        flag_exist, flag_length = False, False
-        xy = self.get_xy(points_only=True)
-        min_val, max_val = min(xy["x"]), max(xy["x"])
+        flag_exist = False
 
-        for l in self.ax.lines:
-            path_verts = self.ax.transData.inverted().transform(
-                l._transformed_path.get_fully_transformed_path().vertices
-            )
+        if check_coverage:
+            flag_length = False
+            xy = self.get_xy(points_only=True)
+            min_val, max_val = min(xy["x"]), max(xy["x"])
+
+        for line in self.ax.lines:
+            # Here we will get the verticies for the line and reformat them in
+
+            # the way that get_slope_yintercept() expects
+            data = line.get_data()
+            path_verts = np.column_stack((data[0], data[1]))
+
             slope, y_intercept = self.get_slope_yintercept(path_verts)
             if math.isclose(slope, slope_exp, abs_tol=1e-4) and math.isclose(
                 y_intercept, intercept_exp, abs_tol=1e-4
             ):
                 flag_exist = True
                 line_x_vals = [coord[0] for coord in path_verts]
-                if (
-                    math.isclose(min(line_x_vals), min_val, abs_tol=1e-4)
-                    or min(line_x_vals) <= min_val
-                ) and (
-                    math.isclose(max(line_x_vals), max_val, abs_tol=1e-4)
-                    or max(line_x_vals) >= max_val
-                ):
-                    flag_length = True
-                    break
+
+                # This check ensures that the minimum and maximum values of the
+                # line are within or very close to the minimum and maximum
+                # values in the pandas dataframe provided. This accounts for
+                # small errors sometimes found in matplotlib plots.
+                if check_coverage:
+                    if (
+                        math.isclose(min(line_x_vals), min_val, abs_tol=1e-4)
+                        or min(line_x_vals) <= min_val
+                    ) and (
+                        math.isclose(max(line_x_vals), max_val, abs_tol=1e-4)
+                        or max(line_x_vals) >= max_val
+                    ):
+                        flag_length = True
+                        break
 
         assert flag_exist, message_no_line
-        assert flag_length, message_data
+        if check_coverage:
+            assert flag_length, message_data
 
-    def assert_lines_of_type(self, line_types):
+    def assert_lines_of_type(self, line_types, check_coverage=True):
         """Asserts each line of type in `line_types` exist on `ax`
 
         Parameters
         ----------
-        line_types : list of strings
+        line_types : string or list of strings
             Acceptable strings in line_types are as follows
-            ``['regression', 'onetoone']``.
+            ``['linear-regression', 'onetoone']``.
+        check_coverage : boolean (default = True)
+            If `check_coverage` is `True`, function will check that the goes at
+            least from x coordinate `min_val` to x coordinate `max_val`. If the
+            line does not cover the entire dataset, and `AssertionError` with
+            be thrown with message `message_data`.
 
         Raises
         -------
@@ -1133,31 +1164,40 @@ class PlotTester(object):
         -----
             If `line_types` is empty, assertion is passed.
         """
-        if line_types:
-            for line_type in line_types:
-                if line_type == "regression":
-                    xy = self.get_xy(points_only=True)
-                    slope_exp, intercept_exp, _, _, _ = stats.linregress(
-                        xy.x, xy.y
-                    )
-                elif line_type == "onetoone":
-                    slope_exp, intercept_exp = 1, 0
-                else:
-                    raise ValueError(
-                        "each string in line_types must be from the following "
-                        + '["regression","onetoone"]'
-                    )
+        if isinstance(line_types, str):
+            line_types = [line_types]
 
-                self.assert_line(
-                    slope_exp,
-                    intercept_exp,
-                    message_no_line="{0} line not displayed properly".format(
-                        line_type
-                    ),
-                    message_data="{0} line does not cover dataset".format(
-                        line_type
-                    ),
+        for line_type in line_types:
+            if line_type == "linear-regression":
+                xy = self.get_xy(points_only=True)
+                # Check that there is xy data for this line. Some one-to-one
+                # lines do not produce xy data.
+                if xy.empty:
+                    raise AssertionError(
+                        "linear-regression line not displayed properly"
+                    )
+                slope_exp, intercept_exp, _, _, _ = stats.linregress(
+                    xy.x, xy.y
                 )
+            elif line_type == "onetoone":
+                slope_exp, intercept_exp = 1, 0
+            else:
+                raise ValueError(
+                    "each string in line_types must be from the following "
+                    + '["linear-regression","onetoone"]'
+                )
+
+            self.assert_line(
+                slope_exp,
+                intercept_exp,
+                message_no_line="{0} line not displayed properly".format(
+                    line_type
+                ),
+                message_data="{0} line does not cover dataset".format(
+                    line_type
+                ),
+                check_coverage=check_coverage,
+            )
 
     # HISTOGRAM FUNCTIONS
 
@@ -1172,7 +1212,7 @@ class PlotTester(object):
             overlapping or stacked histograms in the same
             `matplotlib.axis.Axis` object, then this returns the number of bins
             with unique edges. """
-        x_data = self.get_xy(xtime=False)["x"]
+        x_data = self.get_xy()["x"]
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
 
@@ -1245,12 +1285,11 @@ class PlotTester(object):
         bin_values : list
             A list of numbers representing the expected values of each
             consecutive bin (i.e. the heights of the bars in the histogram).
-        tolerence : float
-            Measure of relative error allowed.
-            For example: Given a tolerance ``tolerence=0.1``, an expected value
-            ``e``, and an actual value ``a``, this asserts
-            ``abs(a - e) < (e * 0.1)``. (This uses `np.testing.assert_allclose`
-            with ``rtol=tolerence`` and ``atol=inf``.)
+        tolerance : float
+            A non-zero value of tol_abs allows an absolute tolerance when
+            checking the bin values. For example, an absolute tolerance of 1
+            checks that the actual bin values do not differ from the expected
+            bin values by more than 1.
         message : string
             The error message to be displayed if the bin values do not match
             `bin_values`
@@ -1277,7 +1316,7 @@ class PlotTester(object):
                 np.testing.assert_allclose(
                     plot_bin_values,
                     expected_bin_values,
-                    rtol=tolerance,
+                    atol=tolerance,
                     err_msg=message,
                 )
             except AssertionError:
