@@ -78,7 +78,7 @@ plot_tester_2 = pt.PlotTester(ax2)
 
 ###############################################################################
 # Test Individual Subplots Using PlotTester Objects
-# ---------------------------------------------
+# -------------------------------------------------
 # Now that you have two ``PlotTester`` objects, one for each subplot, you can
 # run tests like you normally would on the plots!
 #
