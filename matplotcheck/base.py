@@ -1149,7 +1149,7 @@ class PlotTester(object):
         line_types : string or list of strings
             Acceptable strings in line_types are as follows
             ``['linear-regression', 'onetoone']``.
-        check_coverage : boolean
+        check_coverage : boolean (default = True)
             If `check_coverage` is `True`, function will check that the goes at
             least from x coordinate `min_val` to x coordinate `max_val`. If the
             line does not cover the entire dataset, and `AssertionError` with
