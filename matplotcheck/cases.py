@@ -769,7 +769,7 @@ class PlotRasterSuite(PlotVectorSuite):
                 not im_classified, "Image not expected to be classified"
             )
             def test_legend_accuracy(self):
-                self.rt.assert_legend_accuracy_classified_image(
+                self.rt.assert_legend_labels(
                     im_expected=im_expected, all_label_options=legend_labels
                 )
 
