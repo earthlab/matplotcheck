@@ -89,7 +89,7 @@ def remove_comments(input_string):
 def test_imports_at_top(var_dict, n):
     """
     Tests no import statements are found after the first cell in a Jupyter
-    Notebook
+    Notebook using the dictionary produced by running locals() in a notebook.
 
     Parameters
     ----------
