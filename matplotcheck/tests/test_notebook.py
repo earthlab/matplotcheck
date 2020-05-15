@@ -56,10 +56,10 @@ def test_notebook_convert_single_axes(basic_polygon_gdf):
     fig, ax = plt.subplots()
     basic_polygon_gdf.plot(ax=ax)
     ax.set_title("Title")
-    store = nb.convert_axes(plt)
+    plot_axes = nb.convert_axes(plt)
 
-    assert isinstance(store, matplotlib.pyplot.Axes)
-    PlotTester(store).assert_title_contains([["Title"]])
+    assert isinstance(plot_axes, matplotlib.pyplot.Axes)
+    PlotTester(plot_axes).assert_title_contains([["Title"]])
 
     plt.close()
 
@@ -73,12 +73,12 @@ def test_notebook_convert_multi_axes(basic_polygon_gdf):
     basic_polygon_gdf.plot(ax=ax2)
     ax1.set_title(titles[0])
     ax2.set_title(titles[1])
-    store = nb.convert_axes(plt, which_axes="all")
+    plot_axes_list = nb.convert_axes(plt, which_axes="all")
 
-    assert isinstance(store, list)
-    assert len(store) == 2
+    assert isinstance(plot_axes_list, list)
+    assert len(plot_axes_list) == 2
 
-    for i, axes in enumerate(store):
+    for i, axes in enumerate(plot_axes_list):
         PlotTester(axes).assert_title_contains(titles[i])
     plt.close()
 
@@ -92,10 +92,10 @@ def test_notebook_convert_last_axes(basic_polygon_gdf):
     basic_polygon_gdf.plot(ax=ax2)
     ax1.set_title(titles[0])
     ax2.set_title(titles[1])
-    store = nb.convert_axes(plt, which_axes="last")
+    plot_axes = nb.convert_axes(plt, which_axes="last")
 
-    assert isinstance(store, matplotlib.pyplot.Axes)
-    PlotTester(store).assert_title_contains(titles[1])
+    assert isinstance(plot_axes, matplotlib.pyplot.Axes)
+    PlotTester(plot_axes).assert_title_contains(titles[1])
 
     plt.close()
 
@@ -109,10 +109,10 @@ def test_notebook_convert_first_axes(basic_polygon_gdf):
     basic_polygon_gdf.plot(ax=ax2)
     ax1.set_title(titles[0])
     ax2.set_title(titles[1])
-    store = nb.convert_axes(plt, which_axes="first")
+    plot_axes = nb.convert_axes(plt, which_axes="first")
 
-    assert isinstance(store, matplotlib.pyplot.Axes)
-    PlotTester(store).assert_title_contains(titles[0])
+    assert isinstance(plot_axes, matplotlib.pyplot.Axes)
+    PlotTester(plot_axes).assert_title_contains(titles[0])
 
     plt.close()
 
@@ -124,13 +124,13 @@ def test_notebook_convert_last_empty_axes(basic_polygon_gdf):
     fig, (ax1, ax2) = plt.subplots(1, 2)
     basic_polygon_gdf.plot(ax=ax1)
     ax1.set_title("Title1")
-    store = nb.convert_axes(plt, which_axes="last")
+    plot_axes = nb.convert_axes(plt, which_axes="last")
 
-    assert isinstance(store, matplotlib.pyplot.Axes)
+    assert isinstance(plot_axes, matplotlib.pyplot.Axes)
     with pytest.raises(
         AssertionError, match="Expected title is not displayed"
     ):
-        PlotTester(store).assert_title_contains("Title1")
+        PlotTester(plot_axes).assert_title_contains("Title1")
 
     plt.close()
 
@@ -142,22 +142,23 @@ def test_notebook_convert_all_empty_axes(basic_polygon_gdf):
     fig, (ax1, ax2) = plt.subplots(1, 2)
     basic_polygon_gdf.plot(ax=ax1)
     ax1.set_title("Title1")
-    store = nb.convert_axes(plt, which_axes="all")
+    plot_axes_list = nb.convert_axes(plt, which_axes="all")
 
-    assert isinstance(store, list)
-    assert len(store) == 2
+    assert isinstance(plot_axes_list, list)
+    assert len(plot_axes_list) == 2
 
-    PlotTester(store[0]).assert_title_contains("Title1")
+    PlotTester(plot_axes_list[0]).assert_title_contains("Title1")
     with pytest.raises(
         AssertionError, match="Expected title is not displayed"
     ):
-        PlotTester(store[1]).assert_title_contains("Title1")
+        PlotTester(plot_axes_list[1]).assert_title_contains("Title1")
 
     plt.close()
 
 
 def test_notebook_convert_axes_error(basic_polygon_gdf):
-    """Test convert_axes() throws an error when given a bad string."""
+    """Test convert_axes() throws an error when given an incorrect parameter
+    for which_axes."""
     fig, ax = plt.subplots()
     basic_polygon_gdf.plot(ax=ax)
     with pytest.raises(ValueError, match="which_axes must be one of the "):
@@ -200,7 +201,7 @@ def test_test_imports_at_top_pass(capsys, locals_dictionary_good):
     """Test test_imports_at_top() passes when imports are done correctly."""
     nb.test_imports_at_top(locals_dictionary_good, 3)
     captured = capsys.readouterr()
-    assert captured.out == "IMPORT TEST: PASSED!\n"
+    assert captured.out == "TEST IMPORTS AT TOP: PASSED!\n"
 
 
 def test_test_imports_at_top_fail(capsys, locals_dictionary_bad):
@@ -209,7 +210,7 @@ def test_test_imports_at_top_fail(capsys, locals_dictionary_bad):
     captured = capsys.readouterr()
     assert (
         captured.out
-        == "IMPORT TEST: FAILED! Import statement found in cell 2\n"
+        == "TEST IMPORTS AT TOP: FAILED! Import statement found in cell 2\n"
     )
 
 
@@ -220,4 +221,4 @@ def test_test_imports_at_top_pass_when_not_checking(
     checked."""
     nb.test_imports_at_top(locals_dictionary_bad, 1)
     captured = capsys.readouterr()
-    assert captured.out == "IMPORT TEST: PASSED!\n"
+    assert captured.out == "TEST IMPORTS AT TOP: PASSED!\n"
