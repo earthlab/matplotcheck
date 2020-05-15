@@ -52,7 +52,8 @@ def locals_dictionary_bad():
 
 
 def test_notebook_convert_single_axes(basic_polygon_gdf):
-    """Test converting a single axes plot."""
+    """Test converting a single axes plot returns the axes with the correct
+    data."""
     fig, ax = plt.subplots()
     basic_polygon_gdf.plot(ax=ax)
     ax.set_title("Title")
@@ -65,7 +66,8 @@ def test_notebook_convert_single_axes(basic_polygon_gdf):
 
 
 def test_notebook_convert_multi_axes(basic_polygon_gdf):
-    """Test convert multi axes returns a list of all axes available."""
+    """Test convert_axes() with which_axes set to "all" returns a list of all
+    axes available with the correct data."""
     titles = ["Title1", "Title2"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2)
@@ -84,7 +86,8 @@ def test_notebook_convert_multi_axes(basic_polygon_gdf):
 
 
 def test_notebook_convert_last_axes(basic_polygon_gdf):
-    """Test convert last axes returns the last axes plotted by matplotlib."""
+    """Test convert_axes() with which_axes set to "last" returns the last axes
+    plotted by matplotlib with the correct data."""
     titles = ["Title1", "Title2"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2)
@@ -101,7 +104,8 @@ def test_notebook_convert_last_axes(basic_polygon_gdf):
 
 
 def test_notebook_convert_first_axes(basic_polygon_gdf):
-    """Test convert first axes returns the first axes plotted by matplotlib."""
+    """Test convert_axes() with which_axes set to "first" returns the first
+    axes plotted by matplotlib with the correct data."""
     titles = ["Title1", "Title2"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2)
@@ -118,8 +122,8 @@ def test_notebook_convert_first_axes(basic_polygon_gdf):
 
 
 def test_notebook_convert_last_empty_axes(basic_polygon_gdf):
-    """Test convert last with an empty axes to ensure it returns the correct
-    axes even when one is empty."""
+    """Test convert_axes() with which_axes set to "last" with an empty axes to
+    ensure it returns the correct axes even when one is empty."""
 
     fig, (ax1, ax2) = plt.subplots(1, 2)
     basic_polygon_gdf.plot(ax=ax1)
@@ -136,8 +140,8 @@ def test_notebook_convert_last_empty_axes(basic_polygon_gdf):
 
 
 def test_notebook_convert_all_empty_axes(basic_polygon_gdf):
-    """Test convert all with an empty axes to ensure it returns the correct
-    axes in a list even when one is empty."""
+    """Test convert_axes() with which_axes set to "all" with an empty axes to
+    ensure it returns the correct axes in a list even when one is empty."""
 
     fig, (ax1, ax2) = plt.subplots(1, 2)
     basic_polygon_gdf.plot(ax=ax1)
