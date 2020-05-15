@@ -127,7 +127,9 @@ def test_notebook_convert_last_empty_axes(basic_polygon_gdf):
     store = nb.convert_axes(plt, which_axes="last")
 
     assert isinstance(store, matplotlib.pyplot.Axes)
-    with pytest.raises(AssertionError, match="Expected title is not displayed"):
+    with pytest.raises(
+        AssertionError, match="Expected title is not displayed"
+    ):
         PlotTester(store).assert_title_contains("Title1")
 
     plt.close()
@@ -146,15 +148,16 @@ def test_notebook_convert_all_empty_axes(basic_polygon_gdf):
     assert len(store) == 2
 
     PlotTester(store[0]).assert_title_contains("Title1")
-    with pytest.raises(AssertionError, match="Expected title is not displayed"):
+    with pytest.raises(
+        AssertionError, match="Expected title is not displayed"
+    ):
         PlotTester(store[1]).assert_title_contains("Title1")
 
     plt.close()
 
 
-
 def test_notebook_convert_axes_error(basic_polygon_gdf):
-    """Test convert axes throws an error when given a bad string."""
+    """Test convert_axes() throws an error when given a bad string."""
     fig, ax = plt.subplots()
     basic_polygon_gdf.plot(ax=ax)
     with pytest.raises(ValueError, match="which_axes must be one of the "):
@@ -180,28 +183,28 @@ def test_error_test_count(capsys):
 
 
 def test_remove_comments_with_comments():
-    """Test remove_comments() returns string without comments"""
+    """Test remove_comments() returns string without comments."""
     test_string = """Hello\n# comments\ntest\nstring"""
     commentless = nb.remove_comments(test_string)
     assert commentless == """Hello\ntest\nstring"""
 
 
 def test_remove_comments_without_comments():
-    """Test remove_comments() leaves commentless string alone"""
+    """Test remove_comments() leaves commentless string alone."""
     test_string = """Hello\ntest\nstring"""
     commentless = nb.remove_comments(test_string)
     assert commentless == """Hello\ntest\nstring"""
 
 
 def test_import_test_pass(capsys, locals_dictionary_good):
-    """Test import_test() passes when import are done correctly"""
+    """Test import_test() passes when imports are done correctly."""
     nb.import_test(locals_dictionary_good, 3)
     captured = capsys.readouterr()
     assert captured.out == "IMPORT TEST: PASSED!\n"
 
 
 def test_import_test_fail(capsys, locals_dictionary_bad):
-    """Test import_test() fails when import are done incorrectly"""
+    """Test import_test() fails when imports are done incorrectly."""
     nb.import_test(locals_dictionary_bad, 3)
     captured = capsys.readouterr()
     assert (
@@ -211,7 +214,7 @@ def test_import_test_fail(capsys, locals_dictionary_bad):
 
 
 def test_import_test_pass_when_not_checking(capsys, locals_dictionary_bad):
-    """Test import_test() passes when import are done incorrectly but not
+    """Test import_test() passes when imports are done incorrectly but not
     checked."""
     nb.import_test(locals_dictionary_bad, 1)
     captured = capsys.readouterr()
