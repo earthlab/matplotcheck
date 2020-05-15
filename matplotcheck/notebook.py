@@ -86,7 +86,7 @@ def remove_comments(input_string):
     )
 
 
-def import_test(var_dict, n):
+def test_imports_at_top(var_dict, n):
     """
     Tests no import statements are found after the first cell in a Jupyter
     Notebook
@@ -108,6 +108,6 @@ def import_test(var_dict, n):
             flag = False
             break
     if flag:
-        print("IMPORT TEST: PASSED!")
+        print("TEST IMPORTS AT TOP: PASSED!")
     else:
-        print("IMPORT TEST: FAILED! Import statement found in cell", i)
+        print("TEST IMPORTS AT TOP: FAILED! Import statement found in cell", i)

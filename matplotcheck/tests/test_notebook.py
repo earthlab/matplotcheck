@@ -196,16 +196,16 @@ def test_remove_comments_without_comments():
     assert commentless == """Hello\ntest\nstring"""
 
 
-def test_import_test_pass(capsys, locals_dictionary_good):
-    """Test import_test() passes when imports are done correctly."""
-    nb.import_test(locals_dictionary_good, 3)
+def test_test_imports_at_top_pass(capsys, locals_dictionary_good):
+    """Test test_imports_at_top() passes when imports are done correctly."""
+    nb.test_imports_at_top(locals_dictionary_good, 3)
     captured = capsys.readouterr()
     assert captured.out == "IMPORT TEST: PASSED!\n"
 
 
-def test_import_test_fail(capsys, locals_dictionary_bad):
-    """Test import_test() fails when imports are done incorrectly."""
-    nb.import_test(locals_dictionary_bad, 3)
+def test_test_imports_at_top_fail(capsys, locals_dictionary_bad):
+    """Test test_imports_at_top() fails when imports are done incorrectly."""
+    nb.test_imports_at_top(locals_dictionary_bad, 3)
     captured = capsys.readouterr()
     assert (
         captured.out
@@ -213,9 +213,11 @@ def test_import_test_fail(capsys, locals_dictionary_bad):
     )
 
 
-def test_import_test_pass_when_not_checking(capsys, locals_dictionary_bad):
-    """Test import_test() passes when imports are done incorrectly but not
+def test_test_imports_at_top_pass_when_not_checking(
+    capsys, locals_dictionary_bad
+):
+    """Test test_imports_at_top() passes when imports are done incorrectly but not
     checked."""
-    nb.import_test(locals_dictionary_bad, 1)
+    nb.test_imports_at_top(locals_dictionary_bad, 1)
     captured = capsys.readouterr()
     assert captured.out == "IMPORT TEST: PASSED!\n"
