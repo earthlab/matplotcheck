@@ -27,9 +27,7 @@ class PlotBasicSuite(object):
     ycol: string column title in data_exp that contains yaxis data
     plot_type: string from list ["scatter","bar"] of expected plot type
     line_types: list of strings. Acceptable strings in line_types are as
-    follows
-    ["regression", "onetoone"].
-        if list is empty, assert is passed
+        follows ["regression", "onetoone"]. If list is empty, assert is passed
     xlabels: boolean if using x axis labels rather than x data
     lims_equal: boolean expressing if x and y limits are expected to be equal
     title_contains: list of lower case strings where each string is expected to
