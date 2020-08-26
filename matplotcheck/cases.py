@@ -27,9 +27,7 @@ class PlotBasicSuite(object):
     ycol: string column title in data_exp that contains yaxis data
     plot_type: string from list ["scatter","bar"] of expected plot type
     line_types: list of strings. Acceptable strings in line_types are as
-    follows
-    ["regression", "onetoone"].
-        if list is empty, assert is passed
+        follows ["regression", "onetoone"]. If list is empty, assert is passed
     xlabels: boolean if using x axis labels rather than x data
     lims_equal: boolean expressing if x and y limits are expected to be equal
     title_contains: list of lower case strings where each string is expected to
@@ -140,7 +138,7 @@ class PlotBasicSuite(object):
                 self.pt = None
 
         class PlotCaption(unittest.TestCase):
-            """ Returns a unittest.TestCase containing 1 test for an
+            """Returns a unittest.TestCase containing 1 test for an
             appropriate caption:
 
             Test 1 - caption_words: caption contains one string from each of
@@ -479,7 +477,7 @@ class PlotTimeSeriesSuite(PlotBasicSuite):
 
     @property
     def cases(self):
-        """ Returns a list of TestCases for time series plots.
+        """Returns a list of TestCases for time series plots.
         Testcase are as follows:
         1. LabelsCase: Asserts the title, x-axis label, and y-axis label are
         as expected
@@ -633,7 +631,7 @@ class PlotVectorSuite(PlotBasicSuite):
 
     @property
     def cases(self):
-        """ Returns a list of TestCases for spatial vector plots.
+        """Returns a list of TestCases for spatial vector plots.
         Testcase are as follows:
         1. CaptionCase: assert caption is in appropriate location with
         strings expressed in caption_contains
@@ -787,7 +785,7 @@ class PlotRasterSuite(PlotVectorSuite):
 
     @property
     def cases(self):
-        """ Returns a list of TestCases for spatial raster plots.
+        """Returns a list of TestCases for spatial raster plots.
         Testcase are as follows:
         1. CaptionCase: assert caption is in appropriate location with
         strings expressed in caption_strings
@@ -843,7 +841,7 @@ class PlotFoliumSuite(object):
 
     @property
     def cases(self):
-        """ Returns a TestSuite for Folium Maps.
+        """Returns a TestSuite for Folium Maps.
         Testcase are as follows:
         1. FoliumCase: asserts map is of type folium.map and contains
         expected markers

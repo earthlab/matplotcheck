@@ -62,7 +62,7 @@ def error_test(n, n_exp):
 
 
 def remove_comments(input_string):
-    """ Helper function for import_test.
+    """Helper function for import_test.
     Removes all parts of string that would be commented out by # in python
 
     Parameters
