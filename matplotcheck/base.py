@@ -1024,7 +1024,8 @@ class PlotTester(object):
         if x_is_numeric:
             try:
                 np.testing.assert_array_max_ulp(
-                    np.array(xy_data["x"]), np.array(xy_expected[xcol]),
+                    np.array(xy_data["x"]),
+                    np.array(xy_expected[xcol]),
                 )
             except AssertionError:
                 raise AssertionError(message)
@@ -1211,7 +1212,7 @@ class PlotTester(object):
             histogram, this is just the number of bins. If there are two
             overlapping or stacked histograms in the same
             `matplotlib.axis.Axis` object, then this returns the number of bins
-            with unique edges. """
+            with unique edges."""
         x_data = self.get_xy()["x"]
         unique_x_data = list(set(x_data))
         num_bins = len(unique_x_data)
