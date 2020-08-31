@@ -73,7 +73,7 @@ Improving the documentation and testing for code already in MatPlotCheck
 is a great way to get started if you'd like to make a contribution. Please note
 that our documentation files are in
 `ReStructuredText (.rst)
-<http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_
+<https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_
 format and format your pull request
 accordingly.
 

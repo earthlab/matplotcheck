@@ -12,14 +12,15 @@ matplotlib.use("Agg")
 
 @pytest.fixture
 def multi_line_gdf(two_line_gdf):
-    """ Create a multi-line GeoDataFrame.
+    """Create a multi-line GeoDataFrame.
     This has one multi line and another regular line.
     """
     # Create a single and multi line object
     multiline_feat = two_line_gdf.unary_union
     linec = LineString([(2, 1), (3, 1), (4, 1), (5, 2)])
     out_df = gpd.GeoDataFrame(
-        geometry=gpd.GeoSeries([multiline_feat, linec]), crs="epsg:4326",
+        geometry=gpd.GeoSeries([multiline_feat, linec]),
+        crs="epsg:4326",
     )
     out_df["attr"] = ["road", "stream"]
     return out_df

@@ -24,7 +24,7 @@ class VectorTester(PlotTester):
     """ Check Data """
 
     def _convert_length(self, arr, n):
-        """ helper function for 'get_points_by_attributes' and
+        """Helper function for 'get_points_by_attributes' and
         'get_lines_by_attributes'
         takes an array of either length 1 or n.
         If array is length 1: array of array's only element repeating n times
@@ -130,7 +130,7 @@ class VectorTester(PlotTester):
         )
 
     def sort_collection_by_markersize(self):
-        """ Returns a pandas dataframe of points in collections on Axes ax.
+        """Returns a pandas dataframe of points in collections on Axes ax.
 
         Returns
         --------
