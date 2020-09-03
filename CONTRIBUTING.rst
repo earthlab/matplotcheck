@@ -118,7 +118,7 @@ e.g.,::
 Code style
 ==========
 
-- MatPlotCheck currently only supports Python 3 (3.5+). Please test code locally
+- MatPlotCheck currently only supports Python 3 (3.6+). Please test code locally
   in Python 3 when possible (all supported versions will be automatically
   tested on Travis CI).
 
