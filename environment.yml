@@ -2,8 +2,6 @@ name: matplotcheck-dev
 channels:
   - conda-forge
 dependencies:
-  # Workaround for pip 19.1 failing
-  - pip=19.0.3
 
   # Core scientific python
   - numpy>=1.14.0
