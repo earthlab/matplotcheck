@@ -1,4 +1,4 @@
-# This workflow  runs tests for matplotchck
+# This workflow  runs tests for matplotcheck
 # Because we want a conda environment -  and that builds  slower,
 # we divided up  tests from linting and docs  to make  for simpler  install envts
 
@@ -38,7 +38,8 @@ jobs:
           #conda env create -f ci/environment.yml
           conda install -c  conda-forge matplotlib \
             pytest requests  \
-            geopandas rasterio scikit-image
+            geopandas rasterio scikit-image  \
+            seaborn
 
       - name: Check Environment
         shell: bash
