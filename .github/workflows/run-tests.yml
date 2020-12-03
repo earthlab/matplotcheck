@@ -39,7 +39,7 @@ jobs:
           conda install -c  conda-forge matplotlib \
             pytest requests  \
             geopandas rasterio scikit-image  \
-            seaborn
+            seaborn descartes
 
       - name: Check Environment
         shell: bash
