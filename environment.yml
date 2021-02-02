@@ -4,13 +4,10 @@ channels:
 dependencies:
 
   # Core scientific python
-  - numpy>=1.14.0
-  - matplotlib>=3.0.0
-  - python=3.7
+  - matplotlib
   - scipy
 
   # Geo stuff
-  - certifi
   - geopandas
   - rasterio
   - folium
