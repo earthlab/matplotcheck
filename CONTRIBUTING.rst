@@ -163,14 +163,14 @@ For more on bumpversion, see: https://github.com/peritus/bumpversion
 
 To deploy MatPlotCheck,
 
-1. First  update t he changelog with  the new  version  being p ushed and create a new `unreleased` section.
+1. First update the changelog with the new version being pushed and create a new `unreleased` section.
 2. Then, push the commit and the version tags::
 
     $ git push
     $ git push --tags
 
 Once the push has built on GitHub actions, you are ready to make a 
-final release. To do that, go to GitHub, create a new release  with the tag 
+final release. To do that, go to GitHub, create a new release with the tag 
 version you just pushed. In the release, you can mention the changes listed 
 in the changelog (just copy and paste them). 
 GitHub actions will then release to PyPi.
