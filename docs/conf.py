@@ -29,9 +29,9 @@ copyright = "{year}, Earth Lab Contributors, Leah Wasser".format(
 author = "Leah Wasser"
 
 # The short X.Y version
-version = "0.1.2"
+version = "0.1.3"
 # The full version, including alpha/beta/rc tags
-release = "0.1.2"
+release = "0.1.3"
 
 
 # -- General configuration ---------------------------------------------------
