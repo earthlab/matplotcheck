@@ -161,11 +161,16 @@ package, and generates a git commit along with an associated git tag for the
 new version.
 For more on bumpversion, see: https://github.com/peritus/bumpversion
 
-To deploy MatPlotCheck, push the commit and the version tags::
+To deploy MatPlotCheck,
+
+1. First update the changelog with the new version being pushed and create a new `unreleased` section.
+2. Then, push the commit and the version tags::
 
     $ git push
     $ git push --tags
 
-Travis will then deploy to PyPI if the build succeeds.
-Travis will only deploy to PyPI on tagged commits, so remember to push the tags.
-Once that is done, create a release on GitHub for the new version.
+Once the push has built on GitHub actions, you are ready to make a 
+final release. To do that, go to GitHub, create a new release with the tag 
+version you just pushed. In the release, you can mention the changes listed 
+in the changelog (just copy and paste them). 
+GitHub actions will then release to PyPi.
