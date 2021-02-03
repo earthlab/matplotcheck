@@ -12,6 +12,12 @@ Unreleased
 0.1.4
 ----------
 
+-  Fixed issues with CI (@lwasser, #397)
+-  Batch updated dependencies (@nkorinek, #398)
+
+0.1.3
+----------
+
 -  Changed how `assert_lines` checks the limits of lines (@nkorinek, #243)
 -  Changed changelog to an rst file. (@nkorinek, #266)
 -  Add a vignette for testing vector data plots. (@nkorinek, #208)
