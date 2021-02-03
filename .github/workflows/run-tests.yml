@@ -14,7 +14,7 @@ on:
 
 jobs:
   runtests:
-    name: conda (${{ matrix.python-version }}, ${{ matrix.environment-file }})
+    name: conda (${{ matrix.os }}, ${{ matrix.environment-file }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
