@@ -20,8 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        #python-version: [3.6]
         environment-file: [ci/py36-env.yml, ci/py37-env.yml, ci/py38-env.yml]
+        exclude:
+          - environment-file: ci/py36-env.yml
+            os: windows-latest
     defaults:
       run:
         shell: bash -l {0}
