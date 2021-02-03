@@ -36,6 +36,8 @@ jobs:
           auto-activate-base: false
           environment-file: ci/environment.yml
           activate-environment: matplotcheck-dev
+      - run: conda list
+      - run: pytest -v --color=yes
 
       # - name: Install Env
       #   shell: bash
@@ -47,13 +49,13 @@ jobs:
       #       geopandas rasterio scikit-image  \
       #       seaborn descartes
 
-      - name: Check Environment
-        shell: bash
-        run: |
-          conda list
-          python --version
-      - name: Run Tests
-        shell: bash
-        run: |
-          pytest -v --color=yes
-          python --version
+      # - name: Check Environment
+      #   shell: bash
+      #   run: |
+      #     conda list
+      #     python --version
+      # - name: Run Tests
+      #   shell: bash
+      #   run: |
+      #     pytest -v --color=yes
+      #     python --version
