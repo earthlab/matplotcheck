@@ -14,17 +14,17 @@ on:
 
 jobs:
   runtests:
-    name: conda (${{ matrix.python-version }}, ${{ matrix.os }})
+    name: conda (${{ matrix.python-version }}, ${{ matrix.environment-file }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        python-version: [3.6]
+        #python-version: [3.6]
+        environment-file: [ci/environment.yml]
     defaults:
       run:
         shell: bash -l {0}
-
     steps:
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
