@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
         #python-version: [3.6]
-        environment-file: [ci/environment.yml]
+        environment-file: [ci/py36-env.yml, ci/py37-env.yml, ci/py38-env.yml]
     defaults:
       run:
         shell: bash -l {0}
@@ -34,28 +34,7 @@ jobs:
           channel-priority: true
           auto-update-conda: false
           auto-activate-base: false
-          environment-file: ci/environment.yml
+          environment-file: ${{ matrix.environment-file }}
           activate-environment: matplotcheck-dev
       - run: conda list
       - run: pytest -v --color=yes
-
-      # - name: Install Env
-      #   shell: bash
-      #   run: |
-      #     python --version
-      #     #conda env create -f ci/environment.yml
-      #     conda install -c  conda-forge matplotlib \
-      #       pytest requests  \
-      #       geopandas rasterio scikit-image  \
-      #       seaborn descartes
-
-      # - name: Check Environment
-      #   shell: bash
-      #   run: |
-      #     conda list
-      #     python --version
-      # - name: Run Tests
-      #   shell: bash
-      #   run: |
-      #     pytest -v --color=yes
-      #     python --version
