@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
 
+  - python=3.8
   # Core scientific python
   - matplotlib
   - scipy
@@ -11,3 +12,12 @@ dependencies:
   - geopandas
   - rasterio
   - folium
+  - pytest-vcr
+  - pytest-cov
+  - pytest
+  - setuptools
+  - descartes
+  - seaborn
+  - pillow
+  - scikit-image
+  - requests
