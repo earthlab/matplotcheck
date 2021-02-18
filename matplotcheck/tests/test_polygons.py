@@ -21,7 +21,7 @@ def multi_polygon_gdf(basic_polygon):
     poly_a = Polygon([(3, 5), (2, 3.25), (5.25, 6), (2.25, 2), (2, 2)])
     gdf = gpd.GeoDataFrame(
         [1, 2],
-        geometry=[poly_a, basic_polygon],
+        geometry=[poly_a.buffer(0), basic_polygon.buffer(0)],
         crs="epsg:4326",
     )
     multi_gdf = gpd.GeoDataFrame(
