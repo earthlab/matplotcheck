@@ -7,7 +7,7 @@ pytest-cov==2.11.1
 codecov==2.1.11
 pytest==6.2.3
 setuptools==54.2.0
-pre-commit==2.11.1
+pre-commit==2.12.1
 pip==21.0.1
 descartes==1.1.0
 seaborn>=0.9.1
